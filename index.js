@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {TweenMax} from "gsap";
-import * as Perlin from "perlin";
+// import * as Perlin from "perlin";
 
 (function () {
     const AXIS_X = new THREE.Vector3(0, 1, 0);
@@ -10,13 +10,16 @@ import * as Perlin from "perlin";
     const RED = 0xFF0000;
     const GREEN = 0x23f660;
     const DARK_BLUE = 0x70B8D7;
-    const LIGHT_GREEN = 0x71D7C2;
+    const LIGHT_GREEN = 0x71D7C2;ç
     const DARKENED_GREEN = 0x0D7182;
     const ORANGE = 0xf66023;
     const PURPLE = 0x590D82;
     const MAGENTA = 0xC6A0C0;
 
     const canvas = document.querySelector('#scene');
+
+    let width = canvas.offsetWidth,
+        height = canvas.offsetHeight;
 
     const docheight = Math.max(document.body.scrollHeight, document.body.offsetHeight,
         document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
@@ -32,9 +35,6 @@ import * as Perlin from "perlin";
 
         return ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0);
     }
-
-    let width = canvas.offsetWidth,
-        height = canvas.offsetHeight;
 
     const renderer = new THREE.WebGLRenderer({
         canvas: canvas,
@@ -75,7 +75,7 @@ import * as Perlin from "perlin";
     });
 
     const material = new THREE.MeshPhongMaterial({
-        emissive: PURPLE,
+        emissive: ORANGE,
         emissiveIntensity: 0.3,
         // wireframe: true,
         shininess: 0
