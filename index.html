@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Camberi</title>
+	<meta name="description" content="Camberi: Development and Creative agency" />
+	<meta name="keywords" content="webgl, agency, web design, web development, 3d, cool, three.js, animation" />
+	<meta name="author" content="Francesco Gatti" />
+	<meta name="author" content="Mattia Lorenzutti" />
+	<link rel="shortcut icon" href="favicon.ico">
+	<link href="https://fonts.googleapis.com/css?family=Barlow:400,500,700" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/demo2.css" />
+	<script>
+		document.documentElement.className = "js";
+		var supportsCssVars = function () {
+			var e, t = document.createElement("style"); return t.innerHTML = "root: { --tmp-var: bold; }", document.head.appendChild(t), e = !!(window.CSS && window.CSS.supports && window.CSS.supports("font-weight", "var(--tmp-var)")), t.parentNode.removeChild(t), e
+		};
+		supportsCssVars() || alert("Please view this demo in a modern browser that supports CSS Variables.");
+		setTimeout(() => document.body.classList.add('render'), 60);
+	</script>
+</head>
+
+<body class="demo-2">
+	<main>
+		<canvas class="scene scene--full" id="scene"></canvas>
+		<div class="content">
+			<div class="content__inner content--full ">
+				<h1 class="content__main">Camberi</h1>
+				<h3 class="content__subtitle">Digital agency</h2>
+			</div>
+			<div class="content__inner content--entry">
+				<h2 class="content__title">Product design</h2>
+				<p class="content__body">You would like to create a profitable user-centric product. We will leverage our deep industry know-how and modern design
+					methodologies to help you.</p>
+			</div>
+			<div class="content__inner content--entry">
+				<h2 class="content__title">Product engineering</h2>
+				<p class="content__body">You would like to develop excellent and innovative software solutions, but lack the inhouse development capacities. With
+					more than 1,200 developers, we can help you to realize your plans in a scalable and agile environment by leveraging
+					the latest and best fitting technologies. We are highly flexible in the setup of our collaboration and will evaluate
+					the way that works best for you.</p>
+			</div>
+			<div class="content__inner content--entry">
+				<h2 class="content__title">Quality and security</h2>
+				<p class="content__body">You would like to deliver secure products of the highest quality that offer the highest performance for your customer.
+					Nowadays not an easy task, but we are happy to help and be your partner.</p>
+			</div>
+			<div class="content__inner content--last">
+				<h2 class="content__title">Maintenance &amp; support</h2>
+				<p class="content__body">You want perfection after the release date because software is a living product in a fast changing environment. We will
+					take care of your applications, keep them up to date and develop them further. We are your high quality point of contact
+					for assistance 24 hours a day, seven days a week.</p>
+			</div>
+		</div>
+	</main>
+	<script src="https://unpkg.com/scrollreveal/dist/scrollreveal.min.js"></script>
+	<script src="main.bundle.js"></script>
+	<script>
+		window.sr = ScrollReveal({
+			beforeReveal: function (el) {
+				console.log(el);
+			}
+		});
+		sr.reveal('.content__title', { duration: 1000 });
+		sr.reveal('.content__body', { duration: 1000 });
+
+	</script>
+</body>
+
+</html>

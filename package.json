@@ -1,0 +1,34 @@
+{
+  "name": "camberi",
+  "version": "1.0.0",
+  "description": "The awesome website of Mattia and Francesco",
+  "main": "index.js",
+  "dependencies": {
+    "gsap": "^1.20.3",
+    "perlin": "^1.0.0",
+    "three": "^0.89.0"
+  },
+  "devDependencies": {
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.11.0"
+  },
+  "scripts": {
+    "dev": "webpack-dev-server --open",
+    "prod": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "webgl",
+    "agency",
+    "web",
+    "design",
+    "web",
+    "development",
+    "3d",
+    "cool",
+    "three.js",
+    "animation"
+  ],
+  "author": "Francesco Gatti",
+  "license": "ISC"
+}
