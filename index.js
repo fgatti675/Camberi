@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import {TweenMax} from "gsap";
-// import * as Perlin from "perlin";
+import { TweenMax } from "gsap";
+import * as Perlin from "perlin";
 
 (function () {
     const AXIS_X = new THREE.Vector3(0, 1, 0);
@@ -10,11 +10,22 @@ import {TweenMax} from "gsap";
     const RED = 0xFF0000;
     const GREEN = 0x23f660;
     const DARK_BLUE = 0x70B8D7;
-    const LIGHT_GREEN = 0x71D7C2;ç
+    const STRONG_BLUE = 0x0025FF;
+    const LIGHT_GREEN = 0x70C4CE;
     const DARKENED_GREEN = 0x0D7182;
     const ORANGE = 0xf66023;
     const PURPLE = 0x590D82;
     const MAGENTA = 0xC6A0C0;
+    const PINK = 0xCE70A5;
+
+    const MATERIAL_COLOR_FROM = STRONG_BLUE,
+        MATERIAL_COLOR_TO = LIGHT_GREEN,
+        BACKGROUND_COLORS = [LIGHT_GREEN, PINK, DARKENED_GREEN],
+        LIGHT_2_COLOR_FROM = STRONG_BLUE,
+        LIGHT_2_COLOR_TO = RED,
+        LIGHT_3_COLOR_FROM = ORANGE,
+        LIGHT_3_COLOR_TO = DARKENED_GREEN
+        ;
 
     const canvas = document.querySelector('#scene');
 
@@ -41,25 +52,40 @@ import {TweenMax} from "gsap";
         antialias: true
     });
 
-    renderer.setPixelRatio(window.devicePixelRatio );
+
+    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
     renderer.setClearColor(LIGHT_GREEN);
 
     const scene = new THREE.Scene();
-    // var camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 );
+    var camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, 1, 2000);
 
-    const camera = new THREE.PerspectiveCamera(120, width / height, 1, 1000);
-    camera.position.set(100, 0, 300);
+    // const camera = new THREE.PerspectiveCamera(120, width / height, 1, 1000);
+    camera.position.set(360, 0, 600);
 
-    const light = new THREE.HemisphereLight(WHITE, DARK_BLUE, 0.5);
+    //     var planeGeometry = new THREE.PlaneBufferGeometry( 20, 20, 32, 32 );
+    // var planeMaterial = new THREE.MeshStandardMaterial( { color: 0x00ff00 } )
+    // var cube = new THREE.Mesh( planeGeometry, planeMaterial );
+
+    var cube = new THREE.Mesh(
+        new THREE.PlaneBufferGeometry(800, 800, 32, 32),
+        new THREE.MeshPhongMaterial({ color: 0xdddddd, specular: 0x999999,  shading: THREE.FlatShading })
+    );
+    cube.position.set(300, 0, 0);
+    cube.rotateY(-Math.PI / 5);
+
+    scene.add(cube);
+
+    const light = new THREE.HemisphereLight(WHITE, DARKENED_GREEN, .4);
+    light.position.set(500, 500, 600);
     scene.add(light);
 
-    const light2 = new THREE.DirectionalLight(PURPLE, 0.5);
-    light.position.set(200, 300, 400);
+    const light2 = new THREE.DirectionalLight(LIGHT_2_COLOR_FROM, .7);
+    light2.position.set(500, 300, 800);
     scene.add(light2);
-
-    const light3 = new THREE.DirectionalLight(PURPLE, 0.5);
-    light2.position.set(-200, 300, 400);
+    const light3 = new THREE.DirectionalLight(LIGHT_3_COLOR_FROM, .8);
+    light3.position.set(-500, 0, 300);
+    light3.lookAt
     scene.add(light3);
 
     // const geometry = new THREE.IcosahedronGeometry(120, 3);
@@ -75,7 +101,7 @@ import {TweenMax} from "gsap";
     });
 
     const material = new THREE.MeshPhongMaterial({
-        emissive: ORANGE,
+        emissive: MATERIAL_COLOR_FROM,
         emissiveIntensity: 0.3,
         // wireframe: true,
         shininess: 0
@@ -93,21 +119,20 @@ import {TweenMax} from "gsap";
         renderer.setSize(width, height);
     }
 
-
     function getSpikeScalar(vector, time) {
         const spikes = vector.spikes;
         if (!spikes.activated) return .1;
-        const scalar = ((bounce(time, spikes.period)) * spikes.size) * .2;
-        return scalar + .5;
+        const scalar = ((bounce(time, spikes.period)) * spikes.size) * .3;
+        return scalar + .8;
     }
 
     function getBlobScalar(vector, time) {
         const perlin = Perlin.noise.simplex3(
             (vector.x * 0.008) + (time * 0.0003),
             (vector.y * 0.008) + (time * 0.0003),
-            (vector.z * 0.008)
+            (vector.z * 0.008) + (time * 0.0003)
         );
-        const scalar = ((perlin * .7));
+        const scalar = perlin + 1;
         return scalar;
     }
 
@@ -129,12 +154,13 @@ import {TweenMax} from "gsap";
         // const ratio = (sigmoid((scrollTween.y - .5) * 10));
         const ratio = (bounce(scrollTween.y, 2));
 
-        shape.position.x = (mouse.x * scrollTween.y) * 50;
+        shape.position.x = (mouse.x * scrollTween.y) * 0;
+        cube.position.x = (mouse.x) * width - 300;
         shape.position.y = -(scrollTween.y * 200) - (mouse.y * scrollTween.y) * 50;
         // shape.rotateX(-(angleY - .5) * Math.PI / 100);
         // shape.rotateY(-(angleX - .5) * Math.PI / 100);
         // shape.rotateZ(-(scrollTween.y - .5) * Math.PI / 500);
-        
+
 
         geometry.vertices.forEach(vector => {
 
@@ -143,7 +169,7 @@ import {TweenMax} from "gsap";
             // vector.applyAxisAngle(AXIS_Y, angleY);
             var v1, v2;
             if (scrollTween.y < .5)
-                v1 = 1.5 - scrollTween.y, v2 = getBlobScalar(vector, time);
+                v1 = 1.3 - scrollTween.y, v2 = getBlobScalar(vector, time);
             else
                 v1 = getSpikeScalar(vector, time), v2 = getBlobScalar(vector, time);
             // const spikes = getSpikeScalar(vector, time);
@@ -177,13 +203,14 @@ import {TweenMax} from "gsap";
                 ease: Power3.easeOut
             });
         // light.color.setHex(lerpColor(WHITE, WHITE, s));
-        material.emissive.setHex(lerpColor(ORANGE, LIGHT_GREEN, s));
-        light2.color.setHex(lerpColor(PURPLE, ORANGE, s));
-        light3.color.setHex(lerpColor(PURPLE, RED, s));
+        material.emissive.setHex(lerpColor(MATERIAL_COLOR_FROM, MATERIAL_COLOR_TO, s));
+        light2.color.setHex(lerpColor(LIGHT_2_COLOR_FROM, LIGHT_2_COLOR_TO, s));
+        light3.color.setHex(lerpColor(LIGHT_3_COLOR_FROM, LIGHT_3_COLOR_TO, s));
+        // s %1 / BACKGROUND_COLORS.size - 1;
         if (s < .5)
-            renderer.setClearColor(lerpColor(LIGHT_GREEN, DARK_BLUE, s * 2));
+            renderer.setClearColor(lerpColor(BACKGROUND_COLORS[0], BACKGROUND_COLORS[1], s * 2));
         else if (s >= .5)
-            renderer.setClearColor(lerpColor(DARK_BLUE, MAGENTA, (s - .5) * 2));
+            renderer.setClearColor(lerpColor(BACKGROUND_COLORS[1], BACKGROUND_COLORS[2], (s - .5) * 2));
     };
     window.addEventListener("scroll", runOnScroll);
 
