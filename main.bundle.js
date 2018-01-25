@@ -79,13 +79,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 (function () {
-    const AXIS_X = new __WEBPACK_IMPORTED_MODULE_0_three__["k" /* Vector3 */](0, 1, 0);
-    const AXIS_Y = new __WEBPACK_IMPORTED_MODULE_0_three__["k" /* Vector3 */](1, 0, 0);
 
     const WHITE = 0xFFFFFF;
     const RED = 0xFF0000;
     const GREEN = 0x23f660;
-    const DARK_BLUE = 0x70B8D7;
     const STRONG_BLUE = 0x0025FF;
     const LIGHT_GREEN = 0x70C4CE;
     const DARKENED_GREEN = 0x0D7182;
@@ -104,14 +101,96 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         ;
 
     const canvas = document.querySelector('#scene');
+    const width = canvas.offsetWidth;
+    const height = canvas.offsetHeight;
 
-    let width = canvas.offsetWidth,
-        height = canvas.offsetHeight;
+    const docheight = Math.max(document.body.scrollHeight,
+         document.body.offsetHeight,
+        document.documentElement.clientHeight,
+         document.documentElement.scrollHeight,
+          document.documentElement.offsetHeight);
 
-    const docheight = Math.max(document.body.scrollHeight, document.body.offsetHeight,
-        document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+    const mouse = new __WEBPACK_IMPORTED_MODULE_0_three__["i" /* Vector2 */](0, 0);
 
-    const lerpColor = function (ah, bh, amount) {
+    const scrollTween = {
+        y: getScroll()
+    }
+
+    let renderer, shape, geometry, material, scene, camera, light, light2, light3;
+
+    function init() {
+
+        renderer = new __WEBPACK_IMPORTED_MODULE_0_three__["j" /* WebGLRenderer */]({
+            canvas: canvas,
+            antialias: true
+        });
+
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(width, height);
+
+        window.addEventListener("resize", onResize);
+        window.addEventListener("mousemove", onMouseMove);
+        window.addEventListener("scroll", onScroll);
+
+
+        scene = new __WEBPACK_IMPORTED_MODULE_0_three__["h" /* Scene */]();
+        camera = new __WEBPACK_IMPORTED_MODULE_0_three__["f" /* OrthographicCamera */](width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
+        camera.position.set(360, 0, 400);
+        // const camera = new THREE.PerspectiveCamera(50, width / height, 1, 1000);
+        // camera.position.set(360, 0, 400);
+
+        const plane = new __WEBPACK_IMPORTED_MODULE_0_three__["d" /* Mesh */](
+            new __WEBPACK_IMPORTED_MODULE_0_three__["g" /* PlaneGeometry */](10000, 10000),
+            new __WEBPACK_IMPORTED_MODULE_0_three__["e" /* MeshPhongMaterial */]()
+        );
+        plane.position.set(0, 0, -300);
+        // plane.rotateY(-Math.PI / 5);
+
+        scene.add(plane);
+
+        light = new __WEBPACK_IMPORTED_MODULE_0_three__["c" /* HemisphereLight */](WHITE, PURPLE, .4);
+        light.position.set(500, 500, 600);
+        scene.add(light);
+
+
+        light2 = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* DirectionalLight */](LIGHT_2_COLOR_FROM, .7);
+        light2.position.set(500, 0, 600);
+        scene.add(light2);
+
+        light3 = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* DirectionalLight */](LIGHT_3_COLOR_FROM, .8);
+        light3.position.set(-500, 0, 300);
+        light3.lookAt
+        scene.add(light3);
+
+        // const geometry = new THREE.IcosahedronGeometry(120, 3);
+        geometry = new __WEBPACK_IMPORTED_MODULE_0_three__["b" /* DodecahedronGeometry */](120, 4);
+
+        geometry.vertices.forEach(vector => {
+            vector._original = vector.clone();
+            vector.spikes = {
+                activated: Math.random() < .3,
+                period: (Math.random() * 3 + 3) * 1000,
+                size: (Math.random() - 0.5) * 1.5 + 1
+            }
+        });
+
+        material = new __WEBPACK_IMPORTED_MODULE_0_three__["e" /* MeshPhongMaterial */]({
+            emissive: MATERIAL_COLOR_FROM,
+            emissiveIntensity: 0.3,
+            // wireframe: true,
+            shininess: 0
+        });
+
+        shape = new __WEBPACK_IMPORTED_MODULE_0_three__["d" /* Mesh */](geometry, material);
+        scene.add(shape);
+
+    }
+
+    init();
+    requestAnimationFrame(render);
+
+
+    function lerpColor(ah, bh, amount) {
 
         let
             ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
@@ -123,77 +202,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0);
     }
 
-    const renderer = new __WEBPACK_IMPORTED_MODULE_0_three__["l" /* WebGLRenderer */]({
-        canvas: canvas,
-        antialias: true
-    });
 
-
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(width, height);
-    renderer.setClearColor(LIGHT_GREEN);
-
-    const scene = new __WEBPACK_IMPORTED_MODULE_0_three__["i" /* Scene */]();
-    var camera = new __WEBPACK_IMPORTED_MODULE_0_three__["g" /* OrthographicCamera */](width / - 2, width / 2, height / 2, height / - 2, 1, 2000);
-
-    // const camera = new THREE.PerspectiveCamera(120, width / height, 1, 1000);
-    camera.position.set(360, 0, 600);
-
-    //     var planeGeometry = new THREE.PlaneBufferGeometry( 20, 20, 32, 32 );
-    // var planeMaterial = new THREE.MeshStandardMaterial( { color: 0x00ff00 } )
-    // var cube = new THREE.Mesh( planeGeometry, planeMaterial );
-
-    var cube = new __WEBPACK_IMPORTED_MODULE_0_three__["e" /* Mesh */](
-        new __WEBPACK_IMPORTED_MODULE_0_three__["h" /* PlaneBufferGeometry */](800, 800, 32, 32),
-        new __WEBPACK_IMPORTED_MODULE_0_three__["f" /* MeshPhongMaterial */]({ color: 0xdddddd, specular: 0x999999,  shading: __WEBPACK_IMPORTED_MODULE_0_three__["c" /* FlatShading */] })
-    );
-    cube.position.set(300, 0, 0);
-    cube.rotateY(-Math.PI / 5);
-
-    scene.add(cube);
-
-    const light = new __WEBPACK_IMPORTED_MODULE_0_three__["d" /* HemisphereLight */](WHITE, DARKENED_GREEN, .4);
-    light.position.set(500, 500, 600);
-    scene.add(light);
-
-    const light2 = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* DirectionalLight */](LIGHT_2_COLOR_FROM, .7);
-    light2.position.set(500, 300, 800);
-    scene.add(light2);
-    const light3 = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* DirectionalLight */](LIGHT_3_COLOR_FROM, .8);
-    light3.position.set(-500, 0, 300);
-    light3.lookAt
-    scene.add(light3);
-
-    // const geometry = new THREE.IcosahedronGeometry(120, 3);
-    const geometry = new __WEBPACK_IMPORTED_MODULE_0_three__["b" /* DodecahedronGeometry */](120, 4);
-
-    geometry.vertices.forEach(vector => {
-        vector._original = vector.clone();
-        vector.spikes = {
-            activated: Math.random() < .3,
-            period: (Math.random() * 3 + 3) * 1000,
-            size: (Math.random() - 0.5) * 1.5 + 2
-        }
-    });
-
-    const material = new __WEBPACK_IMPORTED_MODULE_0_three__["f" /* MeshPhongMaterial */]({
-        emissive: MATERIAL_COLOR_FROM,
-        emissiveIntensity: 0.3,
-        // wireframe: true,
-        shininess: 0
-    });
-    const shape = new __WEBPACK_IMPORTED_MODULE_0_three__["e" /* Mesh */](geometry, material);
-    scene.add(shape);
-
-    function onResize() {
-        canvas.style.width = '';
-        canvas.style.height = '';
-        width = canvas.offsetWidth;
-        height = canvas.offsetHeight;
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-        renderer.setSize(width, height);
-    }
 
     function getSpikeScalar(vector, time) {
         const spikes = vector.spikes;
@@ -230,26 +239,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         // const ratio = (sigmoid((scrollTween.y - .5) * 10));
         const ratio = (bounce(scrollTween.y, 2));
 
-        shape.position.x = (mouse.x * scrollTween.y) * 0;
-        cube.position.x = (mouse.x) * width - 300;
-        shape.position.y = -(scrollTween.y * 200) - (mouse.y * scrollTween.y) * 50;
+        shape.position.x = (mouse.x * scrollTween.y) * 50;
+        shape.position.y = (mouse.y * scrollTween.y) * 50;
         // shape.rotateX(-(angleY - .5) * Math.PI / 100);
         // shape.rotateY(-(angleX - .5) * Math.PI / 100);
         // shape.rotateZ(-(scrollTween.y - .5) * Math.PI / 500);
 
-
         geometry.vertices.forEach(vector => {
 
             vector.copy(vector._original);
-            // vector.applyAxisAngle(AXIS_X, angleX);
-            // vector.applyAxisAngle(AXIS_Y, angleY);
+
             var v1, v2;
             if (scrollTween.y < .5)
                 v1 = 1.3 - scrollTween.y, v2 = getBlobScalar(vector, time);
             else
                 v1 = getSpikeScalar(vector, time), v2 = getBlobScalar(vector, time);
-            // const spikes = getSpikeScalar(vector, time);
-            // const blob = getBlobScalar(vector, time);
+
             vector.multiplyScalar((1 - ratio) * v1 + ratio * v2 + 1);
         });
     }
@@ -266,31 +271,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     }
 
-    let scrollTween = {
-        y: getScroll()
-    }
-
-    const runOnScroll = function (evt) {
+    function onScroll(evt) {
         const s = getScroll();
         __WEBPACK_IMPORTED_MODULE_1_gsap__["TweenMax"].to(scrollTween,
-            5,
+            4,
             {
                 y: s,
                 ease: Power3.easeOut
             });
-        // light.color.setHex(lerpColor(WHITE, WHITE, s));
-        material.emissive.setHex(lerpColor(MATERIAL_COLOR_FROM, MATERIAL_COLOR_TO, s));
-        light2.color.setHex(lerpColor(LIGHT_2_COLOR_FROM, LIGHT_2_COLOR_TO, s));
-        light3.color.setHex(lerpColor(LIGHT_3_COLOR_FROM, LIGHT_3_COLOR_TO, s));
-        // s %1 / BACKGROUND_COLORS.size - 1;
-        if (s < .5)
-            renderer.setClearColor(lerpColor(BACKGROUND_COLORS[0], BACKGROUND_COLORS[1], s * 2));
-        else if (s >= .5)
-            renderer.setClearColor(lerpColor(BACKGROUND_COLORS[1], BACKGROUND_COLORS[2], (s - .5) * 2));
+        updateSceneColors(s);
     };
-    window.addEventListener("scroll", runOnScroll);
 
-    const mouse = new __WEBPACK_IMPORTED_MODULE_0_three__["j" /* Vector2 */](2, 0.5);
+    function updateSceneColors(scroll) {
+        material.emissive.setHex(lerpColor(MATERIAL_COLOR_FROM, MATERIAL_COLOR_TO, scroll));
+        light2.color.setHex(lerpColor(LIGHT_2_COLOR_FROM, LIGHT_2_COLOR_TO, scroll));
+        light3.color.setHex(lerpColor(LIGHT_3_COLOR_FROM, LIGHT_3_COLOR_TO, scroll));
+    }
+
     function onMouseMove(e) {
         __WEBPACK_IMPORTED_MODULE_1_gsap__["TweenMax"].to(mouse,
             1,
@@ -300,7 +297,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 ease: Power1.easeOut
             });
     }
-    window.addEventListener("mousemove", onMouseMove);
 
     function render(a) {
         requestAnimationFrame(render);
@@ -308,13 +304,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         geometry.verticesNeedUpdate = true;
         renderer.render(scene, camera);
     }
-    requestAnimationFrame(render);
 
-    let resizeTm;
-    window.addEventListener("resize", function () {
-        resizeTm = clearTimeout(resizeTm);
-        resizeTm = setTimeout(onResize, 200);
-    });
+
+    function onResize() {
+        canvas.style.width = '';
+        canvas.style.height = '';
+        width = canvas.offsetWidth;
+        height = canvas.offsetHeight;
+        camera.aspect = width / height;
+        camera.left = width / - 2;
+        camera.right = width / 2;
+        camera.top = height / 2;
+        camera.bottom = height / - 2;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
+    }
+
 })();
 
 /***/ }),
@@ -324,21 +329,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 "use strict";
 /* unused harmony export WebGLRenderTargetCube */
 /* unused harmony export WebGLRenderTarget */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return WebGLRenderer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return WebGLRenderer; });
 /* unused harmony export ShaderLib */
 /* unused harmony export UniformsLib */
 /* unused harmony export UniformsUtils */
 /* unused harmony export ShaderChunk */
 /* unused harmony export FogExp2 */
 /* unused harmony export Fog */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return Scene; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return Scene; });
 /* unused harmony export LensFlare */
 /* unused harmony export Sprite */
 /* unused harmony export LOD */
 /* unused harmony export SkinnedMesh */
 /* unused harmony export Skeleton */
 /* unused harmony export Bone */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return Mesh; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return Mesh; });
 /* unused harmony export LineSegments */
 /* unused harmony export LineLoop */
 /* unused harmony export Line */
@@ -373,7 +378,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* unused harmony export SpotLight */
 /* unused harmony export PointLight */
 /* unused harmony export RectAreaLight */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return HemisphereLight; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return HemisphereLight; });
 /* unused harmony export DirectionalLightShadow */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DirectionalLight; });
 /* unused harmony export AmbientLight */
@@ -381,7 +386,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* unused harmony export Light */
 /* unused harmony export StereoCamera */
 /* unused harmony export PerspectiveCamera */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return OrthographicCamera; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return OrthographicCamera; });
 /* unused harmony export CubeCamera */
 /* unused harmony export ArrayCamera */
 /* unused harmony export Camera */
@@ -437,8 +442,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* unused harmony export Line3 */
 /* unused harmony export Euler */
 /* unused harmony export Vector4 */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return Vector3; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return Vector2; });
+/* unused harmony export Vector3 */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return Vector2; });
 /* unused harmony export Quaternion */
 /* unused harmony export Color */
 /* unused harmony export ImmediateRenderObject */
@@ -492,8 +497,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* unused harmony export SphereBufferGeometry */
 /* unused harmony export RingGeometry */
 /* unused harmony export RingBufferGeometry */
-/* unused harmony export PlaneGeometry */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return PlaneBufferGeometry; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return PlaneGeometry; });
+/* unused harmony export PlaneBufferGeometry */
 /* unused harmony export LatheGeometry */
 /* unused harmony export LatheBufferGeometry */
 /* unused harmony export ShapeGeometry */
@@ -516,7 +521,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* unused harmony export PointsMaterial */
 /* unused harmony export MeshPhysicalMaterial */
 /* unused harmony export MeshStandardMaterial */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return MeshPhongMaterial; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return MeshPhongMaterial; });
 /* unused harmony export MeshToonMaterial */
 /* unused harmony export MeshNormalMaterial */
 /* unused harmony export MeshLambertMaterial */
@@ -560,7 +565,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* unused harmony export FrontSide */
 /* unused harmony export BackSide */
 /* unused harmony export DoubleSide */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return FlatShading; });
+/* unused harmony export FlatShading */
 /* unused harmony export SmoothShading */
 /* unused harmony export NoColors */
 /* unused harmony export FaceColors */
