@@ -26,8 +26,6 @@
 			z-index: 1;
 			top: 0;
 			left: 0;
-			display: -webkit-flex;
-			-webkit-flex-flow: row wrap;
 			display: flex;
 			flex-flow: row wrap;
 		}
@@ -41,6 +39,7 @@
 		}
 
 		nav {
+			height: 80px;
 			color: white;
 			position: fixed;
 			padding: 1rem;
@@ -56,6 +55,7 @@
 
 		nav a {
 			padding: 2rem;
+			align-self: center;
 		}
 	</style>
 </head>
@@ -70,10 +70,9 @@
 	</header>
 
 	<nav>
-		<a href="/html/">HTML</a>
-		<a href="/css/">CSS</a>
-		<a href="/js/">JavaScript</a>
-		<a href="/jquery/">jQuery</a>
+		<a href="/html/">Studio</a>
+		<a href="#contact">Journal</a>
+		<a href="#contact">Contact</a>
 	</nav>
 	<main>
 		<canvas class="scene scene--full" id="scene"></canvas>
@@ -98,7 +97,8 @@
 					the latest and best fitting technologies. We are highly flexible in the setup of our collaboration and will evaluate
 					the way that works best for you.</p>
 			</div>
-			<div class="content__inner content--entry">
+			<div class="content__inner content--entry" name="contact">
+				<a name="contact"/>
 				<h2 class="content__title">Quality and security</h2>
 				<p class="content__body">You would like to deliver secure products of the highest quality that offer the highest performance for your customer.
 					Nowadays not an easy task, but we are happy to help and be your partner.</p>

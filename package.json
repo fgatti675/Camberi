@@ -6,11 +6,12 @@
   "dependencies": {
     "gsap": "^1.20.3",
     "perlin": "^1.0.0",
-    "three": "^0.89.0"
+    "three": "^0.89.0",
+    "tinycolor2": "^1.4.1"
   },
   "devDependencies": {
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.11.0"
+    "webpack-dev-server": "^2.11.1"
   },
   "scripts": {
     "dev": "webpack-dev-server",

@@ -5,5 +5,6 @@ module.exports = {
         path: __dirname, 
         publicPath: __dirname
     }, 
+    devtool: 'source-map',
     watch: true
 };

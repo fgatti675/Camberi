@@ -4,35 +4,38 @@ import * as Perlin from "perlin";
 
 (function () {
 
-    const WHITE = 0xFFFFFF;
-    const RED = 0xFF0000;
-    const GREEN = 0x23f660;
-    const STRONG_BLUE = 0x0025FF;
-    const LIGHT_GREEN = 0x70C4CE;
-    const DARKENED_GREEN = 0x0D7182;
-    const ORANGE = 0xf66023;
-    const PURPLE = 0x590D82;
-    const MAGENTA = 0xC6A0C0;
-    const PINK = 0xCE70A5;
+    const WHITE = 0xFFFFFF,
+        RED = 0xFF0000,
+        GREEN = 0x23f660,
+        STRONG_BLUE = 0x0025FF,
+        LIGHT_GREEN = 0x70C4CE,
+        DARKENED_GREEN = 0x0D7182,
+        ORANGE = 0xf66023,
+        PURPLE = 0x590D82,
+        MAGENTA = 0xC6A0C0,
+        PINK = 0xCE70A5;
+
+    const COLORS = [RED, STRONG_BLUE, DARKENED_GREEN, ORANGE, PURPLE, PINK];
 
     const MATERIAL_COLOR_FROM = STRONG_BLUE,
         MATERIAL_COLOR_TO = LIGHT_GREEN,
-        BACKGROUND_COLORS = [LIGHT_GREEN, PINK, DARKENED_GREEN],
-        LIGHT_2_COLOR_FROM = STRONG_BLUE,
-        LIGHT_2_COLOR_TO = RED,
-        LIGHT_3_COLOR_FROM = ORANGE,
-        LIGHT_3_COLOR_TO = DARKENED_GREEN
-        ;
+        LIGHT_2_COLOR_FROM = getRandomColor(),
+        LIGHT_2_COLOR_TO = getRandomColor(),
+        LIGHT_3_COLOR_FROM = getRandomColor(),
+        LIGHT_3_COLOR_TO = getRandomColor(),
+        RENDERER_CLEAR_COLOR_FROM = increaseBrighness(lerpColor(LIGHT_2_COLOR_FROM, LIGHT_3_COLOR_FROM, .5), .2),
+        RENDERER_CLEAR_COLOR_TO = increaseBrighness(lerpColor(LIGHT_2_COLOR_TO, LIGHT_3_COLOR_TO, .5), .2);
+
+        console.log(WHITE)
+        console.log(increaseBrighness(WHITE, 0))
 
     const canvas = document.querySelector('#scene');
-    const width = canvas.offsetWidth;
-    const height = canvas.offsetHeight;
 
     const docheight = Math.max(document.body.scrollHeight,
-         document.body.offsetHeight,
+        document.body.offsetHeight,
         document.documentElement.clientHeight,
-         document.documentElement.scrollHeight,
-          document.documentElement.offsetHeight);
+        document.documentElement.scrollHeight,
+        document.documentElement.offsetHeight);
 
     const mouse = new THREE.Vector2(0, 0);
 
@@ -40,9 +43,20 @@ import * as Perlin from "perlin";
         y: getScroll()
     }
 
+    let width = canvas.offsetWidth,
+        height = canvas.offsetHeight;
+
     let renderer, shape, geometry, material, scene, camera, light, light2, light3;
 
-    function init() {
+    window.addEventListener("resize", onResize);
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("scroll", onScroll);
+
+    initScene();
+    requestAnimationFrame(render);
+    updateSceneColors(getScroll());
+
+    function initScene() {
 
         renderer = new THREE.WebGLRenderer({
             canvas: canvas,
@@ -52,25 +66,20 @@ import * as Perlin from "perlin";
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(width, height);
 
-        window.addEventListener("resize", onResize);
-        window.addEventListener("mousemove", onMouseMove);
-        window.addEventListener("scroll", onScroll);
-
-
         scene = new THREE.Scene();
         camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
         camera.position.set(360, 0, 400);
         // const camera = new THREE.PerspectiveCamera(50, width / height, 1, 1000);
         // camera.position.set(360, 0, 400);
 
-        const plane = new THREE.Mesh(
-            new THREE.PlaneGeometry(10000, 10000),
-            new THREE.MeshPhongMaterial()
-        );
-        plane.position.set(0, 0, -300);
-        // plane.rotateY(-Math.PI / 5);
+        // const plane = new THREE.Mesh(
+        //     new THREE.PlaneGeometry(10000, 10000),
+        //     new THREE.MeshPhongMaterial()
+        // );
+        // plane.position.set(0, 0, -300);
+        // // plane.rotateY(-Math.PI / 5);
 
-        scene.add(plane);
+        // scene.add(plane);
 
         light = new THREE.HemisphereLight(WHITE, PURPLE, .4);
         light.position.set(500, 500, 600);
@@ -110,9 +119,9 @@ import * as Perlin from "perlin";
 
     }
 
-    init();
-    requestAnimationFrame(render);
-
+    function getRandomColor() {
+        return COLORS[Math.floor(Math.random() * COLORS.length)];
+    }
 
     function lerpColor(ah, bh, amount) {
 
@@ -124,6 +133,17 @@ import * as Perlin from "perlin";
             rb = ab + amount * (bb - ab);
 
         return ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0);
+    }
+
+    function increaseBrighness(color, factor) {
+
+        let
+            cr = color >> 16, cg = color >> 8 & 0xff, cb = color & 0xff;
+        var r = cr + Math.floor(factor * 255);
+        var g = cg + Math.floor(factor * 255);
+        var b = cb + Math.floor(factor * 255);
+
+        return ((1 << 24) +  (r << 16) + (g << 8) + b | 0);
     }
 
 
@@ -175,9 +195,11 @@ import * as Perlin from "perlin";
 
             var v1, v2;
             if (scrollTween.y < .5)
-                v1 = 1.3 - scrollTween.y, v2 = getBlobScalar(vector, time);
+                v1 = 1.3 - scrollTween.y,
+                    v2 = getBlobScalar(vector, time);
             else
-                v1 = getSpikeScalar(vector, time), v2 = getBlobScalar(vector, time);
+                v1 = getSpikeScalar(vector, time),
+                    v2 = getBlobScalar(vector, time);
 
             vector.multiplyScalar((1 - ratio) * v1 + ratio * v2 + 1);
         });
@@ -207,6 +229,9 @@ import * as Perlin from "perlin";
     };
 
     function updateSceneColors(scroll) {
+        let bg = lerpColor(RENDERER_CLEAR_COLOR_FROM, RENDERER_CLEAR_COLOR_TO, scroll);
+        // console.log(bg);
+        renderer.setClearColor(bg);
         material.emissive.setHex(lerpColor(MATERIAL_COLOR_FROM, MATERIAL_COLOR_TO, scroll));
         light2.color.setHex(lerpColor(LIGHT_2_COLOR_FROM, LIGHT_2_COLOR_TO, scroll));
         light3.color.setHex(lerpColor(LIGHT_3_COLOR_FROM, LIGHT_3_COLOR_TO, scroll));
@@ -228,7 +253,6 @@ import * as Perlin from "perlin";
         geometry.verticesNeedUpdate = true;
         renderer.render(scene, camera);
     }
-
 
     function onResize() {
         canvas.style.width = '';
