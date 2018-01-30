@@ -20,43 +20,6 @@
 		setTimeout(() => document.body.classList.add('render'), 60);
 	</script>
 	<style>
-		header {
-			position: fixed;
-			padding: 1rem;
-			z-index: 1;
-			top: 0;
-			left: 0;
-			display: flex;
-			flex-flow: row wrap;
-		}
-
-		header .logo {
-			text-transform: uppercase;
-			letter-spacing: 0.15em;
-			font-family: 'Montserrat', sans-serif;
-			align-self: center;
-			padding-left: 20px;
-		}
-
-		nav {
-			height: 80px;
-			color: white;
-			position: fixed;
-			padding: 1rem;
-			opacity: 0.7;
-			z-index: 1;
-			top: 0;
-			right: 0;
-
-			display: block;
-			align-self: end;
-			text-align: center;
-		}
-
-		nav a {
-			padding: 2rem;
-			align-self: center;
-		}
 	</style>
 </head>
 
@@ -72,57 +35,49 @@
 	<nav>
 		<a href="/html/">Studio</a>
 		<a href="#contact">Journal</a>
-		<a href="#contact">Contact</a>
+		<a href="#contact" class="cta">Contact</a>
 	</nav>
+	<canvas class="scene scene--full" id="scene"></canvas>
 	<main>
-		<canvas class="scene scene--full" id="scene"></canvas>
 		<div class="content">
-			<div class="content__inner content--full ">
-				<h1 class="content__main">Camberí</h1>
-				<h3 class="content__subtitle">Digital agency</h2>
+			<div class="content__page">
+				<h1 class="content__intro">We will blow your mind.</h1>
 			</div>
-			<div class="content__inner content--entry">
-				<h2 class="content__title">UX</h2>
-				<p class="content__body">We care about user experience as much as you do.</p>
+			<div class="content__page">
+				<h2 class="content__title content__header">UX</h2>
+				<p class="content__body content__item">We care about user experience as much as you do.</p>
 			</div>
-			<div class="content__inner content--entry">
-				<h2 class="content__title">Product design</h2>
-				<p class="content__body">You would like to create a profitable user-centric product. We will leverage our deep industry know-how and modern design
+			<div class="content__page">
+				<h2 class="content__title content__header">Product design</h2>
+				<p class="content__body content__item">You would like to create a profitable user-centric product. We will leverage our deep industry know-how and modern design
 					methodologies to help you.</p>
 			</div>
-			<div class="content__inner content--entry">
-				<h2 class="content__title">Product engineering</h2>
-				<p class="content__body">You would like to develop excellent and innovative software solutions, but lack the inhouse development capacities. With
+			<div class="content__page">
+				<h2 class="content__title content__header">Product engineering</h2>
+				<p class="content__body content__item">You would like to develop excellent and innovative software solutions, but lack the inhouse development capacities. With
 					more than 1,200 developers, we can help you to realize your plans in a scalable and agile environment by leveraging
 					the latest and best fitting technologies. We are highly flexible in the setup of our collaboration and will evaluate
 					the way that works best for you.</p>
 			</div>
-			<div class="content__inner content--entry" name="contact">
-				<a name="contact"/>
-				<h2 class="content__title">Quality and security</h2>
-				<p class="content__body">You would like to deliver secure products of the highest quality that offer the highest performance for your customer.
+			<div class="content__page">
+				<h2 class="content__title content__header">Quality and security</h2>
+				<p class="content__body content__item">You would like to deliver secure products of the highest quality that offer the highest performance for your customer.
 					Nowadays not an easy task, but we are happy to help and be your partner.</p>
 			</div>
-			<div class="content__inner content--entry">
-				<h2 class="content__title">Maintenance &amp; support</h2>
-				<p class="content__body">You want perfection after the release date because software is a living product in a fast changing environment. We will
+			<div class="content__page">
+				<h2 class="content__title content__header">Maintenance &amp; support</h2>
+				<p class="content__body content__item">You want perfection after the release date because software is a living product in a fast changing environment. We will
 					take care of your applications, keep them up to date and develop them further. We are your high quality point of contact
 					for assistance 24 hours a day, seven days a week.</p>
 			</div>
+			<div class="content__page" id="contact">
+				<h2 class="content__title content__header">Contact</h2>
+				<p class="content__body content__item">Get in touch! :)</p>
+			</div>
 		</div>
 	</main>
-	<!-- <script src="https://unpkg.com/scrollreveal/dist/scrollreveal.min.js"></script> -->
-	<script src="main.bundle.js"></script>
-	<script>
-		// window.sr = ScrollReveal({
-		// 	beforeReveal: function (el) {
-		// 		// console.log(el);
-		// 	}
-		// });
-		// sr.reveal('.content__title', { duration: 1000 });
-		// sr.reveal('.content__body', { duration: 1000 });
 
-	</script>
+	<script src="main.bundle.js"></script>
 </body>
 
 </html>

@@ -78,34 +78,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+
 (function () {
 
-    const WHITE = 0xFFFFFF,
-        RED = 0xFF0000,
-        GREEN = 0x23f660,
-        STRONG_BLUE = 0x0025FF,
-        LIGHT_GREEN = 0x70C4CE,
-        DARKENED_GREEN = 0x0D7182,
-        ORANGE = 0xf66023,
-        PURPLE = 0x590D82,
-        MAGENTA = 0xC6A0C0,
-        PINK = 0xCE70A5;
+    const WHITE = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xFFFFFF),
+        RED = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xFF0000),
+        GREEN = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0x09CAA1),
+        STRONG_BLUE = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0x0025FF),
+        LIGHT_GREEN = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0x70C4CE),
+        DARKENED_GREEN = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0x0D7182),
+        ORANGE = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xf66023),
+        PURPLE = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0x590D82),
+        MAGENTA = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xC6A0C0),
+        PINK = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xCE70A5);
 
-    const COLORS = [RED, STRONG_BLUE, DARKENED_GREEN, ORANGE, PURPLE, PINK];
+    const COLORS = [RED, STRONG_BLUE, DARKENED_GREEN, ORANGE, PURPLE, PINK, GREEN];
+    shuffle(COLORS);
 
-    const MATERIAL_COLOR_FROM = STRONG_BLUE,
-        MATERIAL_COLOR_TO = LIGHT_GREEN,
-        LIGHT_2_COLOR_FROM = getRandomColor(),
-        LIGHT_2_COLOR_TO = getRandomColor(),
-        LIGHT_3_COLOR_FROM = getRandomColor(),
-        LIGHT_3_COLOR_TO = getRandomColor(),
-        RENDERER_CLEAR_COLOR_FROM = increaseBrighness(lerpColor(LIGHT_2_COLOR_FROM, LIGHT_3_COLOR_FROM, .5), .2),
-        RENDERER_CLEAR_COLOR_TO = increaseBrighness(lerpColor(LIGHT_2_COLOR_TO, LIGHT_3_COLOR_TO, .5), .2);
+    const MATERIAL_COLOR_FROM = COLORS[4],
+        MATERIAL_COLOR_TO = COLORS[5],
+        LIGHT_2_COLOR_FROM = COLORS[0],
+        LIGHT_2_COLOR_TO = COLORS[1],
+        LIGHT_3_COLOR_FROM = COLORS[2],
+        LIGHT_3_COLOR_TO = COLORS[3],
+        RENDERER_CLEAR_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5),
+        RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5);
 
-        console.log(WHITE)
-        console.log(increaseBrighness(WHITE, 0))
+    RENDERER_CLEAR_COLOR_FROM.setHSL(RENDERER_CLEAR_COLOR_FROM.getHSL().h, .7, .6);
+    RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, .7, .6);
 
     const canvas = document.querySelector('#scene');
+    const content = document.querySelector('.content');
 
     const docheight = Math.max(document.body.scrollHeight,
         document.body.offsetHeight,
@@ -113,7 +116,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         document.documentElement.scrollHeight,
         document.documentElement.offsetHeight);
 
-    const mouse = new __WEBPACK_IMPORTED_MODULE_0_three__["h" /* Vector2 */](0, 0);
+    const mouse = new __WEBPACK_IMPORTED_MODULE_0_three__["i" /* Vector2 */](0, 0);
 
     const scrollTween = {
         y: getScroll()
@@ -122,11 +125,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     let width = canvas.offsetWidth,
         height = canvas.offsetHeight;
 
-    let renderer, shape, geometry, material, scene, camera, light, light2, light3;
+    let renderer, shape, shape2, geometry, material, material2, scene, camera, light, light2, light3;
 
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("scroll", onScroll);
+    content.addEventListener("scroll", onScroll);
 
     initScene();
     requestAnimationFrame(render);
@@ -134,7 +137,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     function initScene() {
 
-        renderer = new __WEBPACK_IMPORTED_MODULE_0_three__["i" /* WebGLRenderer */]({
+        renderer = new __WEBPACK_IMPORTED_MODULE_0_three__["j" /* WebGLRenderer */]({
+            alpha: true,
             canvas: canvas,
             antialias: true
         });
@@ -142,8 +146,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(width, height);
 
-        scene = new __WEBPACK_IMPORTED_MODULE_0_three__["g" /* Scene */]();
-        camera = new __WEBPACK_IMPORTED_MODULE_0_three__["f" /* OrthographicCamera */](width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
+        scene = new __WEBPACK_IMPORTED_MODULE_0_three__["h" /* Scene */]();
+        camera = new __WEBPACK_IMPORTED_MODULE_0_three__["g" /* OrthographicCamera */](width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
         camera.position.set(360, 0, 400);
         // const camera = new THREE.PerspectiveCamera(50, width / height, 1, 1000);
         // camera.position.set(360, 0, 400);
@@ -157,78 +161,62 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         // scene.add(plane);
 
-        light = new __WEBPACK_IMPORTED_MODULE_0_three__["c" /* HemisphereLight */](WHITE, PURPLE, .4);
-        light.position.set(500, 500, 600);
+        light = new __WEBPACK_IMPORTED_MODULE_0_three__["d" /* HemisphereLight */](WHITE, PURPLE, .4);
+        light.position.set(500, 500, 0);
         scene.add(light);
 
-
-        light2 = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* DirectionalLight */](LIGHT_2_COLOR_FROM, .7);
+        light2 = new __WEBPACK_IMPORTED_MODULE_0_three__["b" /* DirectionalLight */](LIGHT_2_COLOR_FROM, .7);
         light2.position.set(500, 0, 600);
         scene.add(light2);
 
-        light3 = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* DirectionalLight */](LIGHT_3_COLOR_FROM, .8);
+        light3 = new __WEBPACK_IMPORTED_MODULE_0_three__["b" /* DirectionalLight */](LIGHT_3_COLOR_FROM, .8);
         light3.position.set(-500, 0, 300);
-        light3.lookAt
         scene.add(light3);
 
         // const geometry = new THREE.IcosahedronGeometry(120, 3);
-        geometry = new __WEBPACK_IMPORTED_MODULE_0_three__["b" /* DodecahedronGeometry */](120, 4);
+        geometry = new __WEBPACK_IMPORTED_MODULE_0_three__["c" /* DodecahedronGeometry */](120, 4);
 
         geometry.vertices.forEach(vector => {
             vector._original = vector.clone();
             vector.spikes = {
-                activated: Math.random() < .3,
+                activated: Math.random() < .25,
                 period: (Math.random() * 3 + 3) * 1000,
                 size: (Math.random() - 0.5) * 1.5 + 1
             }
         });
 
-        material = new __WEBPACK_IMPORTED_MODULE_0_three__["e" /* MeshPhongMaterial */]({
+        material = new __WEBPACK_IMPORTED_MODULE_0_three__["f" /* MeshPhongMaterial */]({
             emissive: MATERIAL_COLOR_FROM,
             emissiveIntensity: 0.3,
-            // wireframe: true,
+            transparent: true,
+            // wireframe: Math.random()> .7,
+            flatShading: Math.random() > .7,
             shininess: 0
         });
 
-        shape = new __WEBPACK_IMPORTED_MODULE_0_three__["d" /* Mesh */](geometry, material);
+        material2 = material.clone();
+        material2.flatShading = false;
+        material2.wireframe = true;
+        shape = new __WEBPACK_IMPORTED_MODULE_0_three__["e" /* Mesh */](geometry, material);
+        shape2 = new __WEBPACK_IMPORTED_MODULE_0_three__["e" /* Mesh */](geometry, material2);
         scene.add(shape);
+        scene.add(shape2);
 
     }
 
-    function getRandomColor() {
-        return COLORS[Math.floor(Math.random() * COLORS.length)];
+    function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
     }
-
-    function lerpColor(ah, bh, amount) {
-
-        let
-            ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
-            br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff,
-            rr = ar + amount * (br - ar),
-            rg = ag + amount * (bg - ag),
-            rb = ab + amount * (bb - ab);
-
-        return ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0);
-    }
-
-    function increaseBrighness(color, factor) {
-
-        let
-            cr = color >> 16, cg = color >> 8 & 0xff, cb = color & 0xff;
-        var r = cr + Math.floor(factor * 255);
-        var g = cg + Math.floor(factor * 255);
-        var b = cb + Math.floor(factor * 255);
-
-        return ((1 << 24) +  (r << 16) + (g << 8) + b | 0);
-    }
-
-
 
     function getSpikeScalar(vector, time) {
         const spikes = vector.spikes;
-        if (!spikes.activated) return .1;
+        if (!spikes.activated) return .2;
         const scalar = ((bounce(time, spikes.period)) * spikes.size) * .3;
-        return scalar + .8;
+        return scalar + 1.;
     }
 
     function getBlobScalar(vector, time) {
@@ -252,19 +240,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
 
     function updateVertices(time) {
-
-        const angleX = mouse.x;
-        const angleY = mouse.y;
-
         // const ratio = (sigmoid((scrollTween.y - .5) * 10));
         const ratio = (bounce(scrollTween.y, 2));
 
-        shape.position.x = (mouse.x * scrollTween.y) * 50;
-        shape.position.y = (mouse.y * scrollTween.y) * 50;
-        // shape.rotateX(-(angleY - .5) * Math.PI / 100);
-        // shape.rotateY(-(angleX - .5) * Math.PI / 100);
-        // shape.rotateZ(-(scrollTween.y - .5) * Math.PI / 500);
+        var posX = (mouse.x) * 50;
+        var posY = -(mouse.y) * 50;
+        shape.position.x = posX;
+        shape.position.y = posY;
+        shape2.position.x = posX;
+        shape2.position.y = posY;
+        var rotation = (scrollTween.y) * Math.PI * 1;
 
+        shape.rotation.x = rotation;
+        shape2.rotation.x = rotation;
         geometry.vertices.forEach(vector => {
 
             vector.copy(vector._original);
@@ -283,34 +271,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
     function getScroll() {
-        if (window.pageYOffset != undefined) {
-            return (pageYOffset) / (docheight - window.innerHeight);
-        }
-        else {
-            let sx, sy, d = document, r = d.documentElement, b = d.body;
-            sy = r.scrollTop || b.scrollTop || 0;
-            return (sy) / (docheight - window.innerHeight);
-        }
+        var o = content.scrollTop;
+        var i = window.innerHeight;
+        var h = content.scrollHeight;
+        return (o) / (h - i);
     }
 
     function onScroll(evt) {
-        const s = getScroll();
+        const scroll = getScroll();
         __WEBPACK_IMPORTED_MODULE_1_gsap__["TweenMax"].to(scrollTween,
-            4,
+            5,
             {
-                y: s,
+                y: scroll,
                 ease: Power3.easeOut
             });
-        updateSceneColors(s);
+        updateSceneColors(scroll);
     };
 
     function updateSceneColors(scroll) {
-        let bg = lerpColor(RENDERER_CLEAR_COLOR_FROM, RENDERER_CLEAR_COLOR_TO, scroll);
-        // console.log(bg);
+        material.opacity = ((1 - sigmoid((scroll - 1) * 2) + .5) / .4 + .2);
+        // material.opacity = ((1 - scroll) + .2) / 1.2;
+        material2.opacity = (scroll - .1) / .9;
+        let bg = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, scroll);
         renderer.setClearColor(bg);
-        material.emissive.setHex(lerpColor(MATERIAL_COLOR_FROM, MATERIAL_COLOR_TO, scroll));
-        light2.color.setHex(lerpColor(LIGHT_2_COLOR_FROM, LIGHT_2_COLOR_TO, scroll));
-        light3.color.setHex(lerpColor(LIGHT_3_COLOR_FROM, LIGHT_3_COLOR_TO, scroll));
+        if (scroll == 1 || scroll == 0)
+            document.body.style.backgroundColor = bg.getStyle();
+        material.emissive.set(MATERIAL_COLOR_FROM.clone().lerp(MATERIAL_COLOR_TO, scroll));
+        light2.color.set(LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_TO, scroll));
+        light3.color.set(LIGHT_3_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_TO, scroll));
     }
 
     function onMouseMove(e) {
@@ -353,21 +341,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 "use strict";
 /* unused harmony export WebGLRenderTargetCube */
 /* unused harmony export WebGLRenderTarget */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return WebGLRenderer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return WebGLRenderer; });
 /* unused harmony export ShaderLib */
 /* unused harmony export UniformsLib */
 /* unused harmony export UniformsUtils */
 /* unused harmony export ShaderChunk */
 /* unused harmony export FogExp2 */
 /* unused harmony export Fog */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return Scene; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return Scene; });
 /* unused harmony export LensFlare */
 /* unused harmony export Sprite */
 /* unused harmony export LOD */
 /* unused harmony export SkinnedMesh */
 /* unused harmony export Skeleton */
 /* unused harmony export Bone */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return Mesh; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return Mesh; });
 /* unused harmony export LineSegments */
 /* unused harmony export LineLoop */
 /* unused harmony export Line */
@@ -402,15 +390,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* unused harmony export SpotLight */
 /* unused harmony export PointLight */
 /* unused harmony export RectAreaLight */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return HemisphereLight; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return HemisphereLight; });
 /* unused harmony export DirectionalLightShadow */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DirectionalLight; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return DirectionalLight; });
 /* unused harmony export AmbientLight */
 /* unused harmony export LightShadow */
 /* unused harmony export Light */
 /* unused harmony export StereoCamera */
 /* unused harmony export PerspectiveCamera */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return OrthographicCamera; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return OrthographicCamera; });
 /* unused harmony export CubeCamera */
 /* unused harmony export ArrayCamera */
 /* unused harmony export Camera */
@@ -467,9 +455,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* unused harmony export Euler */
 /* unused harmony export Vector4 */
 /* unused harmony export Vector3 */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return Vector2; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return Vector2; });
 /* unused harmony export Quaternion */
-/* unused harmony export Color */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Color; });
 /* unused harmony export ImmediateRenderObject */
 /* unused harmony export VertexNormalsHelper */
 /* unused harmony export SpotLightHelper */
@@ -505,7 +493,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* unused harmony export OctahedronBufferGeometry */
 /* unused harmony export IcosahedronGeometry */
 /* unused harmony export IcosahedronBufferGeometry */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return DodecahedronGeometry; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return DodecahedronGeometry; });
 /* unused harmony export DodecahedronBufferGeometry */
 /* unused harmony export PolyhedronGeometry */
 /* unused harmony export PolyhedronBufferGeometry */
@@ -545,7 +533,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* unused harmony export PointsMaterial */
 /* unused harmony export MeshPhysicalMaterial */
 /* unused harmony export MeshStandardMaterial */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return MeshPhongMaterial; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return MeshPhongMaterial; });
 /* unused harmony export MeshToonMaterial */
 /* unused harmony export MeshNormalMaterial */
 /* unused harmony export MeshLambertMaterial */

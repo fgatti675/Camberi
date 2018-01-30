@@ -4,14 +4,16 @@
   "description": "The awesome website of Mattia and Francesco",
   "main": "index.js",
   "dependencies": {
+    "css-scroll-snap-polyfill": "^0.1.2",
     "gsap": "^1.20.3",
     "perlin": "^1.0.0",
-    "three": "^0.89.0",
-    "tinycolor2": "^1.4.1"
+    "three": "^0.89.0"
   },
   "devDependencies": {
+    "babel-minify-webpack-plugin": "^0.2.0",
+    "uglifyjs-webpack-plugin": "^1.1.8",
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.11.1"
+    "webpack-dev-server": "^2.11.0"
   },
   "scripts": {
     "dev": "webpack-dev-server",
