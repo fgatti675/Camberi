@@ -21,6 +21,7 @@ import * as Perlin from "perlin";
 
     const MATERIAL_COLOR_FROM = COLORS[4],
         MATERIAL_COLOR_TO = COLORS[5],
+        LIGHT_1_COLOR_BASE = COLORS[6],
         LIGHT_2_COLOR_FROM = COLORS[0],
         LIGHT_2_COLOR_TO = COLORS[1],
         LIGHT_3_COLOR_FROM = COLORS[2],
@@ -71,10 +72,10 @@ import * as Perlin from "perlin";
         renderer.setSize(width, height);
 
         scene = new THREE.Scene();
+
         camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
+        // camera = new THREE.PerspectiveCamera(60, width / height, 1, 1000);
         camera.position.set(360, 0, 400);
-        // const camera = new THREE.PerspectiveCamera(50, width / height, 1, 1000);
-        // camera.position.set(360, 0, 400);
 
         // const plane = new THREE.Mesh(
         //     new THREE.PlaneGeometry(10000, 10000),
@@ -85,7 +86,7 @@ import * as Perlin from "perlin";
 
         // scene.add(plane);
 
-        light = new THREE.HemisphereLight(WHITE, PURPLE, .4);
+        light = new THREE.HemisphereLight(WHITE, LIGHT_1_COLOR_BASE, .4);
         light.position.set(500, 500, 0);
         scene.add(light);
 
@@ -97,7 +98,7 @@ import * as Perlin from "perlin";
         light3.position.set(-500, 0, 300);
         scene.add(light3);
 
-        // const geometry = new THREE.IcosahedronGeometry(120, 3);
+        // geometry = new THREE.IcosahedronGeometry(120, 4);
         geometry = new THREE.DodecahedronGeometry(120, 4);
 
         geometry.vertices.forEach(vector => {
@@ -113,7 +114,6 @@ import * as Perlin from "perlin";
             emissive: MATERIAL_COLOR_FROM,
             emissiveIntensity: 0.3,
             transparent: true,
-            // wireframe: Math.random()> .7,
             flatShading: Math.random() > .7,
             shininess: 0
         });
@@ -121,8 +121,10 @@ import * as Perlin from "perlin";
         material2 = material.clone();
         material2.flatShading = false;
         material2.wireframe = true;
+
         shape = new THREE.Mesh(geometry, material);
         shape2 = new THREE.Mesh(geometry, material2);
+        
         scene.add(shape);
         scene.add(shape2);
 
@@ -193,6 +195,16 @@ import * as Perlin from "perlin";
         });
     }
 
+    // function getScroll() {
+    //     if (window.pageYOffset != undefined) {
+    //         return (pageYOffset) / (docheight - window.innerHeight);
+    //     }
+    //     else {
+    //         let sx, sy, d = document, r = d.documentElement, b = d.body;
+    //         sy = r.scrollTop || b.scrollTop || 0;
+    //         return (sy) / (docheight - window.innerHeight);
+    //     }
+    // }
 
     function getScroll() {
         var o = content.scrollTop;
@@ -213,9 +225,10 @@ import * as Perlin from "perlin";
     };
 
     function updateSceneColors(scroll) {
-        material.opacity = ((1 - sigmoid((scroll - 1) * 2) + .5) / .4 + .2);
-        // material.opacity = ((1 - scroll) + .2) / 1.2;
-        material2.opacity = (scroll - .1) / .9;
+
+        material.opacity = ((1 - sigmoid(scroll * 12 - 6))) * 1.5 + .1; // sigmoid
+        material2.opacity = (scroll - .1) / .9; // linear
+
         let bg = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, scroll);
         renderer.setClearColor(bg);
         if (scroll == 1 || scroll == 0)

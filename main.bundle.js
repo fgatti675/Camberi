@@ -97,6 +97,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     const MATERIAL_COLOR_FROM = COLORS[4],
         MATERIAL_COLOR_TO = COLORS[5],
+        LIGHT_1_COLOR_BASE = COLORS[6],
         LIGHT_2_COLOR_FROM = COLORS[0],
         LIGHT_2_COLOR_TO = COLORS[1],
         LIGHT_3_COLOR_FROM = COLORS[2],
@@ -147,10 +148,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         renderer.setSize(width, height);
 
         scene = new __WEBPACK_IMPORTED_MODULE_0_three__["h" /* Scene */]();
+
         camera = new __WEBPACK_IMPORTED_MODULE_0_three__["g" /* OrthographicCamera */](width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
+        // camera = new THREE.PerspectiveCamera(60, width / height, 1, 1000);
         camera.position.set(360, 0, 400);
-        // const camera = new THREE.PerspectiveCamera(50, width / height, 1, 1000);
-        // camera.position.set(360, 0, 400);
 
         // const plane = new THREE.Mesh(
         //     new THREE.PlaneGeometry(10000, 10000),
@@ -161,7 +162,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         // scene.add(plane);
 
-        light = new __WEBPACK_IMPORTED_MODULE_0_three__["d" /* HemisphereLight */](WHITE, PURPLE, .4);
+        light = new __WEBPACK_IMPORTED_MODULE_0_three__["d" /* HemisphereLight */](WHITE, LIGHT_1_COLOR_BASE, .4);
         light.position.set(500, 500, 0);
         scene.add(light);
 
@@ -173,7 +174,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         light3.position.set(-500, 0, 300);
         scene.add(light3);
 
-        // const geometry = new THREE.IcosahedronGeometry(120, 3);
+        // geometry = new THREE.IcosahedronGeometry(120, 4);
         geometry = new __WEBPACK_IMPORTED_MODULE_0_three__["c" /* DodecahedronGeometry */](120, 4);
 
         geometry.vertices.forEach(vector => {
@@ -189,7 +190,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             emissive: MATERIAL_COLOR_FROM,
             emissiveIntensity: 0.3,
             transparent: true,
-            // wireframe: Math.random()> .7,
             flatShading: Math.random() > .7,
             shininess: 0
         });
@@ -197,8 +197,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         material2 = material.clone();
         material2.flatShading = false;
         material2.wireframe = true;
+
         shape = new __WEBPACK_IMPORTED_MODULE_0_three__["e" /* Mesh */](geometry, material);
         shape2 = new __WEBPACK_IMPORTED_MODULE_0_three__["e" /* Mesh */](geometry, material2);
+        
         scene.add(shape);
         scene.add(shape2);
 
@@ -269,6 +271,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         });
     }
 
+    // function getScroll() {
+    //     if (window.pageYOffset != undefined) {
+    //         return (pageYOffset) / (docheight - window.innerHeight);
+    //     }
+    //     else {
+    //         let sx, sy, d = document, r = d.documentElement, b = d.body;
+    //         sy = r.scrollTop || b.scrollTop || 0;
+    //         return (sy) / (docheight - window.innerHeight);
+    //     }
+    // }
 
     function getScroll() {
         var o = content.scrollTop;
@@ -289,9 +301,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     };
 
     function updateSceneColors(scroll) {
-        material.opacity = ((1 - sigmoid((scroll - 1) * 2) + .5) / .4 + .2);
-        // material.opacity = ((1 - scroll) + .2) / 1.2;
-        material2.opacity = (scroll - .1) / .9;
+
+        material.opacity = ((1 - sigmoid(scroll * 12 - 6))) * 1.5 + .1; // sigmoid
+        material2.opacity = (scroll - .1) / .9; // linear
+
         let bg = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, scroll);
         renderer.setClearColor(bg);
         if (scroll == 1 || scroll == 0)

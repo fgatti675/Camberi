@@ -26,10 +26,14 @@
 <body>
 	<header>
 		<svg width="48px" height="48px" viewBox="0 0 569 541" version="1.1" fill-rule="evenodd">
-			<path d="M504.759368,318.771669 C482.726661,-77.040243 -24.7540242,13.4566495 59.4106359,274.394665 C102.703695,408.617331 518.195977,560.156905 504.759368,318.771669 Z M313.133746,203.444605 C332.463713,203.444605 348.133746,187.774571 348.133746,168.444605 C348.133746,149.114638 332.463713,133.444605 313.133746,133.444605 C293.80378,133.444605 278.133746,149.114638 278.133746,168.444605 C278.133746,187.774571 293.80378,203.444605 313.133746,203.444605 Z"
-			 id="Combined-Shape" fill="#FFFFFF"></path>
+			<a href="#home">
+				<path d="M504.759368,318.771669 C482.726661,-77.040243 -24.7540242,13.4566495 59.4106359,274.394665 C102.703695,408.617331 518.195977,560.156905 504.759368,318.771669 Z M313.133746,203.444605 C332.463713,203.444605 348.133746,187.774571 348.133746,168.444605 C348.133746,149.114638 332.463713,133.444605 313.133746,133.444605 C293.80378,133.444605 278.133746,149.114638 278.133746,168.444605 C278.133746,187.774571 293.80378,203.444605 313.133746,203.444605 Z"
+				 id="Combined-Shape" fill="#FFFFFF"></path>
+			</a>
 		</svg>
-		<div class="logo">Camberí</div>
+		<div class="logo">
+			<a href="#home">Camberí</a>
+		</div>
 	</header>
 
 	<nav>
@@ -40,44 +44,66 @@
 	<canvas class="scene scene--full" id="scene"></canvas>
 	<main>
 		<div class="content">
-			<div class="content__page">
+
+			<div class="content__page" id="home">
 				<h1 class="content__intro">We will blow your mind.</h1>
 			</div>
+
 			<div class="content__page">
-				<h2 class="content__title content__header">UX</h2>
-				<p class="content__body content__item">We care about user experience as much as you do.</p>
+				<h2 class="title content__header">Build something great</h2>
+				<div class="content__body ">
+					<p>We offer a
+						<b>strategic offering</b> that brings together creativity, technology, company and user objectives, data-driven insights
+						and culture.</p>
+					<p>We love what we do.</p>
+					<p>We are creative. We are passionate.</p>
+				</div>
 			</div>
+
 			<div class="content__page">
-				<h2 class="content__title content__header">Product design</h2>
-				<p class="content__body content__item">You would like to create a profitable user-centric product. We will leverage our deep industry know-how and modern design
-					methodologies to help you.</p>
+				<h2 class="title content__header">User first</h2>
+				<div class="content__body ">
+					<p>We care about
+						<b>user experience</b> as much as you do. </p>
+					<p>We feel the interaction between users and products as a
+						<b>form of art</b>. We deliver products of the highest quality that your customers will just love.</p>
+				</div>
 			</div>
+
 			<div class="content__page">
-				<h2 class="content__title content__header">Product engineering</h2>
-				<p class="content__body content__item">You would like to develop excellent and innovative software solutions, but lack the inhouse development capacities. With
-					more than 1,200 developers, we can help you to realize your plans in a scalable and agile environment by leveraging
-					the latest and best fitting technologies. We are highly flexible in the setup of our collaboration and will evaluate
-					the way that works best for you.</p>
+				<h2 class="title content__header">Cutting edge</h2>
+				<div class="content__body ">
+					<p>The technologic landscape is
+						<b>fascinating</b> and ever-evolving.</p>
+					<p> We develop the highest quality sites and web applications., using the latest frameworks such as
+						<b>React</b>,
+						<b>Angular</b> or
+						<b>Vue</b>. Full fledged, amazing backend awesomeness included as well, of course.
+					</p>
+					<p> Do you need
+						<b>native apps</b>? Or maybe you preffer a single code base using
+						<b>React Native</b> or
+						<b>Flutter</b>? We got you!</p>
+				</div>
 			</div>
-			<div class="content__page">
-				<h2 class="content__title content__header">Quality and security</h2>
-				<p class="content__body content__item">You would like to deliver secure products of the highest quality that offer the highest performance for your customer.
-					Nowadays not an easy task, but we are happy to help and be your partner.</p>
-			</div>
-			<div class="content__page">
-				<h2 class="content__title content__header">Maintenance &amp; support</h2>
-				<p class="content__body content__item">You want perfection after the release date because software is a living product in a fast changing environment. We will
-					take care of your applications, keep them up to date and develop them further. We are your high quality point of contact
-					for assistance 24 hours a day, seven days a week.</p>
-			</div>
-			<div class="content__page" id="contact">
-				<h2 class="content__title content__header">Contact</h2>
-				<p class="content__body content__item">Get in touch! :)</p>
+			<div class="content__page " id="contact">
+				<div class="bg"></div>
+				<div class="content__body text_dark">
+					<p>Do you have an awesome project you want to take to the next level? You have come to the
+						<b>right place!</b>
+					</p>
+					<p>Let's
+						<b>build</b> something great together!
+					</p>
+					<p class="text_dark title">hello@camberi.com</p>
+				</div>
+
 			</div>
 		</div>
 	</main>
 
 	<script src="main.bundle.js"></script>
+
 </body>
 
 </html>
