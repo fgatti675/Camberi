@@ -34,6 +34,7 @@ import * as Perlin from "perlin";
 
     const canvas = document.querySelector('#scene');
     const content = document.querySelector('.content');
+    const pages = document.getElementsByClassName("content__page");
 
     const docheight = Math.max(document.body.scrollHeight,
         document.body.offsetHeight,
@@ -73,8 +74,8 @@ import * as Perlin from "perlin";
 
         scene = new THREE.Scene();
 
-        // camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
-        camera = new THREE.PerspectiveCamera(60, width / height, 1, 1000);
+        camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
+        // camera = new THREE.PerspectiveCamera(60, width / height, 1, 1000);
         camera.position.set(360, 0, 400);
 
 
@@ -177,8 +178,7 @@ import * as Perlin from "perlin";
 
     function updateVertices(time) {
 
-        var s = sigmoid((scrollTween.y - .7) * 24 - 6);
-        console.log(s);
+        var s = sigmoid((scrollTween.y - .7) * 24 - 6) * .8;
         var scale = 1 + s;
         shape.scale.set(scale, scale, scale);
         shape2.scale.set(scale, scale, scale);
@@ -237,6 +237,7 @@ import * as Perlin from "perlin";
         return (o) / (h - i);
     }
 
+    let isScrolling;
     function onScroll(evt) {
         const scroll = getScroll();
         TweenMax.to(scrollTween,
@@ -246,7 +247,33 @@ import * as Perlin from "perlin";
                 ease: Power3.easeOut
             });
         updateSceneMaterials(scroll);
+        
+        clearTimeout( isScrolling );
+        isScrolling = setTimeout(function() {
+            updateURL();
+        }, 66);
+
+        // for(var page in pages){
+        //     console.log(page.id + ": " + page.offsetTop + ": " + page.offsetHeight);
+        // }
+
     };
+
+    function updateURL() {
+
+        var c = content.scrollTop - height/2;
+        for (var i = 0; i < pages.length; i++) {
+            var page = pages[i];
+            if (c <= page.offsetTop) {
+                history.replaceState( {} , 'Camberi', '#' + page.id );
+
+                // history.replaceState(page.id);
+                // window.location.hash = page.id;
+                break;
+            }
+            // console.log(page.id + ": " + page.offsetTop + ": " + page.offsetHeight + ": " + content.scrollTop);
+        }
+    }
 
     function updateSceneMaterials(scroll) {
 
