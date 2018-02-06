@@ -94,6 +94,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     const COLORS = [RED, STRONG_BLUE, DARKENED_GREEN, ORANGE, PURPLE, PINK, GREEN];
     shuffle(COLORS);
+    console.log(COLORS);
 
     const MATERIAL_COLOR_FROM = COLORS[4],
         MATERIAL_COLOR_TO = COLORS[5],
@@ -323,9 +324,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 ease: Power3.easeOut
             });
         updateSceneMaterials(scroll);
-        
-        clearTimeout( isScrolling );
-        isScrolling = setTimeout(function() {
+
+        clearTimeout(isScrolling);
+        isScrolling = setTimeout(function () {
             updateURL();
         }, 66);
 
@@ -337,11 +338,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     function updateURL() {
 
-        var c = content.scrollTop - height/2;
+        var c = content.scrollTop - height / 2;
         for (var i = 0; i < pages.length; i++) {
             var page = pages[i];
             if (c <= page.offsetTop) {
-                history.replaceState( {} , 'Camberi', '#' + page.id );
+                history.replaceState({}, 'Camberi', '#' + page.id);
 
                 // history.replaceState(page.id);
                 // window.location.hash = page.id;
