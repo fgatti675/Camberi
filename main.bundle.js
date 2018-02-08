@@ -81,6 +81,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 (function () {
 
+    const BASE_SCALE = 1.4;
+
     const WHITE = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xFFFFFF),
         RED = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xFF0000),
         GREEN = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0x09CAA1),
@@ -110,8 +112,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, .7, .6);
 
     const canvas = document.querySelector('#scene');
-    const content = document.querySelector('.content');
-    const pages = document.getElementsByClassName("content__page");
+    const content = document.querySelector('main');
+    const pages = document.getElementsByClassName('page');
 
     const docheight = Math.max(document.body.scrollHeight,
         document.body.offsetHeight,
@@ -129,6 +131,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         height = canvas.offsetHeight;
 
     let renderer, shape, shape2, shape3, geometry, material, material2, material3, scene, camera, light, light2, light3;
+
+    let onScrollEnd;
 
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMouseMove);
@@ -153,7 +157,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         camera = new __WEBPACK_IMPORTED_MODULE_0_three__["g" /* OrthographicCamera */](width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
         // camera = new THREE.PerspectiveCamera(60, width / height, 1, 1000);
-        camera.position.set(360, 0, 400);
+        camera.position.set(0, -200, 800);
 
 
         light = new __WEBPACK_IMPORTED_MODULE_0_three__["d" /* HemisphereLight */](WHITE, LIGHT_1_COLOR_BASE, .4);
@@ -255,8 +259,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     function updateVertices(time) {
 
-        var s = sigmoid((scrollTween.y - .7) * 24 - 6) * .8;
-        var scale = 1 + s;
+        var s = sigmoid((scrollTween.y - .7) * 24 - 6) * .4;
+        var scale = BASE_SCALE + s;
         shape.scale.set(scale, scale, scale);
         shape2.scale.set(scale, scale, scale);
         shape3.scale.set(scale, scale, scale);
@@ -264,8 +268,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         // const ratio = (sigmoid((scrollTween.y - .5) * 10));
         const ratio = (sinoid(scrollTween.y, 2));
 
-        let posX = (mouse.x) * 50;
-        let posY = -(mouse.y) * 50;
+        let posX = (mouse.x - .5) * 50;
+        let posY = -(mouse.y - .5) * 50;
 
         shape.position.x = posX;
         shape.position.y = posY;
@@ -280,7 +284,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         shape2.rotation.x = rotation;
         shape3.rotation.x = rotation;
 
-        geometry.vertices.forEach(vector => {
+        for (var i = 0; i < geometry.vertices.length; i++) {
+            let vector = geometry.vertices[i];
 
             vector.copy(vector._original);
 
@@ -293,7 +298,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     v2 = getBlobScalar(vector, time);
 
             vector.multiplyScalar((1 - ratio) * v1 + ratio * v2 + 1);
-        });
+        };
     }
 
     // function getScroll() {
@@ -314,24 +319,51 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return (o) / (h - i);
     }
 
-    let isScrolling;
     function onScroll(evt) {
+
         const scroll = getScroll();
+
         __WEBPACK_IMPORTED_MODULE_1_gsap__["TweenMax"].to(scrollTween,
             5,
             {
                 y: scroll,
                 ease: Power3.easeOut
             });
+
         updateSceneMaterials(scroll);
 
-        clearTimeout(isScrolling);
-        isScrolling = setTimeout(function () {
+        clearTimeout(onScrollEnd);
+        onScrollEnd = setTimeout(function () {
             updateURL();
         }, 66);
 
-        // for(var page in pages){
-        //     console.log(page.id + ": " + page.offsetTop + ": " + page.offsetHeight);
+
+        // var a = content.scrollTop % height;
+        // var b = a < height / 2 ? a : (height - a);
+        // // var s = sigmoid(content.scrollTop, height);
+        // var t = b;
+
+        // // console.log(s  + " : " +t);
+
+        // for (var i = 0; i < pages.length; i++) {
+
+        //     var page = pages[i];
+
+        //     // page.style.transform = "translate3d(0px, " + t + "px, 0px)";
+        //     page.childNodes.forEach(child => {
+        //         if (child.style) {
+        //             // if (a < height / 2) child.style.position = "relative";
+        //             // else child.style.position = "fixed";
+        //             // child.style.top =   t + "px";
+        //         }
+        //     });
+
+        //     // if (c < height / 2) {
+        //     // page.style.transform = "translateY(" + content.scrollTop + "px)";
+        //     // } else {
+        //     //     page.style.transform = "translateY(" + -t + "px)";
+        //     // }
+        //     // console.log(page.id + ": " + c + ": " + page.offsetTop + ": " + page.offsetHeight);
         // }
 
     };
@@ -343,12 +375,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var page = pages[i];
             if (c <= page.offsetTop) {
                 history.replaceState({}, 'Camberi', '#' + page.id);
-
-                // history.replaceState(page.id);
-                // window.location.hash = page.id;
                 break;
             }
-            // console.log(page.id + ": " + page.offsetTop + ": " + page.offsetHeight + ": " + content.scrollTop);
         }
     }
 
@@ -364,9 +392,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         material3.opacity = o3;
 
         let bg = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, scroll);
-        renderer.setClearColor(bg);
-        if (scroll == 1 || scroll == 0)
-            document.body.style.backgroundColor = bg.getStyle();
+        // renderer.setClearColor(bg);
+        // if (scroll == 1 || scroll == 0)
+        document.body.style.backgroundColor = bg.getStyle();
         material.emissive.set(MATERIAL_COLOR_FROM.clone().lerp(MATERIAL_COLOR_TO, scroll));
         light2.color.set(LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_TO, scroll));
         light3.color.set(LIGHT_3_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_TO, scroll));

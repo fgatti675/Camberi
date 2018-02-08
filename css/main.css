@@ -69,7 +69,7 @@ svg path {
         transform: none;
     }
     50% {
-        transform: translateY(100px) scaleY(0) ;
+        transform: translateY(100px) scaleY(0);
     }
     100% {
         transform: none;
@@ -79,6 +79,22 @@ svg path {
 header:hover svg #oval {
     animation-name: blink;
     animation-duration: 1s;
+}
+
+.page_intro{
+    position: relative;
+    height: 100vh;
+}
+.page_intro *{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate3d(-50%,-50%,0);
+}
+
+.page_contact{
+    position: relative;
+    height: 100vh;
 }
 
 .logo {
@@ -167,8 +183,13 @@ nav {
 }
 
 .scene--full {
-    width: 100vw;
+    display: block;
+    width: 70vw;
     height: 100vh;
+    margin: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate3d(-50%,-50%,0);
 }
 
 body {
@@ -179,9 +200,10 @@ body {
     --color-cta: white;
 }
 
-.content {
+main {
     position: absolute;
     height: 100vh;
+    width: 100vw;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-scroll-snap-type: mandatory;
@@ -192,42 +214,43 @@ body {
     scroll-behavior: smooth;
 }
 
-.content__page {
+header{
+    display: block;
+    height: 100vh;
+}
+
+.sticky {
     -webkit-scroll-snap-coordinate: 0% 0%;
     -ms-scroll-snap-coordinate: 0% 0%;
     scroll-snap-coordinate: 0% 0%;
-    width: 100vw;
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 3fr 3fr 1fr;
-    grid-template-rows: 2fr 1fr 1fr 1fr 4fr 2fr;
-    align-items: center;
+    height: 200vh;
 }
 
-.title {
-    font-size: 3em;
-    font-weight: 700;
-    color: var(--color-title);
-    /* letter-spacing: 0.1em; */
+.sticky .page_content {
+    position: -webkit-sticky;
+    position: sticky;
+    height: 50vh;
+    /* margin-right: 10vw; */
+    /* float: right; */
+    width: 40vw;
+    top: 60vh;
+    padding-bottom: 40vh;
+    margin: auto;
 }
+
 
 .text_dark {
     color: var(--color-text-dark) !important;
 }
 
-.content__header {
+h2 {
     margin-bottom: 1rem;
-    align-self: end;
-    grid-column-start: 3;
-    grid-row-start: 3;
-    grid-row-end: 5;
+    font-size: 3em;
+    font-weight: 700;
+    color: var(--color-title);
 }
 
-.content__intro {
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 2;
-    grid-row-end: 6;
+h1 {
     font-size: 7vw;
     color: var(--color-title);
     text-align: center;
@@ -240,38 +263,21 @@ body {
     color: var(--color-text);
     letter-spacing: 0.05em;
     align-self: start;
-    grid-column-start: 3;
-    grid-row-start: 5;
 }
 
-.content__icon {
-    align-self: start;
-    grid-column-start: 3;
-    grid-row-start: 3;
-}
-
-.content__icon * {
-    width: 4rem;
-    height: 4rem;
-    margin: auto;
-}
-
-#contact .content__body {
+.page_contact .content__body {
+    position: absolute;
+    bottom: 0;
     padding: 2rem;
     background: white;
-    grid-row-start: 2;
-    grid-row-end: 6;
-    grid-column-start: 2;
-    grid-column-end: 4;
     width: 100%;
-    align-self: center;
 }
 
-#contact .content__body .title {
+.page_contact .content__body h2{
     margin-bottom: 2rem;
 }
 
-#contact .content__body * {
+.page_contact .content__body * {
     margin-top: 2rem;
     text-align: center;
     max-width: 30em;
@@ -279,42 +285,33 @@ body {
     margin-right: auto;
 }
 
-.bg {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    /* z-index: -1; */
-    /* background: darkgrey;
-	mix-blend-mode: saturation; */
-    background: cornsilk;
-    mix-blend-mode: hue;
-}
-
 @media screen and (max-width: 55em) {
+    
     header p {
         display: none;
     }
-    #contact .content__body {
-        grid-column-start: 1;
-        grid-column-end: 5;
+
+    h2 {
+        font-size: 2.5em;
     }
-    .content__page {
-        grid-template-columns: 1fr 1fr 7fr 1fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr 5fr 1fr;
+
+    .page_content {
+        width: 80vw;
     }
     .content--fixed {
         background: #acb2b9;
     }
-    .content__intro {
+    h1 {
         font-size: 3em;
-    }
-    .title {
-        font-size: 2.5em;
     }
     .content__body {
         background: rgba(0%, 0%, 0%, 0.15);
         padding: 2rem;
         font-size: 0.85em;
+    }
+    .scene--full {
+        width: 100vw;
+        height: 100vh;
     }
     .cta {
         padding: .8rem 1.6rem;

@@ -51,33 +51,18 @@
 		<a href="#contact">Journal</a> -->
 		<a href="#contact" class="cta contact">Contact</a>
 	</nav>
+
 	<canvas class="scene scene--full" id="scene"></canvas>
+
 	<main>
-		<div class="content">
 
-			<div class="content__page" id="home">
-				<h1 class="content__intro">We will blow your mind.</h1>
-			</div>
+		<div class="page page_intro">
+			<h1>We will blow your mind.</h1>
+		</div>
 
-			<div class="content__page" id="build">
-				<h2 class="title content__header">Let's build.</h2>
-				<div class="content__icon">
-					<?xml version="1.0" encoding="UTF-8"?>
-					<svg viewBox="0 0 32 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-						<g fill="none" transform="translate(-1.000000, -2.000000)">
-							<g transform="translate(2.000000, 3.000000)" stroke="#FFFFFF" stroke-width="1">
-								<path d="M1.77635684e-15,30.3726398 C8.29819181e-16,31.2555001 0.715699687,31.9711998 1.59855999,31.9711998 L17.5841599,31.9711998 C18.4670202,31.9711998 19.1827199,31.2555001 19.1827199,30.3726398 L19.1827199,25.5769599 L1.77635684e-15,25.5769599 L1.77635684e-15,30.3726398 Z M19.1827199,1.59855999 C19.1827199,0.715699687 18.4670202,1.6564409e-15 17.5841599,0 L1.59855999,0 C0.715699687,0 0,0.715699687 0,1.59855999 L0,4.26282664 L19.1827199,4.26282664 L19.1827199,1.59855999 Z M19.1827199,25.5769599 L19.1827199,4.26282664 L19.1827199,25.5769599 Z M1.77635684e-15,4.26282664 L1.77635684e-15,25.5769599 L1.77635684e-15,4.26282664 Z M9.59135995,29.8397865 C9.00278641,29.8397865 8.52565329,29.3626534 8.52565329,28.7740799 C8.52565329,28.1855063 9.00278641,27.7083732 9.59135995,27.7083732 C10.1799335,27.7083732 10.6570666,28.1855063 10.6570666,28.7740799 C10.6570666,29.3626534 10.1799335,29.8397865 9.59135995,29.8397865 Z"
-								 id="Shape"></path>
-							</g>
-						</g>
-					</svg>
-					<svg viewBox="0 0 32 32" enable-background="new 0 0 32 32">
-						<g>
-							<path fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1" d="M2.5,22.146h9v5.046H7.042v3.162h17.915v-3.162H20.5v-5.046h9c1.1,0,2-0.9,2-2v-16c0-1.1-0.9-2-2-2h-27c-1.1,0-2,0.9-2,2   v16C0.5,21.246,1.4,22.146,2.5,22.146z M24.458,29.854H7.542v-2.162h16.915V29.854z M20,27.192h-8v-5.046h8V27.192z M1,4.146   c0-0.827,0.673-1.5,1.5-1.5h27c0.827,0,1.5,0.673,1.5,1.5v16c0,0.827-0.673,1.5-1.5,1.5h-27c-0.827,0-1.5-0.673-1.5-1.5V4.146z"
-							/>
-						</g>
-					</svg>
-				</div>
+		<div class="page sticky" id="build">
+			<div class="page_content">
+				<h2 >Let's create.</h2>
 				<div class="content__body ">
 					<p>We offer a
 						<b>strategic offering</b> that brings together creativity, technology, company and user objectives, data-driven insights
@@ -88,18 +73,11 @@
 						<b>passionate</b>.</p>
 				</div>
 			</div>
+		</div>
 
-			<div class="content__page" id="tech">
-				<h2 class="title content__header">Cutting-edge.</h2>
-				<div class="content__icon">
-					<svg viewBox="0 0 24 24">
-						<g fill="#FFFFFF">
-							<polygon points="2,4.8 9.6,16.6 14.6,11.6 5,2  " />
-							<path d="M21.7,18.7l-0.4-0.4L20,17l-4-4l-6,6l3,3l6.8-2.2l0,0l0.4,0.4c0.4,0.4,1.1,0.3,1.5-0.1v0C22.1,19.7,22.1,19.1,21.7,18.7z    M14,20l-1-1l3-3l2,2L14,20z"
-							/>
-						</g>
-					</svg>
-				</div>
+		<div class="page sticky" id="tech">
+			<div class="page_content">
+				<h2 >Cutting-edge.</h2>
 				<div class="content__body ">
 					<p>The technologic landscape is
 						<b>fascinating</b> and ever-evolving.</p>
@@ -114,25 +92,11 @@
 						<b>Flutter</b>? We got you!</p>
 				</div>
 			</div>
+		</div>
 
-			<div class="content__page" id="agile">
-				<h2 class="title content__header">We are Agile.</h2>
-				<div class="content__icon">
-					<svg viewBox="0 0 100 100" xml:space="preserve">
-						<g fill="#FFFFFF">
-							<path d="M95.676,82.768l-9.069-4.856l0.111,3.479H60.11c-1.842,1.242-3.789,2.325-5.832,3.24H86.82l0.113,3.562L95.676,82.768z"
-							/>
-							<path d="M63.491,74.224c3.263-3.263,5.824-7.063,7.614-11.294c1.854-4.381,2.793-9.035,2.793-13.832s-0.939-9.449-2.793-13.831   c-1.659-3.923-3.981-7.475-6.911-10.572l2.219-3.002l-0.778-0.089l-5.545-0.629l-3.899-0.443l1.031,2.365l2.994,6.881l0.082,0.188   l1.926-2.606c5.238,5.742,8.434,13.375,8.434,21.739c0,17.806-14.484,32.292-32.291,32.292c-6.641,0-12.819-2.016-17.957-5.466   l0.787,2.54l-2.592,0.172c1.864,1.248,3.844,2.319,5.93,3.201c4.381,1.854,9.035,2.793,13.831,2.793h3.296   c4.214-0.388,8.217-1.512,11.881-3.24h-0.335C57.036,79.631,60.491,77.225,63.491,74.224z"
-							/>
-							<path d="M11.968,76.067l4.332,0.492l2.325,0.265l0,0l0,0l-2.874-6.603l-0.969-2.226l-0.264-0.605l0,0l0,0l-1.372,1.854   c-4.424-5.526-7.072-12.533-7.072-20.147c0-17.806,14.485-32.292,32.292-32.292c5.801,0,11.249,1.538,15.958,4.227L53.62,18.89   l3.13-0.208c-1.454-0.88-2.974-1.655-4.553-2.323c-4.381-1.854-9.035-2.793-13.831-2.793c-4.796,0-9.45,0.939-13.831,2.793   c-4.231,1.79-8.032,4.351-11.294,7.614s-5.825,7.062-7.614,11.294c-1.854,4.382-2.793,9.035-2.793,13.831s0.939,9.451,2.793,13.832   c1.388,3.281,3.24,6.303,5.523,9.016l-0.51,0.689l-2.239,3.027l0.712,0.082l0.204,0.022L11.968,76.067z"
-							/>
-							<path d="M30.344,29.34c-2.645,1.073-5.018,2.648-7.053,4.683c-2.035,2.035-3.61,4.407-4.683,7.053   c-1.036,2.555-1.562,5.254-1.562,8.022c0,2.769,0.525,5.468,1.562,8.023c1.073,2.645,2.648,5.018,4.683,7.053   c2.035,2.034,4.408,3.609,7.053,4.682c1.981,0.805,4.049,1.301,6.168,1.483l0.411,2.742l0.433-0.344l3.033-2.415l1.365-1.085   l-2.077-0.817l-3.299-1.298l-0.369-0.146l0.205,1.369c-4.222-0.468-8.318-2.317-11.548-5.547c-7.555-7.555-7.555-19.846,0-27.401   c2.461-2.461,5.425-4.12,8.563-4.978l-1.208-0.609l1.241-1.417C32.271,28.638,31.298,28.954,30.344,29.34z"
-							/>
-							<path d="M46.388,68.855c2.645-1.072,5.018-2.647,7.052-4.682c2.036-2.035,3.611-4.408,4.684-7.054   c1.036-2.554,1.562-5.253,1.562-8.022c0-2.768-0.525-5.467-1.562-8.022c-1.072-2.645-2.647-5.018-4.684-7.053   c-2.034-2.035-4.407-3.61-7.052-4.683c-2.368-0.96-4.861-1.482-7.417-1.553l-0.332-2.215l-0.369,0.293l-2.62,2.085l-1.842,1.466   l1.44,0.567l4.19,1.649l0.114,0.044l-0.288-1.923c4.658,0.214,9.252,2.096,12.801,5.645c7.556,7.555,7.556,19.846,0,27.401   c-2.817,2.817-6.293,4.584-9.937,5.299l1.412,0.744l-1.026,1.172C43.835,69.754,45.13,69.367,46.388,68.855z"
-							/>
-						</g>
-					</svg>
-				</div>
+		<div class="page sticky" id="agile">
+			<div class="page_content">
+				<h2 >We are Agile.</h2>
 				<div class="content__body ">
 					<p>It is not just a buzzword for us. We know nothing else. Really. </p>
 					<p>We are all about
@@ -145,17 +109,11 @@
 						<b>communication</b> are fundamental concepts in the way we work.</p>
 				</div>
 			</div>
+		</div>
 
-			<div class="content__page" id="user">
-				<h2 class="title content__header">User goes first.</h2>
-				<div class="content__icon">
-					<svg width="32" height="32" viewBox="0 0 64 64" enable-background="new 0 0 64 64">
-						<g fill="#FFFFFF">
-							<path d="M53.627,14.521c-2.279-2.28-5.311-3.535-8.535-3.535s-6.256,1.255-8.536,3.535L32,19.078l-4.556-4.556   c-2.28-2.28-5.312-3.535-8.536-3.535c-3.224,0-6.255,1.255-8.535,3.535c-4.707,4.707-4.707,12.365,0,17.072l21.273,21.273   c0.094,0.094,0.221,0.146,0.354,0.146s0.26-0.053,0.354-0.146l21.273-21.273C58.333,26.886,58.333,19.228,53.627,14.521z    M52.92,30.887L32,51.807l-20.92-20.92c-4.317-4.317-4.317-11.341,0-15.658c2.091-2.091,4.871-3.242,7.828-3.242   c2.958,0,5.738,1.151,7.829,3.242l4.909,4.91c0.188,0.188,0.52,0.188,0.707,0l4.909-4.91c2.092-2.091,4.872-3.242,7.829-3.242   s5.737,1.151,7.828,3.242C57.236,19.545,57.236,26.569,52.92,30.887z"
-							/>
-						</g>
-					</svg>
-				</div>
+		<div class="page sticky" id="user">
+			<div class="page_content">
+				<h2 >User goes first.</h2>
 				<div class="content__body ">
 					<p>We care about
 						<b>user experience</b> as much as you do. </p>
@@ -163,20 +121,22 @@
 						<b>form of art</b>. We deliver products of the highest quality that your customers will just love.</p>
 				</div>
 			</div>
-
-			<div class="content__page" id="contact">
-				<div class="content__body text_dark">
-					<p>Do you have an awesome project you want to take to the next level? You are in the
-						<b>right place!</b>
-					</p>
-					<p>Let's
-						<b>build</b> something great together!
-					</p>
-					<p class="text_dark title">hello@camberi.com</p>
-				</div>
-			</div>
-
 		</div>
+
+		<div class="page page_contact" id="contact">
+			<!-- <div class="page_content"> -->
+			<div class="content__body text_dark">
+				<p>Do you have an awesome project you want to take to the next level? You are in the
+					<b>right place!</b>
+				</p>
+				<p>Let's
+					<b>build</b> something great together!
+				</p>
+				<h2 class="text_dark">hello@camberi.com</h2>
+			</div>
+			<!-- </div> -->
+		</div>
+
 	</main>
 
 	<script src="main.bundle.js"></script>
