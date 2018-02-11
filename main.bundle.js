@@ -79,9 +79,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+
 (function () {
 
-    const BASE_SCALE = 1.4;
+    const BASE_SCALE = 1,
+        MOUSE_LIGHT_DISTANCE_TO_CENTER = 600,
+        SHAPE_RADIUS = 160;
 
     const WHITE = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xFFFFFF),
         RED = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xFF0000),
@@ -94,7 +97,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         MAGENTA = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xC6A0C0),
         PINK = new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xCE70A5);
 
-    const COLORS = [RED, STRONG_BLUE, DARKENED_GREEN, ORANGE, PURPLE, PINK, GREEN];
+    // const COLORS = [RED, STRONG_BLUE, DARKENED_GREEN, ORANGE, PURPLE, PINK, GREEN];
+    const COLORS = [new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xff0066),
+    new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0x33cccc),
+    new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0x0066ff),
+    new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xcc33ff),
+    new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0xffff00),
+    new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0x66ff33),
+    new __WEBPACK_IMPORTED_MODULE_0_three__["a" /* Color */](0x00ffcc)];
     shuffle(COLORS);
     console.log(COLORS);
 
@@ -114,6 +124,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     const canvas = document.querySelector('#scene');
     const content = document.querySelector('main');
     const pages = document.getElementsByClassName('page');
+    const fadingPages = document.getElementsByClassName('fade-page');
 
     const docheight = Math.max(document.body.scrollHeight,
         document.body.offsetHeight,
@@ -121,7 +132,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         document.documentElement.scrollHeight,
         document.documentElement.offsetHeight);
 
-    const mouse = new __WEBPACK_IMPORTED_MODULE_0_three__["i" /* Vector2 */](0, 0);
+    let mouseProjection = new __WEBPACK_IMPORTED_MODULE_0_three__["k" /* Vector3 */](0, 0, 0);
+    const mouse = new __WEBPACK_IMPORTED_MODULE_0_three__["j" /* Vector2 */](0, 0);
 
     const scrollTween = {
         y: getScroll()
@@ -130,12 +142,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     let width = canvas.offsetWidth,
         height = canvas.offsetHeight;
 
-    let renderer, shape, shape2, shape3, geometry, material, material2, material3, scene, camera, light, light2, light3;
+    let renderer, shape, shape2, shape3, geometry, material, material2, material3, scene, camera, light, light2, light3, mouseLight;
 
     let onScrollEnd;
 
     window.addEventListener("resize", onResize);
-    window.addEventListener("mousemove", onMouseMove);
+    content.addEventListener("mousemove", onMouseMove);
     content.addEventListener("scroll", onScroll);
 
     initScene();
@@ -144,10 +156,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     function initScene() {
 
-        renderer = new __WEBPACK_IMPORTED_MODULE_0_three__["j" /* WebGLRenderer */]({
+        renderer = new __WEBPACK_IMPORTED_MODULE_0_three__["l" /* WebGLRenderer */]({
             alpha: true,
             canvas: canvas,
-            antialias: true
+            // antialias: true
         });
 
         renderer.setPixelRatio(window.devicePixelRatio);
@@ -160,25 +172,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         camera.position.set(0, -200, 800);
 
 
-        light = new __WEBPACK_IMPORTED_MODULE_0_three__["d" /* HemisphereLight */](WHITE, LIGHT_1_COLOR_BASE, .4);
-        light.position.set(500, 500, 0);
+        light = new __WEBPACK_IMPORTED_MODULE_0_three__["d" /* HemisphereLight */](WHITE, LIGHT_1_COLOR_BASE, .3);
+        light.position.set(300, 300, 0);
         scene.add(light);
 
-        light2 = new __WEBPACK_IMPORTED_MODULE_0_three__["b" /* DirectionalLight */](LIGHT_2_COLOR_FROM, .7);
-        light2.position.set(500, 0, 600);
+        light2 = new __WEBPACK_IMPORTED_MODULE_0_three__["b" /* DirectionalLight */](LIGHT_2_COLOR_FROM, .6);
+        light2.position.set(300, 0, 300);
         scene.add(light2);
 
-        light3 = new __WEBPACK_IMPORTED_MODULE_0_three__["b" /* DirectionalLight */](LIGHT_3_COLOR_FROM, .8);
-        light3.position.set(-500, 0, 300);
+        light3 = new __WEBPACK_IMPORTED_MODULE_0_three__["b" /* DirectionalLight */](LIGHT_3_COLOR_FROM, .6);
+        light3.position.set(-300, 0, 300);
         scene.add(light3);
 
-        // geometry = new THREE.IcosahedronGeometry(120, 4);
-        geometry = new __WEBPACK_IMPORTED_MODULE_0_three__["c" /* DodecahedronGeometry */](120, 4);
+        mouseLight = new __WEBPACK_IMPORTED_MODULE_0_three__["i" /* SpotLight */](RENDERER_CLEAR_COLOR_TO, .3);
+        mouseLight.angle = Math.PI / 4;
+        mouseLight.distance = 300;
+        mouseLight.position.set(0, 0, MOUSE_LIGHT_DISTANCE_TO_CENTER);
+        scene.add(mouseLight);
+
+        // geometry = new THREE.IcosahedronGeometry(SHAPE_RADIUS, 4);
+        geometry = new __WEBPACK_IMPORTED_MODULE_0_three__["c" /* DodecahedronGeometry */](SHAPE_RADIUS, 4);
 
         geometry.vertices.forEach(vector => {
             vector._original = vector.clone();
             vector.spikes = {
-                activated: Math.random() < .25,
+                activated: Math.random() < .2,
                 period: (Math.random() * 3 + 3) * 1000,
                 size: (Math.random() - 0.5) * 1.5 + 1
             }
@@ -203,6 +221,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         material2 = material.clone();
         material2.flatShading = true;
 
+        // material2 = new THREE.MeshToonMaterial({
+        //     emissive: MATERIAL_COLOR_FROM,
+        //     emissiveIntensity: 0.3,
+        //     transparent: true,
+        //     shininess: 0
+        // });
+
         material3 = material.clone();
         material3.wireframe = true;
 
@@ -224,6 +249,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return a;
     }
 
+
+    function getSphereScalar(scroll) {
+        return 1.5 - 1.5 * scroll;
+    }
+
     function getSpikeScalar(vector, time) {
         const spikes = vector.spikes;
         if (!spikes.activated) return .2;
@@ -233,10 +263,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     function getBlobScalar(vector, time) {
         const perlin = __WEBPACK_IMPORTED_MODULE_2_perlin__["noise"].simplex3(
-            (vector.x * 0.008) + (time * 0.0003),
-            (vector.y * 0.008) + (time * 0.0003),
-            (vector.z * 0.008) + (time * 0.0003)
+            (vector.x * 0.008) + (time * 0.0003) + (mouseProjection.x * 0.0003),
+            (vector.y * 0.008) + (time * 0.0003) + (mouseProjection.y * 0.0003),
+            (vector.z * 0.008) + (time * 0.0003) + (mouseProjection.z * 0.0003)
         );
+        // const perlin = Perlin.noise.simplex3(
+        //     (vector.x * 0.008) + (time * 0.0003),
+        //     (vector.y * 0.008) + (time * 0.0003),
+        //     (vector.z * 0.008) + (time * 0.0003)
+        // );
         const scalar = perlin + 1;
         return scalar;
     }
@@ -259,7 +294,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     function updateVertices(time) {
 
-        var s = sigmoid((scrollTween.y - .7) * 24 - 6) * .4;
+        var s = sigmoid((scrollTween.y - .6) * 24 - 6) * 1;
         var scale = BASE_SCALE + s;
         shape.scale.set(scale, scale, scale);
         shape2.scale.set(scale, scale, scale);
@@ -268,8 +303,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         // const ratio = (sigmoid((scrollTween.y - .5) * 10));
         const ratio = (sinoid(scrollTween.y, 2));
 
-        let posX = (mouse.x - .5) * 50;
-        let posY = -(mouse.y - .5) * 50;
+        let posX = (mouse.x) * 50;
+        let posY = (mouse.y) * 50;
 
         shape.position.x = posX;
         shape.position.y = posY;
@@ -284,20 +319,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         shape2.rotation.x = rotation;
         shape3.rotation.x = rotation;
 
+        // const MAGNET_DISTANCE = 50;
         for (var i = 0; i < geometry.vertices.length; i++) {
             let vector = geometry.vertices[i];
 
             vector.copy(vector._original);
 
+            // var d = vector.distanceTo(mouseProjection);
+            // var inverse = 1 / d;
+            // inverse = inverse * inverse * inverse * inverse;
+            // vector.multiplyScalar(inverse * 300000 + 1);
+
             let v1, v2;
             if (scrollTween.y < .5)
-                v1 = 1.3 - scrollTween.y,
+                v1 = getSphereScalar(scrollTween.y),
                     v2 = getBlobScalar(vector, time);
             else
                 v1 = getSpikeScalar(vector, time),
                     v2 = getBlobScalar(vector, time);
 
             vector.multiplyScalar((1 - ratio) * v1 + ratio * v2 + 1);
+
+
+            // console.log(d)
+            // }
         };
     }
 
@@ -335,38 +380,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         clearTimeout(onScrollEnd);
         onScrollEnd = setTimeout(function () {
             updateURL();
-        }, 66);
+        }, 17);
 
-
-        // var a = content.scrollTop % height;
-        // var b = a < height / 2 ? a : (height - a);
-        // // var s = sigmoid(content.scrollTop, height);
-        // var t = b;
-
-        // // console.log(s  + " : " +t);
-
-        // for (var i = 0; i < pages.length; i++) {
-
-        //     var page = pages[i];
-
-        //     // page.style.transform = "translate3d(0px, " + t + "px, 0px)";
-        //     page.childNodes.forEach(child => {
-        //         if (child.style) {
-        //             // if (a < height / 2) child.style.position = "relative";
-        //             // else child.style.position = "fixed";
-        //             // child.style.top =   t + "px";
-        //         }
-        //     });
-
-        //     // if (c < height / 2) {
-        //     // page.style.transform = "translateY(" + content.scrollTop + "px)";
-        //     // } else {
-        //     //     page.style.transform = "translateY(" + -t + "px)";
-        //     // }
-        //     // console.log(page.id + ": " + c + ": " + page.offsetTop + ": " + page.offsetHeight);
-        // }
+        fadePages();
 
     };
+
+    function fadePages() {
+        for (var i = 0; i < fadingPages.length; i++) {
+            var page = fadingPages[i];
+            let o = page.offsetTop - content.scrollTop;
+            if (o < -height) page.style.opacity = 0;
+            else if (o > 0) page.style.opacity = 1;
+            else page.style.opacity = (height + o) / height;
+        }
+    }
 
     function updateURL() {
 
@@ -374,7 +402,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         for (var i = 0; i < pages.length; i++) {
             var page = pages[i];
             if (c <= page.offsetTop) {
-                history.replaceState({}, 'Camberi', '#' + page.id);
+                history.replaceState({}, 'Camberí', '#' + page.id);
                 break;
             }
         }
@@ -393,21 +421,44 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         let bg = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, scroll);
         // renderer.setClearColor(bg);
-        // if (scroll == 1 || scroll == 0)
         document.body.style.backgroundColor = bg.getStyle();
+
         material.emissive.set(MATERIAL_COLOR_FROM.clone().lerp(MATERIAL_COLOR_TO, scroll));
         light2.color.set(LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_TO, scroll));
         light3.color.set(LIGHT_3_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_TO, scroll));
     }
 
     function onMouseMove(e) {
+
+        // e.preventDefault();
+
+        var ny = -(event.clientY / window.innerHeight) * 2 + 1;
+        var nx = (event.clientX / window.innerWidth) * 2 - 1;
+
+        mouseProjection = projectCanvasLocation(nx, ny);
+        updateMouseLight(mouseProjection);
+
+
         __WEBPACK_IMPORTED_MODULE_1_gsap__["TweenMax"].to(mouse,
-            1,
+            2,
             {
-                y: (e.clientY / height),
-                x: (e.clientX / width),
+                y: ny,
+                x: nx,
                 ease: Power1.easeOut
             });
+
+    }
+
+    function updateMouseLight(pos) {
+        mouseLight.position.copy(pos);
+        mouseLight.position.setLength(MOUSE_LIGHT_DISTANCE_TO_CENTER);
+    }
+
+    function projectCanvasLocation(x, y) {
+        var vector = new __WEBPACK_IMPORTED_MODULE_0_three__["k" /* Vector3 */](x, y, 0);
+        vector.unproject(camera);
+        vector.setLength(SHAPE_RADIUS + 40);
+        return vector;
     }
 
     function render(a) {
@@ -440,7 +491,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 "use strict";
 /* unused harmony export WebGLRenderTargetCube */
 /* unused harmony export WebGLRenderTarget */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return WebGLRenderer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return WebGLRenderer; });
 /* unused harmony export ShaderLib */
 /* unused harmony export UniformsLib */
 /* unused harmony export UniformsUtils */
@@ -486,7 +537,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* unused harmony export Cache */
 /* unused harmony export AudioLoader */
 /* unused harmony export SpotLightShadow */
-/* unused harmony export SpotLight */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return SpotLight; });
 /* unused harmony export PointLight */
 /* unused harmony export RectAreaLight */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return HemisphereLight; });
@@ -553,8 +604,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* unused harmony export Line3 */
 /* unused harmony export Euler */
 /* unused harmony export Vector4 */
-/* unused harmony export Vector3 */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return Vector2; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return Vector3; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return Vector2; });
 /* unused harmony export Quaternion */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Color; });
 /* unused harmony export ImmediateRenderObject */
