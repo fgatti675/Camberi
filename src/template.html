@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>Camberi</title>
+    <meta name="description" content="Camberi: Development and Creative agency" />
+    <meta name="keywords" content="web design, web development, app developemnt, android, ios, webgl, agency, 3d, cool, three.js, animation"/>
+    <meta name="author" content="Francesco Gatti" />
+    <meta name="author" content="Mattia Lorenzutti" />
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic+Coding" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://use.typekit.net/ujy0gmh.css">
+    <script>
+      document.documentElement.className = "js";  
+      var supportsCssVars = function () {
+        var e, t = document.createElement("style"); return t.innerHTML = "root: { --tmp-var: bold; }", document.head.appendChild(t), e = !!(window.CSS && window.CSS.supports && window.CSS.supports("font-weight", "var(--tmp-var)")), t.parentNode.removeChild(t), e
+      };
+      supportsCssVars() || alert("Please view this demo in a modern browser that supports CSS Variables.");
+      setTimeout(() => document.body.classList.add('render'), 60);
+    </script>
+  </head>
+  <body>
+    <%= require('html-loader!./partials/header.html') %>
+    <%= require('html-loader!./partials/nav.html') %>
+    <%= require('html-loader!./partials/canvas.html') %>
+    <%= require('html-loader!./partials/content.html') %>
+  </body>
+</html>
