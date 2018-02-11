@@ -11,6 +11,18 @@ const extractSass = new ExtractTextPlugin({
     disable: process.env.NODE_ENV === "development"
 })
 
+
+let bs = null
+if (process.env.TYPE === "browsersync"){
+ bs = new BrowserSyncPlugin({
+    // browse to http://localhost:3000/ during development,
+    // ./public directory is being served
+    host: 'localhost',
+    port: 3000,
+    server: { baseDir: ['dist'] }
+  })
+}
+
 module.exports = {
     entry: __dirname + '/src/index.js',
     output: {
@@ -40,12 +52,6 @@ module.exports = {
         new HtmlWebpackPlugin({
             template : __dirname + '/src/template.html'
         }),
-        new BrowserSyncPlugin({
-            // browse to http://localhost:3000/ during development,
-            // ./public directory is being served
-            host: 'localhost',
-            port: 3000,
-            server: { baseDir: ['dist'] }
-          })
-    ]
+        bs
+    ].filter(Boolean)
 };
