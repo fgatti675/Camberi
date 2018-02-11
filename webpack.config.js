@@ -3,6 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+
 
 const extractSass = new ExtractTextPlugin({
     filename: "[name].[contenthash].css",
@@ -37,6 +39,13 @@ module.exports = {
         ]),
         new HtmlWebpackPlugin({
             template : __dirname + '/src/template.html'
-        })
+        }),
+        new BrowserSyncPlugin({
+            // browse to http://localhost:3000/ during development,
+            // ./public directory is being served
+            host: 'localhost',
+            port: 3000,
+            server: { baseDir: ['dist'] }
+          })
     ]
 };
