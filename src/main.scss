@@ -306,14 +306,6 @@ h2 {
     margin-right: auto;
 }
 
-.glitch {
-    /* animation-name: glitch-anim-bg;
-    animation-duration: var(--time-anim);
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-delay: calc(var(--delay-anim) + var(--time-anim) * 0.2); */
-}
-
 .glitch:before {
     animation: glitchy 1.5s infinite;
     content: attr(data-text);
