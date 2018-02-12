@@ -7,7 +7,11 @@ import './main.scss';
 
 (function () {
 
-    const BASE_SCALE = 1,
+    const
+        AMBIENT_LIGHT_INTENSITY = .4,
+        DIRECTIONAL_LIGHT_INTENSITY = .7,
+        MOUSE_LIGHT_INTENSITY = .3,
+        BASE_SCALE = 1,
         MOUSE_LIGHT_DISTANCE_TO_CENTER = 600,
         SHAPE_RADIUS = 160;
 
@@ -22,14 +26,11 @@ import './main.scss';
         MAGENTA = new THREE.Color(0xC6A0C0),
         PINK = new THREE.Color(0xCE70A5);
 
-    // const COLORS = [RED, STRONG_BLUE, DARKENED_GREEN, ORANGE, PURPLE, PINK, GREEN];
-    const COLORS = [new THREE.Color(0xff0066),
-    new THREE.Color(0x33cccc),
-    new THREE.Color(0x0066ff),
-    new THREE.Color(0xcc33ff),
-    new THREE.Color(0xffff00),
-    new THREE.Color(0x66ff33),
-    new THREE.Color(0x00ffcc)];
+    const COLORS = [RED, STRONG_BLUE, DARKENED_GREEN, ORANGE, PURPLE, PINK, GREEN];
+    // COLORS.forEach(color => {
+    //     color.setHSL(color.getHSL().h, .9, .55);
+
+    // });
     shuffle(COLORS);
     console.log(COLORS);
 
@@ -57,7 +58,7 @@ import './main.scss';
         document.documentElement.scrollHeight,
         document.documentElement.offsetHeight);
 
-    let mouseProjection = new Vector3(0, 0, 0);
+    const mouseProjection = new Vector3(0, 0, 0);
     const mouse = new THREE.Vector2(0, 0);
 
     const scrollTween = {
@@ -84,7 +85,7 @@ import './main.scss';
         renderer = new THREE.WebGLRenderer({
             alpha: true,
             canvas: canvas,
-            // antialias: true
+            antialias: true
         });
 
         renderer.setPixelRatio(window.devicePixelRatio);
@@ -97,19 +98,19 @@ import './main.scss';
         camera.position.set(0, -200, 800);
 
 
-        light = new THREE.HemisphereLight(WHITE, LIGHT_1_COLOR_BASE, .3);
+        light = new THREE.HemisphereLight(WHITE, LIGHT_1_COLOR_BASE, AMBIENT_LIGHT_INTENSITY);
         light.position.set(300, 300, 0);
         scene.add(light);
 
-        light2 = new THREE.DirectionalLight(LIGHT_2_COLOR_FROM, .6);
-        light2.position.set(300, 0, 300);
+        light2 = new THREE.DirectionalLight(LIGHT_2_COLOR_FROM, DIRECTIONAL_LIGHT_INTENSITY);
+        light2.position.set(300, 0, 500);
         scene.add(light2);
 
-        light3 = new THREE.DirectionalLight(LIGHT_3_COLOR_FROM, .6);
-        light3.position.set(-300, 0, 300);
+        light3 = new THREE.DirectionalLight(LIGHT_3_COLOR_FROM, DIRECTIONAL_LIGHT_INTENSITY);
+        light3.position.set(-300, 0, 500);
         scene.add(light3);
 
-        mouseLight = new THREE.SpotLight(RENDERER_CLEAR_COLOR_TO, .3);
+        mouseLight = new THREE.SpotLight(RENDERER_CLEAR_COLOR_TO, MOUSE_LIGHT_INTENSITY);
         mouseLight.angle = Math.PI / 4;
         mouseLight.distance = 300;
         mouseLight.position.set(0, 0, MOUSE_LIGHT_DISTANCE_TO_CENTER);
@@ -202,9 +203,9 @@ import './main.scss';
     }
 
     // [0, 1]
-    function quadratic(t, offset) { // -4x^​2 +1
-        let x = t - offset;
-        return - 10 * x * x + 1;
+    function quadratic(s, offset) { // -10x^​2 +1
+        let x = s - offset;
+        return - 8 * x * x + 1;
     }
 
     // [-1, 1]
@@ -336,9 +337,10 @@ import './main.scss';
     function updateSceneMaterials(scroll) {
 
         var o1 = ((1 - sigmoid(scroll * 2 * 12 - 6))) * 100;
-        var o2 = quadratic(scroll, .65);
+        var o2 = quadratic(scroll, .7);
         var o3 = (scroll - .1) / .9;
         o3 = o3 * o3;
+        console.log(scroll + ": " + o2);
 
         material.opacity = o1;
         material2.opacity = o2;
@@ -360,7 +362,7 @@ import './main.scss';
         var ny = -(event.clientY / window.innerHeight) * 2 + 1;
         var nx = (event.clientX / window.innerWidth) * 2 - 1;
 
-        mouseProjection = projectCanvasLocation(nx, ny);
+        mouseProjection.copy(projectCanvasLocation(nx, ny));
         updateMouseLight(mouseProjection);
 
 
