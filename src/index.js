@@ -88,7 +88,7 @@ import './main.scss';
             antialias: true
         });
 
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
         renderer.setSize(width, height);
 
         scene = new THREE.Scene();
