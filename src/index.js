@@ -10,8 +10,9 @@ import './main.scss';
     const
         AMBIENT_LIGHT_INTENSITY = .4,
         DIRECTIONAL_LIGHT_INTENSITY = .7,
-        MOUSE_LIGHT_INTENSITY = .3,
+        MOUSE_LIGHT_INTENSITY = .5,
         BASE_SCALE = 1,
+        SCALE_INCREMENT = 1.7,
         MOUSE_LIGHT_DISTANCE_TO_CENTER = 600,
         SHAPE_RADIUS = 160;
 
@@ -44,8 +45,8 @@ import './main.scss';
         RENDERER_CLEAR_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5),
         RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5);
 
-    RENDERER_CLEAR_COLOR_FROM.setHSL(RENDERER_CLEAR_COLOR_FROM.getHSL().h, .7, .6);
-    RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, .7, .6);
+    RENDERER_CLEAR_COLOR_FROM.setHSL(RENDERER_CLEAR_COLOR_FROM.getHSL().h, 1, .6);
+    RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, 1, .6);
 
     const canvas = document.querySelector('#scene');
     const content = document.querySelector('main');
@@ -95,7 +96,7 @@ import './main.scss';
 
         camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
         // camera = new THREE.PerspectiveCamera(60, width / height, 1, 1000);
-        camera.position.set(0, -200, 800);
+        camera.position.set(0, -200, 1000);
 
 
         light = new THREE.HemisphereLight(WHITE, LIGHT_1_COLOR_BASE, AMBIENT_LIGHT_INTENSITY);
@@ -110,7 +111,7 @@ import './main.scss';
         light3.position.set(-300, 0, 500);
         scene.add(light3);
 
-        mouseLight = new THREE.SpotLight(RENDERER_CLEAR_COLOR_TO, MOUSE_LIGHT_INTENSITY);
+        mouseLight = new THREE.SpotLight(RENDERER_CLEAR_COLOR_FROM, MOUSE_LIGHT_INTENSITY);
         mouseLight.angle = Math.PI / 4;
         mouseLight.distance = 300;
         mouseLight.position.set(0, 0, MOUSE_LIGHT_DISTANCE_TO_CENTER);
@@ -122,7 +123,7 @@ import './main.scss';
         geometry.vertices.forEach(vector => {
             vector._original = vector.clone();
             vector.spikes = {
-                activated: Math.random() < .2,
+                activated: Math.random() < .3,
                 period: (Math.random() * 3 + 3) * 1000,
                 size: (Math.random() - 0.5) * 1.5 + 1
             }
@@ -187,18 +188,23 @@ import './main.scss';
         return scalar + 1.;
     }
 
-    function getBlobScalar(vector, time) {
+    function getBlobScalar(vector, time, mouseProjection) {
+
+        var i = 1 / vector.distanceTo(mouseProjection);
+        var value = i * i * 100;
+        // vector.multiplyScalar(value + 1);
+
         const perlin = Perlin.noise.simplex3(
-            (vector.x * 0.008) + (time * 0.0003) + (mouseProjection.x * 0.0003),
-            (vector.y * 0.008) + (time * 0.0003) + (mouseProjection.y * 0.0003),
-            (vector.z * 0.008) + (time * 0.0003) + (mouseProjection.z * 0.0003)
+            (vector.x * 0.008) + (time * 0.0003) + (value),
+            (vector.y * 0.008) + (time * 0.0003) + (value),
+            (vector.z * 0.008) + (time * 0.0003) + (value)
         );
         // const perlin = Perlin.noise.simplex3(
         //     (vector.x * 0.008) + (time * 0.0003),
         //     (vector.y * 0.008) + (time * 0.0003),
         //     (vector.z * 0.008) + (time * 0.0003)
         // );
-        const scalar = perlin + 1;
+        const scalar = perlin + value + 1;
         return scalar;
     }
 
@@ -220,7 +226,7 @@ import './main.scss';
 
     function updateVertices(time) {
 
-        var s = sigmoid((scrollTween.y - .6) * 24 - 6) * 1;
+        var s = sigmoid((scrollTween.y - .6) * 24 - 6) * SCALE_INCREMENT;
         var scale = BASE_SCALE + s;
         shape.scale.set(scale, scale, scale);
         shape2.scale.set(scale, scale, scale);
@@ -241,9 +247,9 @@ import './main.scss';
         shape3.position.y = posY;
         let rotation = (scrollTween.y) * Math.PI;
 
-        shape.rotation.x = rotation;
-        shape2.rotation.x = rotation;
-        shape3.rotation.x = rotation;
+        // shape.rotation.x = rotation;
+        // shape2.rotation.x = rotation;
+        // shape3.rotation.x = rotation;
 
         // const MAGNET_DISTANCE = 50;
         for (var i = 0; i < geometry.vertices.length; i++) {
@@ -259,10 +265,10 @@ import './main.scss';
             let v1, v2;
             if (scrollTween.y < .5)
                 v1 = getSphereScalar(scrollTween.y),
-                    v2 = getBlobScalar(vector, time);
+                    v2 = getBlobScalar(vector, time, mouseProjection);
             else
                 v1 = getSpikeScalar(vector, time),
-                    v2 = getBlobScalar(vector, time);
+                    v2 = getBlobScalar(vector, time, mouseProjection);
 
             vector.multiplyScalar((1 - ratio) * v1 + ratio * v2 + 1);
 
@@ -340,7 +346,7 @@ import './main.scss';
         var o2 = quadratic(scroll, .7);
         var o3 = (scroll - .1) / .9;
         o3 = o3 * o3;
-        console.log(scroll + ": " + o2);
+        // console.log(scroll + ": " + o2);
 
         material.opacity = o1;
         material2.opacity = o2;
@@ -367,7 +373,7 @@ import './main.scss';
 
 
         TweenMax.to(mouse,
-            2,
+            1,
             {
                 y: ny,
                 x: nx,
@@ -377,8 +383,19 @@ import './main.scss';
     }
 
     function updateMouseLight(pos) {
-        mouseLight.position.copy(pos);
-        mouseLight.position.setLength(MOUSE_LIGHT_DISTANCE_TO_CENTER);
+
+        let v = new THREE.Vector3();
+        v.copy(pos);
+        v.setLength(MOUSE_LIGHT_DISTANCE_TO_CENTER);
+        TweenMax.to(mouseLight.position,
+            .4,
+            {
+                y: v.y,
+                x: v.x,
+                z: v.z,
+                ease: Power1.easeOut
+            });
+
     }
 
     function projectCanvasLocation(x, y) {
