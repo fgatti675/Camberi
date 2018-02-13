@@ -13,7 +13,7 @@ import './main.scss';
         MOUSE_LIGHT_INTENSITY = .5,
         BASE_SCALE = 1,
         SCALE_INCREMENT = 1.7,
-        MOUSE_LIGHT_DISTANCE_TO_CENTER = 600,
+        MOUSE_LIGHT_DISTANCE_TO_CENTER = 650,
         SHAPE_RADIUS = 160;
 
     const WHITE = new THREE.Color(0xFFFFFF),
@@ -89,7 +89,7 @@ import './main.scss';
             antialias: true
         });
 
-        renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
+        renderer.setPixelRatio(window.devicePixelRatio > 1 ? 1.5 : 1);
         renderer.setSize(width, height);
 
         scene = new THREE.Scene();
