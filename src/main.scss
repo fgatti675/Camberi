@@ -10,7 +10,7 @@ html {
     /* margin: 0; */
 }
 
-body {   
+body {
     font-family: 'proxima-nova', Helvetica, Arial, sans-serif;
     margin: 0;
     background: #52D1DF;
@@ -234,12 +234,12 @@ main {
     top: 50vh;
 }
 
-.page.page_intro{
+.page.page_intro {
     height: 120vh;
 }
 
 .page.sticky {
-    height: 150vh;
+    height: 160vh;
 }
 
 .page.sticky:last-of-type {
@@ -251,7 +251,7 @@ main {
     position: sticky;
     height: 50vh;
     width: 50vw;
-    margin-bottom: 40vh;
+    margin-bottom: 20vh;
 }
 
 h1 {
@@ -291,7 +291,6 @@ h2 {
 .page_contact .content__body {
     padding: 4rem;
     background: white;
-    width: 100%;
 }
 
 .page_contact .content__body h2 {
@@ -450,7 +449,7 @@ h2 {
     .page_content {
         top: 30vh;
     }
-    
+
     .content--fixed {
         background: #acb2b9;
     }

@@ -9,7 +9,7 @@ import './main.scss';
 
     const
         AMBIENT_LIGHT_INTENSITY = .4,
-        DIRECTIONAL_LIGHT_INTENSITY = .7,
+        DIRECTIONAL_LIGHT_INTENSITY = .8,
         MOUSE_LIGHT_INTENSITY = .5,
         BASE_SCALE = 1,
         SCALE_INCREMENT = 1.7,
@@ -27,21 +27,39 @@ import './main.scss';
         MAGENTA = new THREE.Color(0xC6A0C0),
         PINK = new THREE.Color(0xCE70A5);
 
-    const COLORS = [RED, STRONG_BLUE, DARKENED_GREEN, ORANGE, PURPLE, PINK, GREEN];
+    ORANGE.string = "ORANGE";
+    PURPLE.string = "PURPLE";
+    STRONG_BLUE.string = "STRONG_BLUE";
+    DARKENED_GREEN.string = "DARKENED_GREEN";
+    RED.string = "RED";
+    PINK.string = "PINK";
+    GREEN.string = "GREEN";
+
+
+    // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, DARKENED_GREEN, RED, PINK, GREEN];
+    // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, PINK, RED, DARKENED_GREEN, GREEN];
+    // const COLORS = [ GREEN, STRONG_BLUE, PINK, RED, DARKENED_GREEN, ORANGE, PURPLE ];
+    const COLORS = [RED, PINK, PURPLE, STRONG_BLUE, DARKENED_GREEN, ORANGE, GREEN];
+
+    // shuffle(COLORS);
+
     // COLORS.forEach(color => {
     //     color.setHSL(color.getHSL().h, .9, .55);
-
     // });
-    shuffle(COLORS);
-    console.log(COLORS);
 
-    const MATERIAL_COLOR_FROM = COLORS[4],
-        MATERIAL_COLOR_TO = COLORS[5],
+    let colorString = "const COLORS = [ ";
+    colorString += COLORS.map(c => c.string).reduce((a, b) => a + ", " + b);
+    colorString += " ];";
+    console.log(colorString);
+
+    const
         LIGHT_1_COLOR_BASE = COLORS[6],
         LIGHT_2_COLOR_FROM = COLORS[0],
         LIGHT_2_COLOR_TO = COLORS[1],
         LIGHT_3_COLOR_FROM = COLORS[2],
         LIGHT_3_COLOR_TO = COLORS[3],
+        MATERIAL_COLOR_FROM = COLORS[4],
+        MATERIAL_COLOR_TO = COLORS[5],
         RENDERER_CLEAR_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5),
         RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5);
 
@@ -69,7 +87,14 @@ import './main.scss';
     let width = canvas.offsetWidth,
         height = canvas.offsetHeight;
 
-    let renderer, shape, shape2, shape3, geometry, material, material2, material3, scene, camera, light, light2, light3, mouseLight;
+    let renderer,
+        shape, shape2, shape3,
+        geometry,
+        grid,
+        material, material2, material3,
+        scene,
+        camera,
+        light, light2, light3, mouseLight;
 
     let onScrollEnd;
 
@@ -78,6 +103,7 @@ import './main.scss';
     content.addEventListener("scroll", onScroll);
 
     initScene();
+
     requestAnimationFrame(render);
     updateSceneMaterials(getScroll());
 
@@ -86,10 +112,10 @@ import './main.scss';
         renderer = new THREE.WebGLRenderer({
             alpha: true,
             canvas: canvas,
-            antialias: true
+            // antialias: true
         });
 
-        renderer.setPixelRatio(window.devicePixelRatio > 1 ? 1.5 : 1);
+        renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
         renderer.setSize(width, height);
 
         scene = new THREE.Scene();
@@ -131,7 +157,7 @@ import './main.scss';
 
         material = new THREE.MeshPhongMaterial({
             emissive: MATERIAL_COLOR_FROM,
-            emissiveIntensity: 0.3,
+            emissiveIntensity: 0.4,
             transparent: true,
             shininess: 0
         });
@@ -166,6 +192,41 @@ import './main.scss';
         scene.add(shape2);
         scene.add(shape3);
 
+        // var size = 1500, step = 100;
+
+        // var gridGeometry = new THREE.Geometry();
+
+        // for (var i = - size; i <= size; i += step) {
+
+        //     gridGeometry.vertices.push(new THREE.Vector3(- size, i, 0));
+        //     gridGeometry.vertices.push(new THREE.Vector3(size, i, 0));
+
+        // }
+        // grid = new THREE.LineSegments(gridGeometry, new THREE.LineDashedMaterial({ color: WHITE, dashSize: 2, gapSize: 75 }));
+        // gridGeometry.computeLineDistances();
+        // scene.add(grid);
+
+        var gridGeometry = new THREE.Geometry();
+        var size = 1500, step = 75;
+        for (var i = - size; i <= size; i += step) {
+            for (var j = - size; j <= size; j += step) {
+
+                var star = new THREE.Vector3(
+                    i,
+                    j,
+                    0);
+
+                gridGeometry.vertices.push(star);
+
+            }
+        }
+
+        var starsMaterial = new THREE.PointsMaterial({ color: WHITE, size: 3 });
+
+        grid = new THREE.Points(gridGeometry, starsMaterial);
+
+        scene.add(grid);
+
     }
 
     function shuffle(a) {
@@ -190,8 +251,8 @@ import './main.scss';
 
     function getBlobScalar(vector, time, mouseProjection) {
 
-        var i = 1 / vector.distanceTo(mouseProjection);
-        var value = i * i * 100;
+        var i = 1 / vector.distanceTo(mouseProjection) * 20;
+        var value = i * i;
         // vector.multiplyScalar(value + 1);
 
         const perlin = Perlin.noise.simplex3(
@@ -211,7 +272,7 @@ import './main.scss';
     // [0, 1]
     function quadratic(s, offset) { // -10x^​2 +1
         let x = s - offset;
-        return - 8 * x * x + 1;
+        return - 6 * x * x - 1 * x + 1;
     }
 
     // [-1, 1]
@@ -307,6 +368,7 @@ import './main.scss';
                 ease: Power3.easeOut
             });
 
+        updateGrid(scroll);
         updateSceneMaterials(scroll);
 
         clearTimeout(onScrollEnd);
@@ -318,13 +380,17 @@ import './main.scss';
 
     };
 
+    function updateGrid(scroll) {
+        grid.position.y = 1000 * scroll;
+        // grid.rotation.x = -Math.PI /10* scroll;
+    }
+
     function fadePages() {
         for (var i = 0; i < fadingPages.length; i++) {
             var page = fadingPages[i];
-            let o = page.offsetTop - content.scrollTop;
-            if (o < -height) page.style.opacity = 0;
-            else if (o > 0) page.style.opacity = 1;
-            else page.style.opacity = (height + o) / height;
+            let off = page.offsetTop - content.scrollTop;
+            let opacity = off < -height ? 0 : (off > 0 ? 1 : (height + off) / height);
+            page.style.opacity = opacity;
         }
     }
 
@@ -343,10 +409,14 @@ import './main.scss';
     function updateSceneMaterials(scroll) {
 
         var o1 = ((1 - sigmoid(scroll * 2 * 12 - 6))) * 100;
-        var o2 = quadratic(scroll, .7);
+        var o2 = quadratic(scroll, .8);
         var o3 = (scroll - .1) / .9;
         o3 = o3 * o3;
         // console.log(scroll + ": " + o2);
+
+        shape.visible = o1 > 0;
+        shape2.visible = o2 > 0;
+        shape3.visible = o3 > 0;
 
         material.opacity = o1;
         material2.opacity = o2;
