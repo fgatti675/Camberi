@@ -11,8 +11,11 @@ import './main.scss';
         AMBIENT_LIGHT_INTENSITY = .2,
         DIRECTIONAL_LIGHT_INTENSITY = .8,
         MOUSE_LIGHT_INTENSITY = .5,
-        BASE_SCALE = 1,
+        BASE_SCALE = 1.2,
+        CAMERA_Y_OFFSET = -300,
         SCALE_INCREMENT = 1.7,
+        COLOR_SATURATION = 1,
+        COLOR_LIGHTNESS = .6,
         MOUSE_LIGHT_DISTANCE_TO_CENTER = 650,
         SHAPE_RADIUS = 160;
 
@@ -39,13 +42,16 @@ import './main.scss';
     // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, DARKENED_GREEN, RED, PINK, GREEN];
     // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, PINK, RED, DARKENED_GREEN, GREEN];
     // const COLORS = [ GREEN, STRONG_BLUE, PINK, RED, DARKENED_GREEN, ORANGE, PURPLE ];
-    const COLORS = [RED, PINK, PURPLE, STRONG_BLUE, DARKENED_GREEN, ORANGE, GREEN];
+    // const COLORS = [RED, PINK, PURPLE, STRONG_BLUE, DARKENED_GREEN, ORANGE, GREEN];
+    // const COLORS = [ PINK, PURPLE, DARKENED_GREEN, GREEN, STRONG_BLUE, ORANGE, RED ];
+    // const COLORS = [ ORANGE, RED, PURPLE, STRONG_BLUE, DARKENED_GREEN, PINK, GREEN ];
+    const COLORS = [PINK, GREEN, ORANGE, RED, PURPLE, STRONG_BLUE, DARKENED_GREEN];
 
-    shuffle(COLORS);
+    // shuffle(COLORS);
 
-    // COLORS.forEach(color => {
-    //     color.setHSL(color.getHSL().h, .9, .55);
-    // });
+    COLORS.forEach(color => {
+        // color.setHSL(color.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
+    });
 
     let colorString = "const COLORS = [ ";
     colorString += COLORS.map(c => c.string).reduce((a, b) => a + ", " + b);
@@ -63,8 +69,8 @@ import './main.scss';
         RENDERER_CLEAR_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5),
         RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5);
 
-    RENDERER_CLEAR_COLOR_FROM.setHSL(RENDERER_CLEAR_COLOR_FROM.getHSL().h, 1, .6);
-    RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, 1, .6);
+    RENDERER_CLEAR_COLOR_FROM.setHSL(RENDERER_CLEAR_COLOR_FROM.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
+    RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
 
     const canvas = document.querySelector('#scene');
     const content = document.querySelector('main');
@@ -122,7 +128,7 @@ import './main.scss';
 
         camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
         // camera = new THREE.PerspectiveCamera(60, width / height, 1, 1000);
-        camera.position.set(0, -200, 1000);
+        camera.position.set(0, 0, 1000);
 
 
         light = new THREE.HemisphereLight(WHITE, LIGHT_1_COLOR_BASE, AMBIENT_LIGHT_INTENSITY);
@@ -182,39 +188,29 @@ import './main.scss';
         // });
 
         material3 = material.clone();
+        // material3 = new THREE.PointsMaterial({ color: WHITE, size: 10 })
+
         material3.wireframe = true;
 
         shape = new THREE.Mesh(geometry, material);
         shape2 = new THREE.Mesh(geometry, material2);
         shape3 = new THREE.Mesh(geometry, material3);
+        // shape3 = new THREE.Points(geometry, material3);
 
         scene.add(shape);
         scene.add(shape2);
         scene.add(shape3);
 
-        // var size = 1500, step = 100;
-
-        // var gridGeometry = new THREE.Geometry();
-
-        // for (var i = - size; i <= size; i += step) {
-
-        //     gridGeometry.vertices.push(new THREE.Vector3(- size, i, 0));
-        //     gridGeometry.vertices.push(new THREE.Vector3(size, i, 0));
-
-        // }
-        // grid = new THREE.LineSegments(gridGeometry, new THREE.LineDashedMaterial({ color: WHITE, dashSize: 2, gapSize: 75 }));
-        // gridGeometry.computeLineDistances();
-        // scene.add(grid);
 
         var gridGeometry = new THREE.Geometry();
-        var size = 1500, step = 75;
+        var size = 2000, step = 75;
         for (var i = - size; i <= size; i += step) {
             for (var j = - size; j <= size; j += step) {
                 var star = new THREE.Vector3(i, j, 0);
                 gridGeometry.vertices.push(star);
             }
         }
-        grid = new THREE.Points(gridGeometry, new THREE.PointsMaterial({ color: WHITE, size: 5 }));
+        grid = new THREE.Points(gridGeometry, new THREE.PointsMaterial({ color: WHITE, size: 4 }));
 
         scene.add(grid);
 
@@ -261,9 +257,9 @@ import './main.scss';
     }
 
     // [0, 1]
-    function quadratic(s, offset) { // -10x^​2 +1
+    function quadratic(s, softness, spread, offset) { // -10x^​2 +1
         let x = s - offset;
-        return - 6 * x * x - 1 * x + 1;
+        return softness * x * x + spread * x + 1;
     }
 
     // [-1, 1]
@@ -287,17 +283,9 @@ import './main.scss';
         // const ratio = (sigmoid((scrollTween.y - .5) * 10));
         const ratio = (sinoid(scrollTween.y, 2));
 
-        let posX = (mouse.x) * 50;
-        let posY = (mouse.y) * 50;
-
-        shape.position.x = posX;
-        shape.position.y = posY;
-        shape2.position.x = posX;
-        shape2.position.y = posY;
-        shape.position.y = posY;
-        shape3.position.x = posX;
-        shape3.position.y = posY;
         let rotation = (scrollTween.y) * Math.PI;
+
+        updateShapePosition(getScroll(), mouse);
 
         // shape.rotation.x = rotation;
         // shape2.rotation.x = rotation;
@@ -362,6 +350,7 @@ import './main.scss';
         updateGrid(scroll);
         updateSceneMaterials(scroll);
 
+
         clearTimeout(onScrollEnd);
         onScrollEnd = setTimeout(function () {
             updateURL();
@@ -371,12 +360,27 @@ import './main.scss';
 
     };
 
-    function updateShapePosition(scroll) {
-        var o3 = (1 - scroll - .1) / .9;
-        o3 = o3 * o3 * 300;
-        shape.position.set(0, o3, o);
-        shape2.position.set(0, o3, o);
-        shape3.position.set(0, o3, o);
+    function updateCameraPosition(scroll) {
+        let s = (1 - scroll);
+        s = CAMERA_Y_OFFSET - s * s * s * s * CAMERA_Y_OFFSET;
+
+        let r = (scroll);
+        r = CAMERA_Y_OFFSET - r * r * r * r * CAMERA_Y_OFFSET;
+        camera.position.y = scroll < .5 ? s : r;
+    }
+
+    function updateShapePosition(scroll, mouse) {
+
+        let posX = (mouse.x) * 50;
+        let posY = (mouse.y) * 50;
+
+        shape.position.x = posX;
+        shape.position.y = posY;
+        shape2.position.x = posX;
+        shape2.position.y = posY;
+        shape3.position.x = posX;
+        shape3.position.y = posY;
+
     }
 
     function updateGrid(scroll) {
@@ -407,8 +411,8 @@ import './main.scss';
 
     function updateSceneMaterials(scroll) {
 
-        var o1 = ((1 - sigmoid(scroll * 2 * 12 - 6))) * 100;
-        var o2 = quadratic(scroll, .8);
+        var o1 = ((1 - sigmoid(scroll * 1.5 * 12 - 6))) * 100;
+        var o2 = quadratic(scroll, 15, 12, .65);
         var o3 = (scroll - .1) / .9;
         o3 = o3 * o3;
         // console.log(scroll + ": " + o2);
@@ -420,6 +424,8 @@ import './main.scss';
         material.opacity = o1;
         material2.opacity = o2;
         material3.opacity = o3;
+
+        // grid.material.opacity = 1 - o3;
 
         let bg = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, scroll);
         // renderer.setClearColor(bg);
@@ -439,7 +445,6 @@ import './main.scss';
 
         mouseProjection.copy(projectCanvasLocation(nx, ny));
         updateMouseLight(mouseProjection);
-
 
         TweenMax.to(mouse,
             1,
@@ -476,6 +481,7 @@ import './main.scss';
 
     function render(a) {
         requestAnimationFrame(render);
+        updateCameraPosition(scrollTween.y);
         updateVertices(a);
         geometry.verticesNeedUpdate = true;
         renderer.render(scene, camera);
