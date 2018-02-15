@@ -8,7 +8,7 @@ import './main.scss';
 (function () {
 
     const
-        AMBIENT_LIGHT_INTENSITY = .4,
+        AMBIENT_LIGHT_INTENSITY = .2,
         DIRECTIONAL_LIGHT_INTENSITY = .8,
         MOUSE_LIGHT_INTENSITY = .5,
         BASE_SCALE = 1,
@@ -41,7 +41,7 @@ import './main.scss';
     // const COLORS = [ GREEN, STRONG_BLUE, PINK, RED, DARKENED_GREEN, ORANGE, PURPLE ];
     const COLORS = [RED, PINK, PURPLE, STRONG_BLUE, DARKENED_GREEN, ORANGE, GREEN];
 
-    // shuffle(COLORS);
+    shuffle(COLORS);
 
     // COLORS.forEach(color => {
     //     color.setHSL(color.getHSL().h, .9, .55);
@@ -126,15 +126,15 @@ import './main.scss';
 
 
         light = new THREE.HemisphereLight(WHITE, LIGHT_1_COLOR_BASE, AMBIENT_LIGHT_INTENSITY);
-        light.position.set(300, 300, 0);
+        light.position.set(400, 400, 0);
         scene.add(light);
 
         light2 = new THREE.DirectionalLight(LIGHT_2_COLOR_FROM, DIRECTIONAL_LIGHT_INTENSITY);
-        light2.position.set(300, 0, 500);
+        light2.position.set(400, 0, 500);
         scene.add(light2);
 
         light3 = new THREE.DirectionalLight(LIGHT_3_COLOR_FROM, DIRECTIONAL_LIGHT_INTENSITY);
-        light3.position.set(-300, 0, 500);
+        light3.position.set(-400, 0, 500);
         scene.add(light3);
 
         mouseLight = new THREE.SpotLight(RENDERER_CLEAR_COLOR_FROM, MOUSE_LIGHT_INTENSITY);
@@ -157,9 +157,9 @@ import './main.scss';
 
         material = new THREE.MeshPhongMaterial({
             emissive: MATERIAL_COLOR_FROM,
-            emissiveIntensity: 0.4,
+            emissiveIntensity: .6,
             transparent: true,
-            shininess: 0
+            shininess: .5
         });
 
         // material2 = new THREE.MeshStandardMaterial({
@@ -210,20 +210,11 @@ import './main.scss';
         var size = 1500, step = 75;
         for (var i = - size; i <= size; i += step) {
             for (var j = - size; j <= size; j += step) {
-
-                var star = new THREE.Vector3(
-                    i,
-                    j,
-                    0);
-
+                var star = new THREE.Vector3(i, j, 0);
                 gridGeometry.vertices.push(star);
-
             }
         }
-
-        var starsMaterial = new THREE.PointsMaterial({ color: WHITE, size: 3 });
-
-        grid = new THREE.Points(gridGeometry, starsMaterial);
+        grid = new THREE.Points(gridGeometry, new THREE.PointsMaterial({ color: WHITE, size: 5 }));
 
         scene.add(grid);
 
@@ -379,6 +370,14 @@ import './main.scss';
         fadePages();
 
     };
+
+    function updateShapePosition(scroll) {
+        var o3 = (1 - scroll - .1) / .9;
+        o3 = o3 * o3 * 300;
+        shape.position.set(0, o3, o);
+        shape2.position.set(0, o3, o);
+        shape3.position.set(0, o3, o);
+    }
 
     function updateGrid(scroll) {
         grid.position.y = 1000 * scroll;
