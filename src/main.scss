@@ -9,6 +9,9 @@ html {
     box-sizing: border-box;
     /* margin: 0; */
 }
+// body :not(.scene){
+//     opacity: 0;
+// }
 
 body {
     font-family: 'proxima-nova', Helvetica, Arial, sans-serif;
@@ -287,7 +290,7 @@ h2 {
 
 .page_contact .content__body {
     max-width: 100%;
-    padding: 8vw;
+    padding: 5vw;
     background: white;
 }
 

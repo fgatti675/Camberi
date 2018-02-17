@@ -8,8 +8,8 @@ import './main.scss';
 (function () {
 
     const
-        AMBIENT_LIGHT_INTENSITY = .2,
-        DIRECTIONAL_LIGHT_INTENSITY = .8,
+        AMBIENT_LIGHT_INTENSITY = .22,
+        DIRECTIONAL_LIGHT_INTENSITY = .75,
         MOUSE_LIGHT_INTENSITY = .5,
         BASE_SCALE = 1.2,
         CAMERA_Y_OFFSET = -300,
@@ -41,21 +41,28 @@ import './main.scss';
 
     // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, DARKENED_GREEN, RED, PINK, GREEN];
     // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, PINK, RED, DARKENED_GREEN, GREEN];
-    // const COLORS = [ GREEN, STRONG_BLUE, PINK, RED, DARKENED_GREEN, ORANGE, PURPLE ];
+    // const COLORS = [GREEN, STRONG_BLUE, PINK, RED, DARKENED_GREEN, ORANGE, PURPLE];
     // const COLORS = [RED, PINK, PURPLE, STRONG_BLUE, DARKENED_GREEN, ORANGE, GREEN];
-    // const COLORS = [ PINK, PURPLE, DARKENED_GREEN, GREEN, STRONG_BLUE, ORANGE, RED ];
-    // const COLORS = [ ORANGE, RED, PURPLE, STRONG_BLUE, DARKENED_GREEN, PINK, GREEN ];
-    const COLORS = [PINK, GREEN, ORANGE, RED, PURPLE, STRONG_BLUE, DARKENED_GREEN];
+    // const COLORS = [PINK, PURPLE, DARKENED_GREEN, GREEN, STRONG_BLUE, ORANGE, RED];
+    // const COLORS = [ORANGE, RED, PURPLE, STRONG_BLUE, DARKENED_GREEN, PINK, GREEN];
+    // const COLORS = [DARKENED_GREEN, PINK, RED, STRONG_BLUE, PURPLE, GREEN, ORANGE];
+    // const COLORS = [PINK, GREEN, ORANGE, RED, PURPLE, STRONG_BLUE, DARKENED_GREEN];
+    // const COLORS = [RED, PINK, GREEN, STRONG_BLUE, ORANGE, PURPLE, DARKENED_GREEN];
+    // const COLORS = [RED, STRONG_BLUE, GREEN, PINK, ORANGE, DARKENED_GREEN, PURPLE];
+    // const COLORS = [PURPLE, GREEN, ORANGE, PINK, RED, STRONG_BLUE, DARKENED_GREEN];
+    // const COLORS = [RED, STRONG_BLUE, PINK, ORANGE, PURPLE, DARKENED_GREEN, GREEN];
 
-    // shuffle(COLORS);
+
+    const COLORS = [ORANGE, PURPLE, STRONG_BLUE, DARKENED_GREEN, RED, PINK, GREEN];
+    shuffle(COLORS);
 
     COLORS.forEach(color => {
         // color.setHSL(color.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
     });
 
-    let colorString = "const COLORS = [ ";
+    let colorString = "const COLORS = [";
     colorString += COLORS.map(c => c.string).reduce((a, b) => a + ", " + b);
-    colorString += " ];";
+    colorString += "];";
     console.log(colorString);
 
     const
@@ -111,6 +118,7 @@ import './main.scss';
     initScene();
 
     requestAnimationFrame(render);
+
     updateSceneMaterials(getScroll());
 
     function initScene() {
@@ -151,9 +159,24 @@ import './main.scss';
 
         // geometry = new THREE.IcosahedronGeometry(SHAPE_RADIUS, 4);
         geometry = new THREE.DodecahedronGeometry(SHAPE_RADIUS, 4);
+        let torusGeometry = new THREE.TorusGeometry(SHAPE_RADIUS / 2, SHAPE_RADIUS / 4, 10, 461);
 
-        geometry.vertices.forEach(vector => {
+        console.log(geometry.vertices.length);
+        console.log(torusGeometry.vertices.length);
+
+        geometry.vertices.forEach((vector, i) => {
+
             vector._original = vector.clone();
+            // let d = 100000;
+            // torusGeometry.vertices.forEach(element => {
+            //     let e = element.distanceTo(vector);
+            //     if (e < d) {
+            //         d = e;
+            //         vector._torusEquivalent = element;
+            //     }
+            // });
+
+
             vector.spikes = {
                 activated: Math.random() < .3,
                 period: (Math.random() * 3 + 3) * 1000,
@@ -161,11 +184,22 @@ import './main.scss';
             }
         });
 
+        // var newFaces = [];
+        // geometry.faces.forEach((f, i) => {
+        //     var a = geometry.vertices[f.a];
+        //     var b = geometry.vertices[f.b];
+        //     var c = geometry.vertices[f.c];
+        //     var dist = 50;
+        //     if (a.distanceTo(b) < dist && c.distanceTo(b) < dist && a.distanceTo(c) < dist)
+        //         newFaces.push(f);
+        // });
+        // geometry.faces = newFaces;
+
         material = new THREE.MeshPhongMaterial({
             emissive: MATERIAL_COLOR_FROM,
             emissiveIntensity: .6,
             transparent: true,
-            shininess: .5
+            shininess: .3
         });
 
         // material2 = new THREE.MeshStandardMaterial({
@@ -243,9 +277,9 @@ import './main.scss';
         // vector.multiplyScalar(value + 1);
 
         const perlin = Perlin.noise.simplex3(
-            (vector.x * 0.008) + (time * 0.0003) + (value),
-            (vector.y * 0.008) + (time * 0.0003) + (value),
-            (vector.z * 0.008) + (time * 0.0003) + (value)
+            (vector.x * 0.008) + (time * 0.0004) + (value),
+            (vector.y * 0.008) + (time * 0.0004) + (value),
+            (vector.z * 0.008) + (time * 0.0004) + (value)
         );
         // const perlin = Perlin.noise.simplex3(
         //     (vector.x * 0.008) + (time * 0.0003),
@@ -297,11 +331,6 @@ import './main.scss';
 
             vector.copy(vector._original);
 
-            // var d = vector.distanceTo(mouseProjection);
-            // var inverse = 1 / d;
-            // inverse = inverse * inverse * inverse * inverse;
-            // vector.multiplyScalar(inverse * 300000 + 1);
-
             let v1, v2;
             if (scrollTween.y < .5)
                 v1 = getSphereScalar(scrollTween.y),
@@ -313,8 +342,6 @@ import './main.scss';
             vector.multiplyScalar((1 - ratio) * v1 + ratio * v2 + 1);
 
 
-            // console.log(d)
-            // }
         };
     }
 
@@ -361,12 +388,9 @@ import './main.scss';
     };
 
     function updateCameraPosition(scroll) {
-        let s = (1 - scroll);
-        s = CAMERA_Y_OFFSET - s * s * s * s * CAMERA_Y_OFFSET;
-
-        let r = (scroll);
-        r = CAMERA_Y_OFFSET - r * r * r * r * CAMERA_Y_OFFSET;
-        camera.position.y = scroll < .5 ? s : r;
+        let s = 1 - 2 * (1 - scroll);
+        s = CAMERA_Y_OFFSET - s * s * CAMERA_Y_OFFSET; // https://www.desmos.com/calculator/xkxkvj1qwi
+        camera.position.y = s;
     }
 
     function updateShapePosition(scroll, mouse) {
@@ -411,10 +435,9 @@ import './main.scss';
 
     function updateSceneMaterials(scroll) {
 
-        var o1 = ((1 - sigmoid(scroll * 1.5 * 12 - 6))) * 100;
-        var o2 = quadratic(scroll, 15, 12, .65);
-        var o3 = (scroll - .1) / .9;
-        o3 = o3 * o3;
+        var o1 = 1 - sigmoid(scroll * 18 - 11.5);
+        var o2 = quadratic(scroll, -25, 6, .7); // https://www.desmos.com/calculator/la8eufllq5
+        var o3 = Math.pow((scroll - .1) / .9, 2);
         // console.log(scroll + ": " + o2);
 
         shape.visible = o1 > 0;
