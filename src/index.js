@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { TweenMax } from "gsap";
 import * as Perlin from 'perlin';
 import { Vector3 } from 'three';
+import  Swiper  from 'swiper';
 import './main.scss';
 
 
@@ -51,7 +52,7 @@ import './main.scss';
     // const COLORS = [RED, STRONG_BLUE, GREEN, PINK, ORANGE, DARKENED_GREEN, PURPLE];
     // const COLORS = [PURPLE, GREEN, ORANGE, PINK, RED, STRONG_BLUE, DARKENED_GREEN];
     // const COLORS = [RED, STRONG_BLUE, PINK, ORANGE, PURPLE, DARKENED_GREEN, GREEN];
-
+    // const COLORS = [RED, PINK, GREEN, PURPLE, ORANGE, STRONG_BLUE, DARKENED_GREEN];
 
     const COLORS = [ORANGE, PURPLE, STRONG_BLUE, DARKENED_GREEN, RED, PINK, GREEN];
     shuffle(COLORS);
@@ -115,10 +116,31 @@ import './main.scss';
     content.addEventListener("mousemove", onMouseMove);
     content.addEventListener("scroll", onScroll);
 
+    var mySwiper = new Swiper ('.swiper-container', {
+        // Optional parameters
+        direction: 'horizontal',
+        loop: true,
+    
+        // If we need pagination
+        pagination: {
+          el: '.swiper-pagination',
+        },
+    
+        // Navigation arrows
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+    
+        // // And if we need scrollbar
+        // scrollbar: {
+        //   el: '.swiper-scrollbar',
+        // },
+      })
+
     initScene();
 
     requestAnimationFrame(render);
-
     updateSceneMaterials(getScroll());
 
     function initScene() {
@@ -159,10 +181,8 @@ import './main.scss';
 
         // geometry = new THREE.IcosahedronGeometry(SHAPE_RADIUS, 4);
         geometry = new THREE.DodecahedronGeometry(SHAPE_RADIUS, 4);
-        let torusGeometry = new THREE.TorusGeometry(SHAPE_RADIUS / 2, SHAPE_RADIUS / 4, 10, 461);
+        // let torusGeometry = new THREE.TorusGeometry(SHAPE_RADIUS / 2, SHAPE_RADIUS / 4, 10, 461);
 
-        console.log(geometry.vertices.length);
-        console.log(torusGeometry.vertices.length);
 
         geometry.vertices.forEach((vector, i) => {
 
@@ -175,7 +195,6 @@ import './main.scss';
             //         vector._torusEquivalent = element;
             //     }
             // });
-
 
             vector.spikes = {
                 activated: Math.random() < .3,
