@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { TweenMax } from "gsap";
 import * as Perlin from 'perlin';
 import { Vector3 } from 'three';
-import  Swiper  from 'swiper';
+import Swiper from 'swiper';
 import './main.scss';
 
 
@@ -11,11 +11,13 @@ import './main.scss';
     const
         AMBIENT_LIGHT_INTENSITY = .22,
         DIRECTIONAL_LIGHT_INTENSITY = .75,
-        MOUSE_LIGHT_INTENSITY = .5,
+        MOUSE_LIGHT_INTENSITY = .4,
         BASE_SCALE = 1.2,
+        BLUR_PIXELS = 8,
         CAMERA_Y_OFFSET = -300,
+        GRID_SPEED = 800,
         SCALE_INCREMENT = 1.7,
-        COLOR_SATURATION = 1,
+        COLOR_SATURATION = .8,
         COLOR_LIGHTNESS = .6,
         MOUSE_LIGHT_DISTANCE_TO_CENTER = 650,
         SHAPE_RADIUS = 160;
@@ -53,6 +55,8 @@ import './main.scss';
     // const COLORS = [PURPLE, GREEN, ORANGE, PINK, RED, STRONG_BLUE, DARKENED_GREEN];
     // const COLORS = [RED, STRONG_BLUE, PINK, ORANGE, PURPLE, DARKENED_GREEN, GREEN];
     // const COLORS = [RED, PINK, GREEN, PURPLE, ORANGE, STRONG_BLUE, DARKENED_GREEN];
+    // const COLORS = [PINK, RED, PURPLE, STRONG_BLUE, GREEN, ORANGE, DARKENED_GREEN];
+
 
     const COLORS = [ORANGE, PURPLE, STRONG_BLUE, DARKENED_GREEN, RED, PINK, GREEN];
     shuffle(COLORS);
@@ -81,6 +85,7 @@ import './main.scss';
     RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
 
     const canvas = document.querySelector('#scene');
+    const header = document.querySelector('header');
     const content = document.querySelector('main');
     const pages = document.getElementsByClassName('page');
     const fadingPages = document.getElementsByClassName('fade-page');
@@ -116,32 +121,36 @@ import './main.scss';
     content.addEventListener("mousemove", onMouseMove);
     content.addEventListener("scroll", onScroll);
 
-    var mySwiper = new Swiper ('.swiper-container', {
+    var mySwiper = new Swiper('.swiper-container', {
         // Optional parameters
         direction: 'horizontal',
-        loop: true,
-    
+        // loop: true,
+
         // If we need pagination
         pagination: {
-          el: '.swiper-pagination',
+            el: '.swiper-pagination',
         },
-    
-        // Navigation arrows
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-    
-        // // And if we need scrollbar
-        // scrollbar: {
-        //   el: '.swiper-scrollbar',
+
+        // // Navigation arrows
+        // navigation: {
+        //     nextEl: '.swiper-button-next',
+        //     prevEl: '.swiper-button-prev',
         // },
-      })
+
+        // And if we need scrollbar
+        scrollbar: {
+            el: '.swiper-scrollbar',
+        },
+    })
 
     initScene();
 
     requestAnimationFrame(render);
-    updateSceneMaterials(getScroll());
+
+    let scroll = getScroll();
+    updateSceneMaterials(scroll);
+    updateBlur(scroll);
+    updateHeader(scroll);
 
     function initScene() {
 
@@ -150,8 +159,8 @@ import './main.scss';
             canvas: canvas,
             // antialias: true
         });
-
-        renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
+        console.log(window.devicePixelRatio);
+        renderer.setPixelRatio(window.devicePixelRatio > 1 ? 1.5 : 1);
         renderer.setSize(width, height);
 
         scene = new THREE.Scene();
@@ -282,10 +291,10 @@ import './main.scss';
         return 1.5 - 1.5 * scroll;
     }
 
-    function getSpikeScalar(vector, time) {
+    function getSpikeScalar(vector, scroll, time) {
         const spikes = vector.spikes;
         if (!spikes.activated) return .2;
-        const scalar = ((sinoid(time, spikes.period)) * spikes.size) * .3;
+        const scalar = ((sinoid(time + scroll*1000, spikes.period)) * spikes.size) * .3;
         return scalar + 1.;
     }
 
@@ -355,7 +364,7 @@ import './main.scss';
                 v1 = getSphereScalar(scrollTween.y),
                     v2 = getBlobScalar(vector, time, mouseProjection);
             else
-                v1 = getSpikeScalar(vector, time),
+                v1 = getSpikeScalar(vector, scrollTween.y, time),
                     v2 = getBlobScalar(vector, time, mouseProjection);
 
             vector.multiplyScalar((1 - ratio) * v1 + ratio * v2 + 1);
@@ -395,6 +404,8 @@ import './main.scss';
 
         updateGrid(scroll);
         updateSceneMaterials(scroll);
+        updateBlur(scroll);
+        updateHeader(scroll);
 
 
         clearTimeout(onScrollEnd);
@@ -406,6 +417,22 @@ import './main.scss';
 
     };
 
+
+    function updateHeader(scroll) {
+        header.style.opacity = (scroll - .05) / .95 * 5;
+    }
+
+    function updateBlur(scroll) {
+        if (scroll > .8) {
+            let blurValue = (scroll - .8) / .2 * BLUR_PIXELS;
+            // canvas.style = "-webkit-filter:blur(" + blurValue + "px)";
+            // canvas.setAttribute("style","-ms-filter:blur(" + blurValue + "px)")
+
+            // canvas.style.filter = "blur(10px)";
+        } else {
+            canvas.style.filter = null;
+        }
+    }
     function updateCameraPosition(scroll) {
         let s = 1 - 2 * (1 - scroll);
         s = CAMERA_Y_OFFSET - s * s * CAMERA_Y_OFFSET; // https://www.desmos.com/calculator/xkxkvj1qwi
@@ -427,7 +454,8 @@ import './main.scss';
     }
 
     function updateGrid(scroll) {
-        grid.position.y = 1000 * scroll;
+        grid.position.y = GRID_SPEED * scroll;
+        // grid.position.z = 100 * scroll;
         // grid.rotation.x = -Math.PI /10* scroll;
     }
 
@@ -435,8 +463,9 @@ import './main.scss';
         for (var i = 0; i < fadingPages.length; i++) {
             var page = fadingPages[i];
             let off = page.offsetTop - content.scrollTop;
-            let opacity = off < -height ? 0 : (off > 0 ? 1 : (height + off) / height);
-            page.style.opacity = opacity;
+            let o = off < -height ? 0 : (off > 0 ? 1 : (height + off) / height);
+            if (o != 0, 1)
+                page.style.opacity = Math.sin(o * Math.PI / 2);
         }
     }
 
@@ -455,8 +484,8 @@ import './main.scss';
     function updateSceneMaterials(scroll) {
 
         var o1 = 1 - sigmoid(scroll * 18 - 11.5);
-        var o2 = quadratic(scroll, -25, 6, .7); // https://www.desmos.com/calculator/la8eufllq5
-        var o3 = Math.pow((scroll - .1) / .9, 2);
+        var o2 = quadratic(scroll, -25, 6, .75); // https://www.desmos.com/calculator/la8eufllq5
+        var o3 = quadratic(scroll, -25, 6, .5);
         // console.log(scroll + ": " + o2);
 
         shape.visible = o1 > 0;
