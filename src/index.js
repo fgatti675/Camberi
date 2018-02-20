@@ -15,7 +15,7 @@ import './main.scss';
         BASE_SCALE = 1.2,
         BLUR_PIXELS = 8,
         CAMERA_Y_OFFSET = -300,
-        GRID_SPEED = 800,
+        GRID_SPEED = 1000,
         SCALE_INCREMENT = 1.7,
         COLOR_SATURATION = .8,
         COLOR_LIGHTNESS = .6,
@@ -402,7 +402,6 @@ import './main.scss';
                 ease: Power3.easeOut
             });
 
-        updateGrid(scroll);
         updateSceneMaterials(scroll);
         updateBlur(scroll);
         updateHeader(scroll);
@@ -427,6 +426,7 @@ import './main.scss';
             let blurValue = (scroll - .8) / .2 * BLUR_PIXELS;
             // canvas.style = "-webkit-filter:blur(" + blurValue + "px)";
             // canvas.setAttribute("style","-ms-filter:blur(" + blurValue + "px)")
+            canvas.setAttribute("style","-webkit-filter:blur(10px)")
 
             // canvas.style.filter = "blur(10px)";
         } else {
@@ -454,7 +454,7 @@ import './main.scss';
     }
 
     function updateGrid(scroll) {
-        grid.position.y = GRID_SPEED * scroll;
+        grid.position.y = GRID_SPEED * scroll + camera.position.y; // compensate for the camera translation, should be done better
         // grid.position.z = 100 * scroll;
         // grid.rotation.x = -Math.PI /10* scroll;
     }
@@ -552,7 +552,10 @@ import './main.scss';
 
     function render(a) {
         requestAnimationFrame(render);
+
         updateCameraPosition(scrollTween.y);
+        updateGrid(scrollTween.y);
+
         updateVertices(a);
         geometry.verticesNeedUpdate = true;
         renderer.render(scene, camera);
