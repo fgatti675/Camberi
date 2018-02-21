@@ -13,14 +13,19 @@ const extractSass = new ExtractTextPlugin({
 
 
 let bs = null
-if (process.env.TYPE === "browsersync"){
- bs = new BrowserSyncPlugin({
-    // browse to http://localhost:3000/ during development,
-    // ./public directory is being served
-    host: 'localhost',
-    port: 3000,
-    server: { baseDir: ['dist'] }
-  })
+if (process.env.TYPE === "browsersync") {
+    bs = new BrowserSyncPlugin({
+        // browse to http://localhost:3000/ during development,
+        // ./public directory is being served
+        host: 'localhost',
+        port: 3000,
+        server: { baseDir: ['dist'] }
+    })
+}
+
+let uglify = null;
+if (process.env.NODE_ENV === "prod") {
+    uglify = new UglifyJsPlugin();
 }
 
 module.exports = {
@@ -50,8 +55,9 @@ module.exports = {
             { from: 'src/static' }
         ]),
         new HtmlWebpackPlugin({
-            template : __dirname + '/src/template.html'
+            template: __dirname + '/src/template.html'
         }),
-        bs
+        bs,
+        uglify
     ].filter(Boolean)
 };
