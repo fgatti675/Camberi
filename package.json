@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "css-scroll-snap-polyfill": "^0.1.2",
+    "firebase-tools": "^3.17.4",
     "gsap": "^1.20.3",
     "perlin": "^1.0.0",
     "swiper": "^4.1.6",
@@ -31,7 +32,10 @@
     "dev": "npm run runwatch & npm run runserver",
     "runwatch": "NODE_ENV=development webpack --w",
     "runserver": "NODE_ENV=development webpack-dev-server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "npm run prod & npm run firebase",
+    "firebase": "firebase deploy",
+    "prod": "NODE_ENV=prod webpack"
   },
   "keywords": [
     "webgl",
