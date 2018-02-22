@@ -8,6 +8,7 @@
     "firebase-tools": "^3.17.4",
     "gsap": "^1.20.3",
     "perlin": "^1.0.0",
+    "scrollreveal": "^3.3.6",
     "swiper": "^4.1.6",
     "three": "^0.89.0"
   },

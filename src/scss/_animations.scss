@@ -1,0 +1,11 @@
+@keyframes blink {
+    0% {
+        transform: none;
+    }
+    50% {
+        transform: translateY(100px) scaleY(0);
+    }
+    100% {
+        transform: none;
+    }
+}

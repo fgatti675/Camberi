@@ -1,0 +1,30 @@
+header {
+    position: fixed;
+    padding: 1rem;
+    z-index: 1;
+    top: 10px;
+    left: 0;
+    a {
+        color: white;
+        display: block;
+        display: flex;
+        align-items: center
+    }
+    p {
+        padding:0;
+        margin: 0;
+        margin-left: 15px;
+    }
+    &:hover {
+        a {
+            color: var(--color-text-dark);
+        }
+        svg path {
+            fill: var(--color-text-dark);
+        }
+    }
+    &:hover svg #oval {
+        animation-name: blink;
+        animation-duration: 1s;
+    }
+}

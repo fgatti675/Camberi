@@ -1,0 +1,16 @@
+
+.scene {
+    will-change: filter;
+    position: fixed;
+    &.scene--full {
+        margin: -5vh -5vw;
+        width: 110vw;
+        height: 110vh;
+    }
+}
+
+/* @media screen and (max-width: 80em) {
+    .scene--full {
+        width: 100vw;
+    }
+} */

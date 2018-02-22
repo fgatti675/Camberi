@@ -1,0 +1,15 @@
+.logo {
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 700;
+    font-size: 16px;
+    @media (min-width:800px){
+        font-size: 22px;
+    }
+}
+
+.logo_header{
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 2rem;
+}

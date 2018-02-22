@@ -3,10 +3,20 @@ import { TweenMax } from "gsap";
 import * as Perlin from 'perlin';
 import { Vector3 } from 'three';
 import Swiper from 'swiper';
+import ScrollReveal from 'scrollreveal';
 import './main.scss';
 
 
 (function () {
+
+    //scrollReveal TEST
+
+    window.sr = ScrollReveal();
+    sr.reveal('.reveal', { 
+        duration: 2000
+     }, 300);
+    sr.reveal('.reveal2');
+    
 
     const
         AMBIENT_LIGHT_INTENSITY = .22,
@@ -86,7 +96,7 @@ import './main.scss';
 
     const canvas = document.querySelector('#scene');
     const header = document.querySelector('header');
-    const content = document.querySelector('main');
+    const content = window.document.documentElement;
     const pages = document.getElementsByClassName('page');
     const fadingPages = document.getElementsByClassName('fade-page');
 
@@ -373,23 +383,23 @@ import './main.scss';
         };
     }
 
-    // function getScroll() {
-    //     if (window.pageYOffset != undefined) {
-    //         return (pageYOffset) / (docheight - window.innerHeight);
-    //     }
-    //     else {
-    //         let sx, sy, d = document, r = d.documentElement, b = d.body;
-    //         sy = r.scrollTop || b.scrollTop || 0;
-    //         return (sy) / (docheight - window.innerHeight);
-    //     }
-    // }
-
     function getScroll() {
+         if (window.pageYOffset != undefined) {
+             return (pageYOffset) / (docheight - window.innerHeight);
+         }
+         else {
+             let sx, sy, d = document, r = d.documentElement, b = d.body;
+             sy = r.scrollTop || b.scrollTop || 0;
+             return (sy) / (docheight - window.innerHeight);
+         }
+     }
+
+    /*function getScroll() {
         let o = content.scrollTop;
         let i = window.innerHeight;
         let h = content.scrollHeight;
         return (o) / (h - i);
-    }
+    }*/
 
     function onScroll(evt) {
 
@@ -460,13 +470,13 @@ import './main.scss';
     }
 
     function fadePages() {
-        for (var i = 0; i < fadingPages.length; i++) {
+        /*for (var i = 0; i < fadingPages.length; i++) {
             var page = fadingPages[i];
             let off = page.offsetTop - content.scrollTop;
             let o = off < -height ? 0 : (off > 0 ? 1 : (height + off) / height);
             if (o != 0, 1)
                 page.style.opacity = Math.sin(o * Math.PI / 2);
-        }
+        }*/
     }
 
     function updateURL() {
