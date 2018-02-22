@@ -9,8 +9,7 @@
     "gsap": "^1.20.3",
     "perlin": "^1.0.0",
     "swiper": "^4.1.6",
-    "three": "^0.89.0",
-    "webpack": "^3.11.0"
+    "three": "^0.89.0"
   },
   "devDependencies": {
     "babel-minify-webpack-plugin": "^0.2.0",
@@ -26,6 +25,7 @@
     "style-loader": "^0.20.1",
     "uglify-es": "3.3.9",
     "uglifyjs-webpack-plugin": "1.1.8",
+    "webpack": "^3.11.0",
     "webpack-dev-server": "^2.11.1"
   },
   "scripts": {
@@ -34,9 +34,9 @@
     "runwatch": "NODE_ENV=development webpack --w",
     "runserver": "NODE_ENV=development webpack-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "npm run prod & npm run firebase",
-    "firebase": "firebase deploy",
-    "prod": "NODE_ENV=prod webpack"
+    "deploy": "npm run prod && npm run firebase",
+    "prod": "NODE_ENV=prod webpack",
+    "firebase": "firebase deploy"
   },
   "keywords": [
     "webgl",
