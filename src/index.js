@@ -128,8 +128,8 @@ import './main.scss';
     let onScrollEnd;
 
     window.addEventListener("resize", onResize);
-    content.addEventListener("mousemove", onMouseMove);
-    content.addEventListener("scroll", onScroll);
+    window.addEventListener("mousemove", onMouseMove);
+    // window.addEventListener("scroll", onScroll);
 
     var mySwiper = new Swiper('.swiper-container', {
         // Optional parameters
@@ -562,6 +562,8 @@ import './main.scss';
 
     function render(a) {
         requestAnimationFrame(render);
+
+        onScroll();
 
         updateCameraPosition(scrollTween.y);
         updateGrid(scrollTween.y);
