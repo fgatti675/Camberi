@@ -128,13 +128,19 @@ import './main.scss';
     let onScrollEnd;
 
     window.addEventListener("resize", onResize);
-    content.addEventListener("mousemove", onMouseMove);
-    content.addEventListener("scroll", onScroll);
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("scroll", onScroll);
 
     var mySwiper = new Swiper('.swiper-container', {
         // Optional parameters
-        direction: 'horizontal',
-        // loop: true,
+        direction: 'horizontal',  
+        autoplay: {
+            delay: 5000,
+          },
+        fadeEffect: {
+            crossFade: true
+          },
+        loop: true,
 
         // If we need pagination
         pagination: {
@@ -402,7 +408,6 @@ import './main.scss';
     }*/
 
     function onScroll(evt) {
-
         const scroll = getScroll();
 
         TweenMax.to(scrollTween,
