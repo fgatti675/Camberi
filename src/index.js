@@ -94,6 +94,9 @@ import './main.scss';
     RENDERER_CLEAR_COLOR_FROM.setHSL(RENDERER_CLEAR_COLOR_FROM.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
     RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
 
+    const loader = document.querySelector('.loader');
+    
+
     const canvas = document.querySelector('#scene');
     const header = document.querySelector('header');
     const content = window.document.documentElement;
@@ -134,11 +137,10 @@ import './main.scss';
     var mySwiper = new Swiper('.swiper-container', {
         // Optional parameters
         direction: 'horizontal',  
+        spaceBetween:15,
+        speed: 800,
         autoplay: {
             delay: 5000,
-          },
-        fadeEffect: {
-            crossFade: true
           },
         loop: true,
 
