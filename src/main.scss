@@ -11,24 +11,20 @@
 @import "scss/components/logo";
 @import "scss/components/grid";
 @import "scss/components/loader";
-  
+@import "scss/components/background";
+
 
 @media screen and (max-width: 55em) {
-
-   
-
-    .swiper-container{
+    .swiper-container {
         padding: 0 5vw;
     }
-
     .swiper-slide,
-    .swiper-wrapper{
+    .swiper-wrapper {
         width: 90vw;
     }
     .content--fixed {
         background: #acb2b9;
     }
-    
     nav a {
         display: none;
     }

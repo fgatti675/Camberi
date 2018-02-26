@@ -9,15 +9,6 @@ import './main.scss';
 
 (function () {
 
-    //scrollReveal TEST
-
-    window.sr = ScrollReveal();
-    sr.reveal('.reveal', {
-        duration: 2000
-    }, 300);
-    sr.reveal('.reveal2');
-
-
     const
         AMBIENT_LIGHT_INTENSITY = .22,
         DIRECTIONAL_LIGHT_INTENSITY = .75,
@@ -27,7 +18,7 @@ import './main.scss';
         CAMERA_Y_OFFSET = -300,
         GRID_SPEED = 1000,
         SCALE_INCREMENT = 1.7,
-        COLOR_SATURATION = .8,
+        COLOR_SATURATION = .75,
         COLOR_LIGHTNESS = .6,
         MOUSE_LIGHT_DISTANCE_TO_CENTER = 650,
         SHAPE_RADIUS = 160;
@@ -69,6 +60,7 @@ import './main.scss';
 
     // TOO BRIGHT:
     // const COLORS = [GREEN, PURPLE, PINK, STRONG_BLUE, ORANGE, DARKENED_GREEN, RED];
+    // const COLORS = [GREEN, PURPLE, PINK, STRONG_BLUE, ORANGE, DARKENED_GREEN, RED];
 
 
     const COLORS = [ORANGE, PURPLE, STRONG_BLUE, DARKENED_GREEN, RED, PINK, GREEN];
@@ -99,12 +91,9 @@ import './main.scss';
     };
     adjustLightness(LIGHT_2_COLOR_FROM);
     adjustLightness(LIGHT_3_COLOR_FROM);
-    
-    RENDERER_CLEAR_COLOR_FROM.setHSL(RENDERER_CLEAR_COLOR_FROM.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
-    RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
 
     const loader = document.querySelector('.loader');
-    
+
 
     const canvas = document.querySelector('#scene');
     const header = document.querySelector('header');
@@ -143,33 +132,10 @@ import './main.scss';
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("scroll", onScroll);
 
-    var mySwiper = new Swiper('.swiper-container', {
-        // Optional parameters
-        direction: 'horizontal',  
-        spaceBetween:15,
-        speed: 800,
-        autoplay: {
-            delay: 5000,
-          },
-        loop: true,
+    setUpSwiper();
+    setUpScrollReveal();
 
-        // If we need pagination
-        pagination: {
-            el: '.swiper-pagination',
-        },
-
-        // // Navigation arrows
-        // navigation: {
-        //     nextEl: '.swiper-button-next',
-        //     prevEl: '.swiper-button-prev',
-        // },
-
-        // And if we need scrollbar
-        scrollbar: {
-            el: '.swiper-scrollbar',
-        },
-    })
-
+    setUpBackgroundColors();
     initScene();
 
     requestAnimationFrame(render);
@@ -178,6 +144,7 @@ import './main.scss';
     updateSceneMaterials(scroll);
     updateBlur(scroll);
     updateHeader(scroll);
+
 
     function initScene() {
 
@@ -292,7 +259,7 @@ import './main.scss';
 
 
         var gridGeometry = new THREE.Geometry();
-        var size = 2000, step = 75;
+        var size = 1500, step = 75;
         for (var i = - size; i <= size; i += step) {
             for (var j = - size; j <= size; j += step) {
                 var star = new THREE.Vector3(i, j, 0);
@@ -303,6 +270,70 @@ import './main.scss';
 
         scene.add(grid);
 
+    }
+
+    function setUpSwiper() {
+        new Swiper('.swiper-container', {
+            // Optional parameters
+            direction: 'horizontal',
+            spaceBetween: 15,
+            speed: 800,
+            autoplay: {
+                delay: 5000,
+            },
+            loop: true,
+
+            // If we need pagination
+            pagination: {
+                el: '.swiper-pagination',
+            },
+
+            // // Navigation arrows
+            // navigation: {
+            //     nextEl: '.swiper-button-next',
+            //     prevEl: '.swiper-button-prev',
+            // },
+
+            // And if we need scrollbar
+            scrollbar: {
+                el: '.swiper-scrollbar',
+            },
+        });
+    }
+
+    function setUpBackgroundColors() {
+        let bgPages = document.getElementsByClassName('bg_page');
+
+        // let bodyBackground = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, .5);
+        // document.body.style.backgroundColor = bodyBackground.getStyle();
+
+        RENDERER_CLEAR_COLOR_FROM.setHSL(RENDERER_CLEAR_COLOR_FROM.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
+        RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
+        RENDERER_CLEAR_COLOR_TO.getHSL().h = RENDERER_CLEAR_COLOR_FROM.getHSL.h + .5;
+
+        for (var i = 0; i < bgPages.length; i++) {
+            var page = bgPages[i];
+            let bg = RENDERER_CLEAR_COLOR_FROM.lerp(RENDERER_CLEAR_COLOR_TO, i * 1 / pages.length);
+
+            // hue += 1 / pages.length;
+            bg.setHSL(bg.getHSL().h + i * .05, COLOR_SATURATION, COLOR_LIGHTNESS);
+
+            // let a = 'rgba(' + bg.r*255 + ', '+ bg.g*255 + ', '+ bg.b*255 + ', '+ 0.2 + ')';
+            // console.log(a);
+            console.log(bg.getHSL().h);
+            page.style.backgroundColor = bg.getStyle();
+
+            if (i == 0)
+                document.body.style.backgroundColor = bg.getStyle();
+        }
+    }
+
+    function setUpScrollReveal() {
+        window.sr = ScrollReveal();
+        sr.reveal('.reveal', {
+            duration: 2000
+        }, 300);
+        sr.reveal('.reveal2');
     }
 
     function shuffle(a) {
@@ -419,6 +450,9 @@ import './main.scss';
     }*/
 
     function onScroll(evt) {
+
+        evt.preventDefault(); // prevent default browser scroll
+
         const scroll = getScroll();
 
         TweenMax.to(scrollTween,
@@ -523,10 +557,6 @@ import './main.scss';
         material3.opacity = o3;
 
         // grid.material.opacity = 1 - o3;
-
-        let bg = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, scroll);
-        // renderer.setClearColor(bg);
-        document.body.style.backgroundColor = bg.getStyle();
 
         material.emissive.set(MATERIAL_COLOR_FROM.clone().lerp(MATERIAL_COLOR_TO, scroll));
         light2.color.set(LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_TO, scroll));

@@ -18,16 +18,16 @@
         var e, t = document.createElement("style"); return t.innerHTML = "root: { --tmp-var: bold; }", document.head.appendChild(t), e = !!(window.CSS && window.CSS.supports && window.CSS.supports("font-weight", "var(--tmp-var)")), t.parentNode.removeChild(t), e
       };
       supportsCssVars() || alert("Please view this website in a modern browser that supports CSS Variables.");
-      setTimeout(() => document.body.classList.add('render'), 10);
+      setTimeout(() => document.body.classList.add('render'), 17);
     </script>
   </head>
   <body>
     <%= require('html-loader!./partials/icons.html') %>
     <%= require('html-loader!./partials/header.html') %>
     <%= require('html-loader!./partials/nav.html') %>
+    <%= require('html-loader!./partials/background.html') %>
     <%= require('html-loader!./partials/canvas.html') %>
-    <%= require('html-loader!./partials/content.html') %>
-  </body>
+    <%= require('html-loader!./partials/content.html') %></div>
   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://use.typekit.net/ujy0gmh.css">
 </html>
