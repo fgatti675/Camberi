@@ -16,7 +16,7 @@
 }
 
 .page.sticky {
-    // height: 160vh;
+    height: var(--page-height);
 }
 
 .page.sticky:last-of-type {
@@ -24,10 +24,12 @@
 }
 
 .page.sticky .page_content {
-    // position: -webkit-sticky;
-    // position: sticky;
-    //height: 50vh;
-    // margin: 20vh 0;
+    position: -webkit-sticky;
+    position: sticky;
+    // height: 50vh;
+    // margin: 10vh 0;
+    top: 50vh;
+    transform: translateY(-50%);
 }
 
 
@@ -63,13 +65,12 @@
     line-height: 1.5;
     margin-top: 20px;
     @media screen and (max-width: 55em) {
-        height: 100%;
-        background: rgba(0, 0, 0, 0.25);
+        background: rgba(0, 0, 0, 0.2);
         padding: 2rem;
-        border-radius: 23px;
+        border-radius: 16px;
         font-size: 0.85em;
         max-width: 90vw;
-        box-shadow: 0px 0px 33px rgba(0,0,0,0.2);
+        box-shadow: 0px 0px 33px rgba(0,0,0,0.1);
     }
 }
 

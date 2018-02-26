@@ -331,11 +331,13 @@ import './main.scss';
     }
 
     function setUpScrollReveal() {
-        window.sr = ScrollReveal();
+        let sr = ScrollReveal();
         sr.reveal('.reveal', {
             duration: 2000
         }, 300);
-        sr.reveal('.reveal2');
+        sr.reveal('.reveal2',{
+            viewFactor: 0.1
+        });
     }
 
     function shuffle(a) {
@@ -484,7 +486,7 @@ import './main.scss';
     }
 
     function updateBlur(scroll) {
-        if (scroll > (1-1/pages.length)+.05) {
+        if (scroll > (1 - 1 / pages.length) + .05) {
             let blurValue = (scroll - .8) / .2 * BLUR_PIXELS;
             // canvas.style = "-webkit-filter:blur(" + blurValue + "px)";
             // canvas.setAttribute("style","-ms-filter:blur(" + blurValue + "px)")
@@ -522,13 +524,14 @@ import './main.scss';
     }
 
     function fadePages() {
-        /*for (var i = 0; i < fadingPages.length; i++) {
+        for (var i = 0; i < fadingPages.length; i++) {
             var page = fadingPages[i];
             let off = page.offsetTop - content.scrollTop;
-            let o = off < -height ? 0 : (off > 0 ? 1 : (height + off) / height);
+            let h = page.offsetHeight;
+            let o = off < -h ? 0 : (off > 0 ? 1 : (h + off) / h);
             if (o != 0, 1)
                 page.style.opacity = Math.sin(o * Math.PI / 2);
-        }*/
+        }
     }
 
     function updateURL() {
