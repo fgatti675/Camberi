@@ -6,22 +6,23 @@ import Swiper from 'swiper';
 import ScrollReveal from 'scrollreveal';
 import './main.scss';
 
-
 (function () {
 
     const
         AMBIENT_LIGHT_INTENSITY = .22,
-        DIRECTIONAL_LIGHT_INTENSITY = .75,
+        DIRECTIONAL_LIGHT_INTENSITY = .8,
         MOUSE_LIGHT_INTENSITY = .4,
         BASE_SCALE = 1.2,
         BLUR_PIXELS = 8,
         CAMERA_Y_OFFSET = -300,
         GRID_SPEED = 1000,
         SCALE_INCREMENT = 1.7,
-        COLOR_SATURATION = .75,
+        LIGHT_COLOR_SATURATION = .9,
+        BG_COLOR_SATURATION = .75,
         COLOR_LIGHTNESS = .6,
         MOUSE_LIGHT_DISTANCE_TO_CENTER = 650,
-        SHAPE_RADIUS = 160;
+        SHAPE_RADIUS = 160,
+        SHAPE_RADIUS_SMALL = 120;
 
     const WHITE = new THREE.Color(0xFFFFFF),
         RED = new THREE.Color(0xFF0000),
@@ -87,8 +88,9 @@ import './main.scss';
         RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5);
 
     let adjustLightness = function (color) {
-        color.setHSL(color.getHSL().h, color.getHSL().s, .4);
+        color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .38);
     };
+    adjustLightness(MATERIAL_COLOR_FROM);
     adjustLightness(LIGHT_2_COLOR_FROM);
     adjustLightness(LIGHT_3_COLOR_FROM);
 
@@ -153,7 +155,7 @@ import './main.scss';
             canvas: canvas,
             // antialias: true
         });
-        console.log(window.devicePixelRatio);
+        console.log(width);
         renderer.setPixelRatio(window.devicePixelRatio > 1 ? 1.5 : 1);
         renderer.setSize(width, height);
 
@@ -183,7 +185,7 @@ import './main.scss';
         scene.add(mouseLight);
 
         // geometry = new THREE.IcosahedronGeometry(SHAPE_RADIUS, 4);
-        geometry = new THREE.DodecahedronGeometry(SHAPE_RADIUS, 4);
+        geometry = new THREE.DodecahedronGeometry(width < 600 ? SHAPE_RADIUS_SMALL : SHAPE_RADIUS, 4);
         // let torusGeometry = new THREE.TorusGeometry(SHAPE_RADIUS / 2, SHAPE_RADIUS / 4, 10, 461);
 
 
@@ -307,8 +309,8 @@ import './main.scss';
         // let bodyBackground = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, .5);
         // document.body.style.backgroundColor = bodyBackground.getStyle();
 
-        RENDERER_CLEAR_COLOR_FROM.setHSL(RENDERER_CLEAR_COLOR_FROM.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
-        RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
+        RENDERER_CLEAR_COLOR_FROM.setHSL(RENDERER_CLEAR_COLOR_FROM.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
+        RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
         RENDERER_CLEAR_COLOR_TO.getHSL().h = RENDERER_CLEAR_COLOR_FROM.getHSL.h + .5;
 
         for (var i = 0; i < bgPages.length; i++) {
@@ -316,7 +318,7 @@ import './main.scss';
             let bg = RENDERER_CLEAR_COLOR_FROM.lerp(RENDERER_CLEAR_COLOR_TO, i * 1 / pages.length);
 
             // hue += 1 / pages.length;
-            bg.setHSL(bg.getHSL().h + i * .05, COLOR_SATURATION, COLOR_LIGHTNESS);
+            bg.setHSL(bg.getHSL().h + i * .05, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
 
             // let a = 'rgba(' + bg.r*255 + ', '+ bg.g*255 + ', '+ bg.b*255 + ', '+ 0.2 + ')';
             // console.log(a);
@@ -456,7 +458,7 @@ import './main.scss';
         const scroll = getScroll();
 
         TweenMax.to(scrollTween,
-            5,
+            4,
             {
                 y: scroll,
                 ease: Power3.easeOut
@@ -482,7 +484,7 @@ import './main.scss';
     }
 
     function updateBlur(scroll) {
-        if (scroll > .8) {
+        if (scroll > (1-1/pages.length)+.05) {
             let blurValue = (scroll - .8) / .2 * BLUR_PIXELS;
             // canvas.style = "-webkit-filter:blur(" + blurValue + "px)";
             // canvas.setAttribute("style","-ms-filter:blur(" + blurValue + "px)")
