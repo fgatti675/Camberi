@@ -9,6 +9,8 @@
 @import "scss/components/page";
 @import "scss/components/swiper";
 @import "scss/components/logo";
+@import "scss/components/grid";
+@import "scss/components/loader";
   
 
 @media screen and (max-width: 55em) {
@@ -22,9 +24,6 @@
     .swiper-slide,
     .swiper-wrapper{
         width: 90vw;
-    }
-    .page_content {
-        top: 30vh;
     }
     .content--fixed {
         background: #acb2b9;

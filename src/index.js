@@ -12,11 +12,11 @@ import './main.scss';
     //scrollReveal TEST
 
     window.sr = ScrollReveal();
-    sr.reveal('.reveal', { 
+    sr.reveal('.reveal', {
         duration: 2000
-     }, 300);
+    }, 300);
     sr.reveal('.reveal2');
-    
+
 
     const
         AMBIENT_LIGHT_INTENSITY = .22,
@@ -67,6 +67,9 @@ import './main.scss';
     // const COLORS = [RED, PINK, GREEN, PURPLE, ORANGE, STRONG_BLUE, DARKENED_GREEN];
     // const COLORS = [PINK, RED, PURPLE, STRONG_BLUE, GREEN, ORANGE, DARKENED_GREEN];
 
+    // TOO BRIGHT:
+    // const COLORS = [GREEN, PURPLE, PINK, STRONG_BLUE, ORANGE, DARKENED_GREEN, RED];
+
 
     const COLORS = [ORANGE, PURPLE, STRONG_BLUE, DARKENED_GREEN, RED, PINK, GREEN];
     shuffle(COLORS);
@@ -91,8 +94,17 @@ import './main.scss';
         RENDERER_CLEAR_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5),
         RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5);
 
+    let adjustLightness = function (color) {
+        color.setHSL(color.getHSL().h, color.getHSL().s, .4);
+    };
+    adjustLightness(LIGHT_2_COLOR_FROM);
+    adjustLightness(LIGHT_3_COLOR_FROM);
+    
     RENDERER_CLEAR_COLOR_FROM.setHSL(RENDERER_CLEAR_COLOR_FROM.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
     RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
+
+    const loader = document.querySelector('.loader');
+    
 
     const canvas = document.querySelector('#scene');
     const header = document.querySelector('header');
@@ -129,12 +141,17 @@ import './main.scss';
 
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMouseMove);
-    // window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll);
 
     var mySwiper = new Swiper('.swiper-container', {
         // Optional parameters
-        direction: 'horizontal',
-        // loop: true,
+        direction: 'horizontal',  
+        spaceBetween:15,
+        speed: 800,
+        autoplay: {
+            delay: 5000,
+          },
+        loop: true,
 
         // If we need pagination
         pagination: {
@@ -304,7 +321,7 @@ import './main.scss';
     function getSpikeScalar(vector, scroll, time) {
         const spikes = vector.spikes;
         if (!spikes.activated) return .2;
-        const scalar = ((sinoid(time + scroll*1000, spikes.period)) * spikes.size) * .3;
+        const scalar = ((sinoid(time + scroll * 1000, spikes.period)) * spikes.size) * .3;
         return scalar + 1.;
     }
 
@@ -384,15 +401,15 @@ import './main.scss';
     }
 
     function getScroll() {
-         if (window.pageYOffset != undefined) {
-             return (pageYOffset) / (docheight - window.innerHeight);
-         }
-         else {
-             let sx, sy, d = document, r = d.documentElement, b = d.body;
-             sy = r.scrollTop || b.scrollTop || 0;
-             return (sy) / (docheight - window.innerHeight);
-         }
-     }
+        if (window.pageYOffset != undefined) {
+            return (pageYOffset) / (docheight - window.innerHeight);
+        }
+        else {
+            let sx, sy, d = document, r = d.documentElement, b = d.body;
+            sy = r.scrollTop || b.scrollTop || 0;
+            return (sy) / (docheight - window.innerHeight);
+        }
+    }
 
     /*function getScroll() {
         let o = content.scrollTop;
@@ -402,7 +419,6 @@ import './main.scss';
     }*/
 
     function onScroll(evt) {
-
         const scroll = getScroll();
 
         TweenMax.to(scrollTween,
@@ -436,7 +452,7 @@ import './main.scss';
             let blurValue = (scroll - .8) / .2 * BLUR_PIXELS;
             // canvas.style = "-webkit-filter:blur(" + blurValue + "px)";
             // canvas.setAttribute("style","-ms-filter:blur(" + blurValue + "px)")
-            canvas.setAttribute("style","-webkit-filter:blur(10px)")
+            canvas.setAttribute("style", "-webkit-filter:blur(10px)")
 
             // canvas.style.filter = "blur(10px)";
         } else {
@@ -562,8 +578,6 @@ import './main.scss';
 
     function render(a) {
         requestAnimationFrame(render);
-
-        onScroll();
 
         updateCameraPosition(scrollTween.y);
         updateGrid(scrollTween.y);

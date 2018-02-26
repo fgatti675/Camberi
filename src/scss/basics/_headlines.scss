@@ -17,7 +17,7 @@ h1{
     mix-blend-mode: overlay;
     text-align: center;
     line-height: .85;
-    @media (min-width:800px){
+    @media (min-width:55em){
         font-size: 14vw;
         line-height: .75;
     }
@@ -32,7 +32,7 @@ h2 {
     line-height: .85;
     mix-blend-mode: overlay;
     text-align: center;
-    @media (min-width:800px){
+    @media (min-width:55em){
         font-size: 11vw;
         line-height: .75;
     }
@@ -45,4 +45,17 @@ h3 {
     @extend .main-title;
     font-size: 30px;
     line-height: .9;
+}
+
+.email_headline {
+    text-transform: inherit;
+    font-family:$font-family;
+    font-size: 9vw;
+    color: white;
+    mix-blend-mode: normal;
+    font-weight: 600;
+    @media (min-width:55em){
+        font-size: 70px;
+        color: black;
+    }
 }

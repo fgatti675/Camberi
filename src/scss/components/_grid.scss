@@ -1,0 +1,24 @@
+.row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    @media (min-width:55em){
+        flex-wrap: nowrap;
+    }
+    .col-3 {
+        padding: 15px;
+        width: 50%;
+        text-align: center;
+        @media (min-width:55em){
+            width: 30%;
+        }
+    }
+    .col-4 {
+        padding: 15px;
+        width: 50%;
+        text-align: center;
+        @media (min-width:55em){
+            width: 40%;
+        }
+    }
+}
