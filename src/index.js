@@ -15,7 +15,7 @@ import './main.scss';
         BASE_SCALE = 1.2,
         BLUR_PIXELS = 8,
         CAMERA_Y_OFFSET = -300,
-        GRID_SPEED = 1000,
+        GRID_SPEED = 1400,
         SCALE_INCREMENT = 1.7,
         LIGHT_COLOR_SATURATION = .9,
         BG_COLOR_SATURATION = .75,
@@ -90,6 +90,7 @@ import './main.scss';
     let adjustLightness = function (color) {
         color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .38);
     };
+    adjustLightness(LIGHT_1_COLOR_BASE);
     adjustLightness(MATERIAL_COLOR_FROM);
     adjustLightness(LIGHT_2_COLOR_FROM);
     adjustLightness(LIGHT_3_COLOR_FROM);
@@ -335,7 +336,7 @@ import './main.scss';
         sr.reveal('.reveal', {
             duration: 2000
         }, 300);
-        sr.reveal('.reveal2',{
+        sr.reveal('.reveal2', {
             viewFactor: 0.1
         });
     }
@@ -530,7 +531,7 @@ import './main.scss';
             let h = page.offsetHeight;
             let o = off < -h ? 0 : (off > 0 ? 1 : (h + off) / h);
             if (o != 0, 1)
-                page.style.opacity = Math.sin(o * Math.PI / 2);
+                page.style.opacity = Math.sin(o * Math.PI / 2) + .1;
         }
     }
 
