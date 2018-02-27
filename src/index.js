@@ -27,6 +27,7 @@ import './main.scss';
     const WHITE = new THREE.Color(0xFFFFFF),
         RED = new THREE.Color(0xFF0000),
         GREEN = new THREE.Color(0x09CAA1),
+        YELLOW = new THREE.Color(0xFFFF00),
         STRONG_BLUE = new THREE.Color(0x0025FF),
         LIGHT_GREEN = new THREE.Color(0x70C4CE),
         DARKENED_GREEN = new THREE.Color(0x0D7182),
@@ -37,6 +38,7 @@ import './main.scss';
 
     ORANGE.string = "ORANGE";
     PURPLE.string = "PURPLE";
+    YELLOW.string = "YELLOW";
     STRONG_BLUE.string = "STRONG_BLUE";
     DARKENED_GREEN.string = "DARKENED_GREEN";
     RED.string = "RED";
@@ -64,7 +66,7 @@ import './main.scss';
     // const COLORS = [GREEN, PURPLE, PINK, STRONG_BLUE, ORANGE, DARKENED_GREEN, RED];
 
 
-    const COLORS = [ORANGE, PURPLE, STRONG_BLUE, DARKENED_GREEN, RED, PINK, GREEN];
+    const COLORS = [ORANGE, PURPLE, YELLOW, DARKENED_GREEN, RED, PINK, GREEN, STRONG_BLUE];
     shuffle(COLORS);
 
     COLORS.forEach(color => {
@@ -100,6 +102,7 @@ import './main.scss';
 
     const canvas = document.querySelector('#scene');
     const header = document.querySelector('header');
+    const location = document.querySelector('.location');
     const content = window.document.documentElement;
     const pages = document.getElementsByClassName('page');
     const fadingPages = document.getElementsByClassName('fade-page');
@@ -316,10 +319,10 @@ import './main.scss';
 
         for (var i = 0; i < bgPages.length; i++) {
             var page = bgPages[i];
-            let bg = RENDERER_CLEAR_COLOR_FROM.lerp(RENDERER_CLEAR_COLOR_TO, i * 1 / pages.length);
+            let bg = RENDERER_CLEAR_COLOR_FROM.lerp(RENDERER_CLEAR_COLOR_TO, i * 1 / bgPages.length);
 
             // hue += 1 / pages.length;
-            bg.setHSL(bg.getHSL().h + i * .05, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
+            bg.setHSL(bg.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
 
             // let a = 'rgba(' + bg.r*255 + ', '+ bg.g*255 + ', '+ bg.b*255 + ', '+ 0.2 + ')';
             // console.log(a);
@@ -368,9 +371,9 @@ import './main.scss';
         // vector.multiplyScalar(value + 1);
 
         const perlin = Perlin.noise.simplex3(
-            (vector.x * 0.008) + (time * 0.0004) + (value),
-            (vector.y * 0.008) + (time * 0.0004) + (value),
-            (vector.z * 0.008) + (time * 0.0004) + (value)
+            (vector.x * 0.008) + (time * 0.00045) + (value),
+            (vector.y * 0.008) + (time * 0.00045) + (value),
+            (vector.z * 0.008) + (time * 0.00045) + (value)
         );
         // const perlin = Perlin.noise.simplex3(
         //     (vector.x * 0.008) + (time * 0.0003),
@@ -399,7 +402,7 @@ import './main.scss';
 
     function updateVertices(time) {
 
-        var s = sigmoid((scrollTween.y - .6) * 24 - 6) * SCALE_INCREMENT;
+        var s = sigmoid((scrollTween.y - .7) * 24 - 6) * SCALE_INCREMENT;
         var scale = BASE_SCALE + s;
         shape.scale.set(scale, scale, scale);
         shape2.scale.set(scale, scale, scale);
@@ -483,7 +486,15 @@ import './main.scss';
 
 
     function updateHeader(scroll) {
-        header.style.opacity = (scroll - .05) / .95 * 5;
+        let page = pages[0];
+        if (page.offsetHeight  < content.scrollTop * 2) {
+            header.style.opacity = 1;
+            location.style.opacity = 0;
+        }
+        else {
+            header.style.opacity = 0;
+            location.style.opacity = 1;
+        }
     }
 
     function updateBlur(scroll) {
