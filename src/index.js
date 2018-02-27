@@ -3,10 +3,37 @@ import { TweenMax } from "gsap";
 import * as Perlin from 'perlin';
 import { Vector3 } from 'three';
 import Swiper from 'swiper';
-import ScrollReveal from 'scrollreveal';
+import  ScrollReveal from 'scrollreveal';
+import * as ScrollSnap from 'scrollSnap';
 import './main.scss';
 
 (function () {
+
+    ScrollSnap.init({
+ 
+        // NodeList of snap-elements (required) 
+        // scrollSnap always snaps to the nearest element 
+        elements: document.querySelectorAll('.page'),
+        
+        // Integer - Set a minimum window-size (required) 
+        // scrollSnap will be deactivated when the window is smaller than the given dimensions 
+        minWidth: 600,
+        minHeight: 400,
+        
+        // Boolean - Deactivate scrollSnap on mobile devices (optional) 
+        detectMobile: true,
+        
+        // Boolean - Keyboard-navigation (optional) 
+        keyboard: true,
+        
+        // Integer - Snap-animation-speed (optional) 
+        // Higher = slower 
+        duration: 20,
+        
+        // Function - Set a custom timing-function for the snap-animation (optional) 
+        timing: ScrollSnap._timing
+     
+    })
 
     const
         AMBIENT_LIGHT_INTENSITY = .22,
