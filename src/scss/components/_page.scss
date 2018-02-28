@@ -1,13 +1,17 @@
 .page {
     position: relative;
-    height: 100vh;
+    width: 100vw;
+    height: 120vh;
     display: flex;
     justify-content: center;
     align-items: center;
     -webkit-scroll-snap-coordinate: 0% 0%;
     -ms-scroll-snap-coordinate: 0% 0%;
     scroll-snap-coordinate: 0% 0%;
-    
+}
+
+.page:last-of-type {
+    height: 100vh;
 }
 
 .page_content {
@@ -19,9 +23,6 @@
     height: var(--page-height);
 }
 
-.page.sticky:last-of-type {
-    // height: 100vh;
-}
 
 .page.sticky .page_content {
     position: -webkit-sticky;

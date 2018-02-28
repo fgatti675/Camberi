@@ -9,32 +9,6 @@ import './main.scss';
 
 (function () {
 
-    ScrollSnap.init({
- 
-        // NodeList of snap-elements (required) 
-        // scrollSnap always snaps to the nearest element 
-        elements: document.querySelectorAll('.page'),
-        
-        // Integer - Set a minimum window-size (required) 
-        // scrollSnap will be deactivated when the window is smaller than the given dimensions 
-        minWidth: 600,
-        minHeight: 400,
-        
-        // Boolean - Deactivate scrollSnap on mobile devices (optional) 
-        detectMobile: true,
-        
-        // Boolean - Keyboard-navigation (optional) 
-        keyboard: true,
-        
-        // Integer - Snap-animation-speed (optional) 
-        // Higher = slower 
-        duration: 20,
-        
-        // Function - Set a custom timing-function for the snap-animation (optional) 
-        timing: ScrollSnap._timing
-     
-    })
-
     const
         AMBIENT_LIGHT_INTENSITY = .22,
         DIRECTIONAL_LIGHT_INTENSITY = .8,
@@ -113,8 +87,8 @@ import './main.scss';
         LIGHT_3_COLOR_TO = COLORS[3],
         MATERIAL_COLOR_FROM = COLORS[4],
         MATERIAL_COLOR_TO = COLORS[5],
-        RENDERER_CLEAR_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5),
-        RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5);
+        RENDERER_CLEAR_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3),
+        RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
 
     let adjustLightness = function (color) {
         color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .38);
@@ -125,8 +99,6 @@ import './main.scss';
     adjustLightness(LIGHT_3_COLOR_FROM);
 
     const loader = document.querySelector('.loader');
-
-
     const canvas = document.querySelector('#scene');
     const header = document.querySelector('header');
     const location = document.querySelector('.location');
@@ -167,6 +139,7 @@ import './main.scss';
 
     setUpSwiper();
     setUpScrollReveal();
+    setUpScrollSnap();
 
     setUpBackgroundColors();
     initScene();
@@ -335,7 +308,7 @@ import './main.scss';
     }
 
     function setUpBackgroundColors() {
-        let bgPages = document.getElementsByClassName('bg_page');
+        let bgPages = document.getElementById('background').getElementsByClassName('page');
 
         // let bodyBackground = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, .5);
         // document.body.style.backgroundColor = bodyBackground.getStyle();
@@ -368,6 +341,34 @@ import './main.scss';
         }, 300);
         sr.reveal('.reveal2', {
             viewFactor: 0.1
+        });
+    }
+
+    function setUpScrollSnap(){
+        ScrollSnap.init({
+ 
+            // NodeList of snap-elements (required) 
+            // scrollSnap always snaps to the nearest element 
+            elements: document.querySelectorAll('main .page'),
+            
+            // Integer - Set a minimum window-size (required) 
+            // scrollSnap will be deactivated when the window is smaller than the given dimensions 
+            minWidth: 600,
+            minHeight: 400,
+            
+            // Boolean - Deactivate scrollSnap on mobile devices (optional) 
+            detectMobile: true,
+            
+            // Boolean - Keyboard-navigation (optional) 
+            keyboard: true,
+            
+            // Integer - Snap-animation-speed (optional) 
+            // Higher = slower 
+            duration: 8,
+            
+            // Function - Set a custom timing-function for the snap-animation (optional) 
+            timing: ScrollSnap._timing
+         
         });
     }
 
