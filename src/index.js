@@ -48,6 +48,7 @@ import './main.scss';
     PINK.string = "PINK";
     GREEN.string = "GREEN";
 
+    const COLORS = [ORANGE, PURPLE, YELLOW, DARKENED_GREEN, RED, PINK, GREEN, STRONG_BLUE];
 
     // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, DARKENED_GREEN, RED, PINK, GREEN];
     // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, PINK, RED, DARKENED_GREEN, GREEN];
@@ -68,38 +69,23 @@ import './main.scss';
     // const COLORS = [GREEN, PURPLE, PINK, STRONG_BLUE, ORANGE, DARKENED_GREEN, RED];
     // const COLORS = [GREEN, PURPLE, PINK, STRONG_BLUE, ORANGE, DARKENED_GREEN, RED];
 
-
-    const COLORS = [ORANGE, PURPLE, YELLOW, DARKENED_GREEN, RED, PINK, GREEN, STRONG_BLUE];
-    shuffle(COLORS);
-
     COLORS.forEach(color => {
         // color.setHSL(color.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
     });
 
-    let colorString = "const COLORS = [";
-    colorString += COLORS.map(c => c.string).reduce((a, b) => a + ", " + b);
-    colorString += "];";
-    console.log(colorString);
+    let
+        LIGHT_1_COLOR_BASE,
+        LIGHT_2_COLOR_FROM,
+        LIGHT_2_COLOR_TO,
+        LIGHT_3_COLOR_FROM,
+        LIGHT_3_COLOR_TO,
+        MATERIAL_COLOR_FROM,
+        MATERIAL_COLOR_TO,
+        RENDERER_CLEAR_COLOR_FROM,
+        RENDERER_CLEAR_COLOR_TO;
 
-    const
-        LIGHT_1_COLOR_BASE = COLORS[6],
-        LIGHT_2_COLOR_FROM = COLORS[0],
-        LIGHT_2_COLOR_TO = COLORS[1],
-        LIGHT_3_COLOR_FROM = COLORS[2],
-        LIGHT_3_COLOR_TO = COLORS[3],
-        MATERIAL_COLOR_FROM = COLORS[4],
-        MATERIAL_COLOR_TO = COLORS[5],
-        RENDERER_CLEAR_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3),
-        RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
 
-    let adjustLightness = function (color) {
-        color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .38);
-    };
-    adjustLightness(LIGHT_1_COLOR_BASE);
-    adjustLightness(MATERIAL_COLOR_FROM);
-    adjustLightness(LIGHT_2_COLOR_FROM);
-    adjustLightness(LIGHT_3_COLOR_FROM);
-
+    const shuffleButton = document.getElementById('shuffle_colors_btn');
     const loader = document.querySelector('.loader');
     const canvas = document.querySelector('#scene');
     const header = document.querySelector('header');
@@ -138,11 +124,14 @@ import './main.scss';
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("scroll", onScroll);
+    shuffleButton.addEventListener("click", onShuffleClick);
 
     setUpSwiper();
     setUpScrollReveal();
     setUpScrollSnap();
 
+    shuffle(COLORS);
+    setUpLightColors();
     setUpBackgroundColors();
     initScene();
 
@@ -192,6 +181,7 @@ import './main.scss';
 
         // geometry = new THREE.IcosahedronGeometry(SHAPE_RADIUS, 4);
         geometry = new THREE.DodecahedronGeometry(width < 600 ? SHAPE_RADIUS_SMALL : SHAPE_RADIUS, 4);
+        // geometry = new THREE.TorusGeometry(SHAPE_RADIUS / 2, SHAPE_RADIUS / 4, 10, 461);
         // let torusGeometry = new THREE.TorusGeometry(SHAPE_RADIUS / 2, SHAPE_RADIUS / 4, 10, 461);
 
 
@@ -309,6 +299,33 @@ import './main.scss';
         });
     }
 
+    function setUpLightColors() {
+
+        LIGHT_1_COLOR_BASE = COLORS[6];
+        LIGHT_2_COLOR_FROM = COLORS[0];
+        LIGHT_2_COLOR_TO = COLORS[1];
+        LIGHT_3_COLOR_FROM = COLORS[2];
+        LIGHT_3_COLOR_TO = COLORS[3];
+        MATERIAL_COLOR_FROM = COLORS[4];
+        MATERIAL_COLOR_TO = COLORS[5];
+        RENDERER_CLEAR_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
+        RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
+
+        let adjustLightness = function (color) {
+            color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .38);
+        };
+        adjustLightness(LIGHT_1_COLOR_BASE);
+        adjustLightness(MATERIAL_COLOR_FROM);
+        adjustLightness(LIGHT_2_COLOR_FROM);
+        adjustLightness(LIGHT_3_COLOR_FROM);
+
+        let colorString = "const COLORS = [";
+        colorString += COLORS.map(c => c.string).reduce((a, b) => a + ", " + b);
+        colorString += "];";
+        console.log(colorString);
+
+    }
+
     function setUpBackgroundColors() {
         let bgPages = document.getElementById('background').getElementsByClassName('page');
 
@@ -400,7 +417,7 @@ import './main.scss';
         let m = mouseProjection.clone();
         m.applyAxisAngle(X_AXIS, -rotation);
 
-        var i = 1 / vector.distanceTo(m ) * 20;
+        var i = 1 / vector.distanceTo(m) * 20;
         var value = i * i;
         // vector.multiplyScalar(value + 1);
 
@@ -495,6 +512,15 @@ import './main.scss';
         return scroll * Math.PI;
     }
 
+
+    function onShuffleClick() {
+        console.log("Shuffle up!");
+        shuffle(COLORS);
+        setUpLightColors();
+        setUpBackgroundColors();
+        updateSceneMaterials(scrollTween.y);
+    }
+
     function onScroll(evt) {
 
         evt.preventDefault(); // prevent default browser scroll
@@ -505,6 +531,7 @@ import './main.scss';
             4,
             {
                 y: scroll,
+                yoyo: true,
                 ease: Power3.easeOut
             });
 
@@ -613,6 +640,7 @@ import './main.scss';
 
         // grid.material.opacity = 1 - o3;
 
+        light.groundColor = LIGHT_1_COLOR_BASE;
         material.emissive.set(MATERIAL_COLOR_FROM.clone().lerp(MATERIAL_COLOR_TO, scroll));
         light2.color.set(LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_TO, scroll));
         light3.color.set(LIGHT_3_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_TO, scroll));
