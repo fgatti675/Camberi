@@ -265,7 +265,7 @@ import './main.scss';
 
 
         var gridGeometry = new THREE.Geometry();
-        var size = 1500, step = 75;
+        var size = 1800, step = 75;
         for (var i = - size; i <= size; i += step) {
             for (var j = - size; j <= size; j += step) {
                 var star = new THREE.Vector3(i, j, 0);
