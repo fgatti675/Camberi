@@ -322,7 +322,8 @@ import './main.scss';
             let bg = RENDERER_CLEAR_COLOR_FROM.lerp(RENDERER_CLEAR_COLOR_TO, i * 1 / bgPages.length);
 
             // hue += 1 / pages.length;
-            bg.setHSL(bg.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
+            // bg.setHSL(bg.getHSL().h, .3, .8 );
+            bg.setHSL(bg.getHSL().h, .3, .9 - i * .05);
 
             // let a = 'rgba(' + bg.r*255 + ', '+ bg.g*255 + ', '+ bg.b*255 + ', '+ 0.2 + ')';
             // console.log(a);
@@ -487,7 +488,7 @@ import './main.scss';
 
     function updateHeader(scroll) {
         let page = pages[0];
-        if (page.offsetHeight  < content.scrollTop * 2) {
+        if (page.offsetHeight < content.scrollTop * 2) {
             header.style.opacity = 1;
             location.style.opacity = 0;
         }
