@@ -3,11 +3,13 @@ import { TweenMax } from "gsap";
 import * as Perlin from 'perlin';
 import { Vector3 } from 'three';
 import Swiper from 'swiper';
-import  ScrollReveal from 'scrollreveal';
+import ScrollReveal from 'scrollreveal';
 import * as ScrollSnap from 'scrollSnap';
 import './main.scss';
 
 (function () {
+
+    const X_AXIS = new THREE.Vector3(1, 0, 0);
 
     const
         AMBIENT_LIGHT_INTENSITY = .22,
@@ -344,31 +346,31 @@ import './main.scss';
         });
     }
 
-    function setUpScrollSnap(){
+    function setUpScrollSnap() {
         ScrollSnap.init({
- 
+
             // NodeList of snap-elements (required) 
             // scrollSnap always snaps to the nearest element 
             elements: document.querySelectorAll('main .page'),
-            
+
             // Integer - Set a minimum window-size (required) 
             // scrollSnap will be deactivated when the window is smaller than the given dimensions 
             minWidth: 600,
             minHeight: 400,
-            
+
             // Boolean - Deactivate scrollSnap on mobile devices (optional) 
             detectMobile: true,
-            
+
             // Boolean - Keyboard-navigation (optional) 
             keyboard: true,
-            
+
             // Integer - Snap-animation-speed (optional) 
             // Higher = slower 
             duration: 8,
-            
+
             // Function - Set a custom timing-function for the snap-animation (optional) 
             timing: ScrollSnap._timing
-         
+
         });
     }
 
@@ -392,9 +394,13 @@ import './main.scss';
         return scalar + 1.;
     }
 
-    function getBlobScalar(vector, time, mouseProjection) {
+    function getBlobScalar(vector, time, mouseProjection, scroll) {
 
-        var i = 1 / vector.distanceTo(mouseProjection) * 20;
+        let rotation = getShapeRotation(scroll);
+        let m = mouseProjection.clone();
+        m.applyAxisAngle(X_AXIS, -rotation);
+
+        var i = 1 / vector.distanceTo(m ) * 20;
         var value = i * i;
         // vector.multiplyScalar(value + 1);
 
@@ -439,13 +445,13 @@ import './main.scss';
         // const ratio = (sigmoid((scrollTween.y - .5) * 10));
         const ratio = (sinoid(scrollTween.y, 2));
 
-        let rotation = (scrollTween.y) * Math.PI;
+        let rotation = getShapeRotation(scrollTween.y);
 
         updateShapePosition(getScroll(), mouse);
 
-        // shape.rotation.x = rotation;
-        // shape2.rotation.x = rotation;
-        // shape3.rotation.x = rotation;
+        shape.rotation.x = rotation;
+        shape2.rotation.x = rotation;
+        shape3.rotation.x = rotation;
 
         // const MAGNET_DISTANCE = 50;
         for (var i = 0; i < geometry.vertices.length; i++) {
@@ -456,10 +462,10 @@ import './main.scss';
             let v1, v2;
             if (scrollTween.y < .5)
                 v1 = getSphereScalar(scrollTween.y),
-                    v2 = getBlobScalar(vector, time, mouseProjection);
+                    v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
             else
                 v1 = getSpikeScalar(vector, scrollTween.y, time),
-                    v2 = getBlobScalar(vector, time, mouseProjection);
+                    v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
 
             vector.multiplyScalar((1 - ratio) * v1 + ratio * v2 + 1);
 
@@ -484,6 +490,10 @@ import './main.scss';
         let h = content.scrollHeight;
         return (o) / (h - i);
     }*/
+
+    function getShapeRotation(scroll) {
+        return scroll * Math.PI;
+    }
 
     function onScroll(evt) {
 
@@ -515,7 +525,7 @@ import './main.scss';
 
     function updateHeader(scroll) {
         let page = pages[0];
-        if (page.offsetHeight  < content.scrollTop * 2) {
+        if (page.offsetHeight < content.scrollTop * 2) {
             header.style.opacity = 1;
             location.style.opacity = 0;
         }
