@@ -3,11 +3,13 @@ import { TweenMax } from "gsap";
 import * as Perlin from 'perlin';
 import { Vector3 } from 'three';
 import Swiper from 'swiper';
-import  ScrollReveal from 'scrollreveal';
+import ScrollReveal from 'scrollreveal';
 import * as ScrollSnap from 'scrollSnap';
 import './main.scss';
 
 (function () {
+
+    const X_AXIS = new THREE.Vector3(1, 0, 0);
 
     const
         AMBIENT_LIGHT_INTENSITY = .22,
@@ -46,6 +48,7 @@ import './main.scss';
     PINK.string = "PINK";
     GREEN.string = "GREEN";
 
+    const COLORS = [ORANGE, PURPLE, YELLOW, DARKENED_GREEN, RED, PINK, GREEN, STRONG_BLUE];
 
     // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, DARKENED_GREEN, RED, PINK, GREEN];
     // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, PINK, RED, DARKENED_GREEN, GREEN];
@@ -66,38 +69,23 @@ import './main.scss';
     // const COLORS = [GREEN, PURPLE, PINK, STRONG_BLUE, ORANGE, DARKENED_GREEN, RED];
     // const COLORS = [GREEN, PURPLE, PINK, STRONG_BLUE, ORANGE, DARKENED_GREEN, RED];
 
-
-    const COLORS = [ORANGE, PURPLE, YELLOW, DARKENED_GREEN, RED, PINK, GREEN, STRONG_BLUE];
-    shuffle(COLORS);
-
     COLORS.forEach(color => {
         // color.setHSL(color.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
     });
 
-    let colorString = "const COLORS = [";
-    colorString += COLORS.map(c => c.string).reduce((a, b) => a + ", " + b);
-    colorString += "];";
-    console.log(colorString);
+    let
+        LIGHT_1_COLOR_BASE,
+        LIGHT_2_COLOR_FROM,
+        LIGHT_2_COLOR_TO,
+        LIGHT_3_COLOR_FROM,
+        LIGHT_3_COLOR_TO,
+        MATERIAL_COLOR_FROM,
+        MATERIAL_COLOR_TO,
+        RENDERER_CLEAR_COLOR_FROM,
+        RENDERER_CLEAR_COLOR_TO;
 
-    const
-        LIGHT_1_COLOR_BASE = COLORS[6],
-        LIGHT_2_COLOR_FROM = COLORS[0],
-        LIGHT_2_COLOR_TO = COLORS[1],
-        LIGHT_3_COLOR_FROM = COLORS[2],
-        LIGHT_3_COLOR_TO = COLORS[3],
-        MATERIAL_COLOR_FROM = COLORS[4],
-        MATERIAL_COLOR_TO = COLORS[5],
-        RENDERER_CLEAR_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3),
-        RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
 
-    let adjustLightness = function (color) {
-        color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .38);
-    };
-    adjustLightness(LIGHT_1_COLOR_BASE);
-    adjustLightness(MATERIAL_COLOR_FROM);
-    adjustLightness(LIGHT_2_COLOR_FROM);
-    adjustLightness(LIGHT_3_COLOR_FROM);
-
+    const shuffleButton = document.getElementById('shuffle_colors_btn');
     const loader = document.querySelector('.loader');
     const canvas = document.querySelector('#scene');
     const header = document.querySelector('header');
@@ -136,11 +124,14 @@ import './main.scss';
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("scroll", onScroll);
+    shuffleButton.addEventListener("click", onShuffleClick);
 
     setUpSwiper();
     setUpScrollReveal();
     setUpScrollSnap();
 
+    shuffle(COLORS);
+    setUpLightColors();
     setUpBackgroundColors();
     initScene();
 
@@ -190,6 +181,7 @@ import './main.scss';
 
         // geometry = new THREE.IcosahedronGeometry(SHAPE_RADIUS, 4);
         geometry = new THREE.DodecahedronGeometry(width < 600 ? SHAPE_RADIUS_SMALL : SHAPE_RADIUS, 4);
+        // geometry = new THREE.TorusGeometry(SHAPE_RADIUS / 2, SHAPE_RADIUS / 4, 10, 461);
         // let torusGeometry = new THREE.TorusGeometry(SHAPE_RADIUS / 2, SHAPE_RADIUS / 4, 10, 461);
 
 
@@ -307,6 +299,33 @@ import './main.scss';
         });
     }
 
+    function setUpLightColors() {
+
+        LIGHT_1_COLOR_BASE = COLORS[6];
+        LIGHT_2_COLOR_FROM = COLORS[0];
+        LIGHT_2_COLOR_TO = COLORS[1];
+        LIGHT_3_COLOR_FROM = COLORS[2];
+        LIGHT_3_COLOR_TO = COLORS[3];
+        MATERIAL_COLOR_FROM = COLORS[4];
+        MATERIAL_COLOR_TO = COLORS[5];
+        RENDERER_CLEAR_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
+        RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
+
+        let adjustLightness = function (color) {
+            color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .38);
+        };
+        adjustLightness(LIGHT_1_COLOR_BASE);
+        adjustLightness(MATERIAL_COLOR_FROM);
+        adjustLightness(LIGHT_2_COLOR_FROM);
+        adjustLightness(LIGHT_3_COLOR_FROM);
+
+        let colorString = "const COLORS = [";
+        colorString += COLORS.map(c => c.string).reduce((a, b) => a + ", " + b);
+        colorString += "];";
+        console.log(colorString);
+
+    }
+
     function setUpBackgroundColors() {
         let bgPages = document.getElementById('background').getElementsByClassName('page');
 
@@ -344,31 +363,31 @@ import './main.scss';
         });
     }
 
-    function setUpScrollSnap(){
+    function setUpScrollSnap() {
         ScrollSnap.init({
- 
+
             // NodeList of snap-elements (required) 
             // scrollSnap always snaps to the nearest element 
             elements: document.querySelectorAll('main .page'),
-            
+
             // Integer - Set a minimum window-size (required) 
             // scrollSnap will be deactivated when the window is smaller than the given dimensions 
             minWidth: 600,
             minHeight: 400,
-            
+
             // Boolean - Deactivate scrollSnap on mobile devices (optional) 
             detectMobile: true,
-            
+
             // Boolean - Keyboard-navigation (optional) 
             keyboard: true,
-            
+
             // Integer - Snap-animation-speed (optional) 
             // Higher = slower 
             duration: 8,
-            
+
             // Function - Set a custom timing-function for the snap-animation (optional) 
             timing: ScrollSnap._timing
-         
+
         });
     }
 
@@ -392,9 +411,13 @@ import './main.scss';
         return scalar + 1.;
     }
 
-    function getBlobScalar(vector, time, mouseProjection) {
+    function getBlobScalar(vector, time, mouseProjection, scroll) {
 
-        var i = 1 / vector.distanceTo(mouseProjection) * 20;
+        let rotation = getShapeRotation(scroll);
+        let m = mouseProjection.clone();
+        m.applyAxisAngle(X_AXIS, -rotation);
+
+        var i = 1 / vector.distanceTo(m) * 20;
         var value = i * i;
         // vector.multiplyScalar(value + 1);
 
@@ -439,13 +462,13 @@ import './main.scss';
         // const ratio = (sigmoid((scrollTween.y - .5) * 10));
         const ratio = (sinoid(scrollTween.y, 2));
 
-        let rotation = (scrollTween.y) * Math.PI;
+        let rotation = getShapeRotation(scrollTween.y);
 
         updateShapePosition(getScroll(), mouse);
 
-        // shape.rotation.x = rotation;
-        // shape2.rotation.x = rotation;
-        // shape3.rotation.x = rotation;
+        shape.rotation.x = rotation;
+        shape2.rotation.x = rotation;
+        shape3.rotation.x = rotation;
 
         // const MAGNET_DISTANCE = 50;
         for (var i = 0; i < geometry.vertices.length; i++) {
@@ -456,10 +479,10 @@ import './main.scss';
             let v1, v2;
             if (scrollTween.y < .5)
                 v1 = getSphereScalar(scrollTween.y),
-                    v2 = getBlobScalar(vector, time, mouseProjection);
+                    v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
             else
                 v1 = getSpikeScalar(vector, scrollTween.y, time),
-                    v2 = getBlobScalar(vector, time, mouseProjection);
+                    v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
 
             vector.multiplyScalar((1 - ratio) * v1 + ratio * v2 + 1);
 
@@ -485,6 +508,19 @@ import './main.scss';
         return (o) / (h - i);
     }*/
 
+    function getShapeRotation(scroll) {
+        return scroll * Math.PI;
+    }
+
+
+    function onShuffleClick() {
+        console.log("Shuffle up!");
+        shuffle(COLORS);
+        setUpLightColors();
+        setUpBackgroundColors();
+        updateSceneMaterials(scrollTween.y);
+    }
+
     function onScroll(evt) {
 
         evt.preventDefault(); // prevent default browser scroll
@@ -495,6 +531,7 @@ import './main.scss';
             4,
             {
                 y: scroll,
+                yoyo: true,
                 ease: Power3.easeOut
             });
 
@@ -515,7 +552,7 @@ import './main.scss';
 
     function updateHeader(scroll) {
         let page = pages[0];
-        if (page.offsetHeight  < content.scrollTop * 2) {
+        if (page.offsetHeight < content.scrollTop * 2) {
             header.style.opacity = 1;
             location.style.opacity = 0;
         }
@@ -603,6 +640,7 @@ import './main.scss';
 
         // grid.material.opacity = 1 - o3;
 
+        light.groundColor = LIGHT_1_COLOR_BASE;
         material.emissive.set(MATERIAL_COLOR_FROM.clone().lerp(MATERIAL_COLOR_TO, scroll));
         light2.color.set(LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_TO, scroll));
         light3.color.set(LIGHT_3_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_TO, scroll));

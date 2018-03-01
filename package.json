@@ -33,9 +33,7 @@
   },
   "scripts": {
     "browsersync": "cross-env NODE_ENV=development TYPE=browsersync webpack --watch",
-    "dev": "npm run runwatch & npm run runserver",
-    "runwatch": "cross-env NODE_ENV=development webpack --w",
-    "runserver": "cross-env NODE_ENV=development webpack-dev-server",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "npm run prod && npm run firebase",
     "prod": "NODE_ENV=prod webpack",
