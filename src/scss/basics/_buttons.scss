@@ -60,5 +60,11 @@
     }
     @media screen and (max-width: 55em) {
         padding: .8rem 1.6rem;
+        .icon{
+            display:none;
+        }
+        &.btn--has-icon {
+            padding-right: 1.6rem;; 
+        }
     }
 }

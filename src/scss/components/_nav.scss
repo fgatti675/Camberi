@@ -6,15 +6,32 @@ nav {
     z-index: 1;
     top: 0;
     right: 0;
-    display: block;
+    display: flex;
     align-self: end;
+
     > a {
-        padding-right: 2rem;
+        padding-right: 1rem;
         align-self: center;
         color: var(--color-text-dark);
         &:hover, &:focus {
             color: var(--color-link-hover);
             outline: none;
         }
+    }
+
+   svg{
+        &:hover {
+            path {
+                fill: var(--color-text-dark);
+            }
+        }
+    }
+}
+
+
+
+@media screen and (max-width: 55em) {
+    nav a {
+        // display: none;
     }
 }

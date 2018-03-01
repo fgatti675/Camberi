@@ -28,4 +28,11 @@ header {
         animation-name: blink;
         animation-duration: 1s;
     }
+
+    @media screen and (max-width: 55em) {
+        p {
+            display: none;
+        }
+    }
 }
+
