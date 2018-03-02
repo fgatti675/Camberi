@@ -20,3 +20,22 @@ main {
         transition: 300ms;
     }
 }
+
+.content {
+	position: absolute;
+	height: 100vh;
+	overflow-x: hidden;
+	overflow-y: auto;
+	-webkit-scroll-snap-type: mandatory;
+	-ms-scroll-snap-type: mandatory;
+	scroll-snap-type: mandatory;
+	-webkit-scroll-behavior: smooth;
+	-ms-scroll-scroll-behavior: smooth;
+	scroll-behavior: smooth;
+}
+
+.page {   
+	-webkit-scroll-snap-coordinate: 0vw 0vw;
+	-ms-scroll-snap-coordinate: 0vw 0vw;
+	scroll-snap-coordinate: 0vw 0vw;
+}
