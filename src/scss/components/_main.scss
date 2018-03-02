@@ -1,0 +1,10 @@
+
+main {
+    position: absolute;
+    top: 0;
+    transition: 300ms;
+    &.displaced{
+        transform: translateX(-100vw);
+        transition: 300ms;
+    }
+}

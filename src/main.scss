@@ -3,6 +3,7 @@
 @import "scss/basics/headlines";
 @import "scss/basics/general";
 @import "scss/basics/buttons";
+@import "scss/components/main";
 @import "scss/components/header";
 @import "scss/components/nav";
 @import "scss/components/scene";
@@ -13,17 +14,5 @@
 @import "scss/components/loader";
 @import "scss/components/background";
 @import "scss/components/location";
+@import "scss/components/about";
 
-
-@media screen and (max-width: 55em) {
-    .swiper-container {
-        padding: 0 5vw;
-    }
-    .swiper-slide,
-    .swiper-wrapper {
-        width: 90vw;
-    }
-    .content--fixed {
-        background: #acb2b9;
-    }
-}

@@ -16,11 +16,23 @@ body {
     font-family: $font-family;
     margin: 0;
     overflow-x: hidden;
-    background: #52D1DF;
+    background: #FFFFFF;
     font-weight: 400;
     color: var(--color-text);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    
+    font-size: $body-font-size;
+    opacity: 0;
+    transition: 1s ease opacity;
+
+    &.render  {
+        opacity: 1;
+    }
+
+    &.blocked{
+        overflow: hidden;
+    }
 }
 
 body {
@@ -51,15 +63,6 @@ body {
     --blend-color-5: #1c1cc9;
 }
 
-body {
-    font-size: $body-font-size;
-    opacity: 0;
-    &.render  {
-        transition: 1s ease opacity;
-        opacity: 1;
-    }
-}
-
 
 a {
     text-decoration: none;
@@ -76,10 +79,4 @@ svg path {
 
 .text_dark {
     color: var(--color-text-dark) !important;
-}
-
-main {
-    position: absolute;
-    top: 0;
-    width: 100%;
 }

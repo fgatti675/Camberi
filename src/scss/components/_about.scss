@@ -1,0 +1,25 @@
+#about {
+    margin: 0;
+    position: fixed;
+    top:0;
+    transform: translateX(100vw);
+    width: 100vw;
+    height: 100vh;
+    overflow-x: auto;
+
+    .content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        height: 160vh;
+    }
+    
+    &.active {
+        transition: 400ms;
+        transform: translateX(0);
+    }
+    &.displayedOnce {
+        transition: 400ms;
+    }
+}

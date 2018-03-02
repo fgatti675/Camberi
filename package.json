@@ -4,13 +4,12 @@
   "description": "The awesome website of Mattia and Francesco",
   "main": "index.js",
   "dependencies": {
-    "css-scroll-snap-polyfill": "^0.1.2",
-    "gsap": "^1.20.3",
+    "gsap": "^1.20.4",
     "perlin": "^1.0.0",
     "scrollreveal": "^3.3.6",
     "scrollsnap": "^1.3.3",
     "swiper": "^4.1.6",
-    "three": "^0.89.0"
+    "three": "^0.90.0"
   },
   "devDependencies": {
     "babel-minify-webpack-plugin": "^0.2.0",

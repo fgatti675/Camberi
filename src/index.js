@@ -1,7 +1,11 @@
 import * as THREE from 'three';
-import { TweenMax } from "gsap";
+import {
+    TweenMax
+} from "gsap";
 import * as Perlin from 'perlin';
-import { Vector3 } from 'three';
+import {
+    Vector3
+} from 'three';
 import Swiper from 'swiper';
 import ScrollReveal from 'scrollreveal';
 import * as ScrollSnap from 'scrollSnap';
@@ -87,11 +91,15 @@ import './main.scss';
 
     const shuffleButton = document.getElementById('shuffle_colors_btn');
     const loader = document.querySelector('.loader');
+    const main = document.querySelector('main');
+    const aboutPage = document.querySelector('#about');
     const canvas = document.querySelector('#scene');
     const header = document.querySelector('header');
     const location = document.querySelector('.location');
+    const background = document.getElementById('background');
     const content = window.document.documentElement;
-    const pages = document.getElementsByClassName('page');
+    const body = document.querySelector('body');
+    const pages = document.querySelectorAll('main .page');
     const fadingPages = document.getElementsByClassName('fade-page');
 
     const docheight = Math.max(document.body.scrollHeight,
@@ -121,10 +129,7 @@ import './main.scss';
 
     let onScrollEnd;
 
-    window.addEventListener("resize", onResize);
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("scroll", onScroll);
-    shuffleButton.addEventListener("click", onShuffleClick);
+    console.log(document.URL);
 
     setUpSwiper();
     setUpScrollReveal();
@@ -142,6 +147,12 @@ import './main.scss';
     updateBlur(scroll);
     updateHeader(scroll);
 
+    window.addEventListener("resize", onResize);
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("scroll", onScroll);
+    window.addEventListener("hashchange", onHashChange);
+
+    shuffleButton.addEventListener("click", onShuffleClick);
 
     function initScene() {
 
@@ -156,9 +167,9 @@ import './main.scss';
 
         scene = new THREE.Scene();
 
-        camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
+        camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 1, 2000);
         // camera = new THREE.PerspectiveCamera(60, width / height, 1, 1000);
-        camera.position.set(0, 0, 1000);
+        camera.position.set(0, 0, 1400);
 
 
         light = new THREE.HemisphereLight(WHITE, LIGHT_1_COLOR_BASE, AMBIENT_LIGHT_INTENSITY);
@@ -257,14 +268,18 @@ import './main.scss';
 
 
         var gridGeometry = new THREE.Geometry();
-        var size = 1800, step = 75;
-        for (var i = - size; i <= size; i += step) {
-            for (var j = - size; j <= size; j += step) {
+        var size = 1800,
+            step = 75;
+        for (var i = -size; i <= size; i += step) {
+            for (var j = -size; j <= size; j += step) {
                 var star = new THREE.Vector3(i, j, 0);
                 gridGeometry.vertices.push(star);
             }
         }
-        grid = new THREE.Points(gridGeometry, new THREE.PointsMaterial({ color: WHITE, size: 4 }));
+        grid = new THREE.Points(gridGeometry, new THREE.PointsMaterial({
+            color: WHITE,
+            size: 4
+        }));
 
         scene.add(grid);
 
@@ -327,7 +342,7 @@ import './main.scss';
     }
 
     function setUpBackgroundColors() {
-        let bgPages = document.getElementById('background').getElementsByClassName('page');
+        let bgPages = background.getElementsByClassName('page');
 
         // let bodyBackground = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, .5);
         // document.body.style.backgroundColor = bodyBackground.getStyle();
@@ -348,8 +363,8 @@ import './main.scss';
             console.log(bg.getHSL().h);
             page.style.backgroundColor = bg.getStyle();
 
-            if (i == 0)
-                document.body.style.backgroundColor = bg.getStyle();
+            // if (i == 0)
+            //     document.body.style.backgroundColor = bg.getStyle();
         }
     }
 
@@ -368,7 +383,7 @@ import './main.scss';
 
             // NodeList of snap-elements (required) 
             // scrollSnap always snaps to the nearest element 
-            elements: document.querySelectorAll('main .page'),
+            elements: pages,
 
             // Integer - Set a minimum window-size (required) 
             // scrollSnap will be deactivated when the window is smaller than the given dimensions 
@@ -479,10 +494,10 @@ import './main.scss';
             let v1, v2;
             if (scrollTween.y < .5)
                 v1 = getSphereScalar(scrollTween.y),
-                    v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
+                v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
             else
                 v1 = getSpikeScalar(vector, scrollTween.y, time),
-                    v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
+                v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
 
             vector.multiplyScalar((1 - ratio) * v1 + ratio * v2 + 1);
 
@@ -493,9 +508,10 @@ import './main.scss';
     function getScroll() {
         if (window.pageYOffset != undefined) {
             return (pageYOffset) / (docheight - window.innerHeight);
-        }
-        else {
-            let sx, sy, d = document, r = d.documentElement, b = d.body;
+        } else {
+            let sx, sy, d = document,
+                r = d.documentElement,
+                b = d.body;
             sy = r.scrollTop || b.scrollTop || 0;
             return (sy) / (docheight - window.innerHeight);
         }
@@ -509,7 +525,7 @@ import './main.scss';
     }*/
 
     function getShapeRotation(scroll) {
-        return scroll * Math.PI;
+        return scroll * Math.PI * 2;
     }
 
 
@@ -521,6 +537,41 @@ import './main.scss';
         updateSceneMaterials(scrollTween.y);
     }
 
+    let prevScroll = content.scrollTop;
+
+    function getUrlFragment(url) {
+        return url.split('#')[1];
+    }
+
+    function onHashChange(e) {
+        onUrlFragmentChange(getUrlFragment(e.newURL), getUrlFragment(e.oldURL));
+    }
+
+    function onUrlFragmentChange(newFragment, oldFragment) {
+        if (newFragment === "about") {
+            prevScroll = content.scrollTop;
+            window.removeEventListener("scroll", onScroll);
+            console.log(prevScroll);
+            main.classList.add('displaced');
+            body.classList.add('blocked');
+            background.classList.add('displaced');
+            aboutPage.classList.add('active');
+            aboutPage.classList.add('displayedOnce');
+        } else {
+            main.classList.remove('displaced');
+            background.classList.remove('displaced');
+            aboutPage.classList.remove('active');
+            body.classList.remove('blocked');
+            if (oldFragment === "about")
+                // setTimeout(function () {
+                content.scrollTo({
+                    top: prevScroll
+                });
+            // }, 400);
+            window.addEventListener("scroll", onScroll);
+        }
+    }
+
     function onScroll(evt) {
 
         evt.preventDefault(); // prevent default browser scroll
@@ -528,8 +579,7 @@ import './main.scss';
         const scroll = getScroll();
 
         TweenMax.to(scrollTween,
-            4,
-            {
+            4, {
                 y: scroll,
                 yoyo: true,
                 ease: Power3.easeOut
@@ -555,8 +605,7 @@ import './main.scss';
         if (page.offsetHeight < content.scrollTop * 2) {
             header.style.opacity = 1;
             location.style.opacity = 0;
-        }
-        else {
+        } else {
             header.style.opacity = 0;
             location.style.opacity = 1;
         }
@@ -574,6 +623,7 @@ import './main.scss';
             canvas.style.filter = null;
         }
     }
+
     function updateCameraPosition(scroll) {
         let s = 1 - 2 * (1 - scroll);
         s = CAMERA_Y_OFFSET - s * s * CAMERA_Y_OFFSET; // https://www.desmos.com/calculator/xkxkvj1qwi
@@ -612,8 +662,7 @@ import './main.scss';
     }
 
     function updateURL() {
-
-        var c = content.scrollTop - height / 2;
+        var c = content.scrollTop - 100;
         for (var i = 0; i < pages.length; i++) {
             var page = pages[i];
             if (c <= page.offsetTop) {
@@ -657,8 +706,7 @@ import './main.scss';
         updateMouseLight(mouseProjection);
 
         TweenMax.to(mouse,
-            1,
-            {
+            1, {
                 y: ny,
                 x: nx,
                 ease: Power1.easeOut
@@ -672,8 +720,7 @@ import './main.scss';
         v.copy(pos);
         v.setLength(MOUSE_LIGHT_DISTANCE_TO_CENTER);
         TweenMax.to(mouseLight.position,
-            .4,
-            {
+            .4, {
                 y: v.y,
                 x: v.x,
                 z: v.z,
@@ -706,10 +753,10 @@ import './main.scss';
         width = canvas.offsetWidth;
         height = canvas.offsetHeight;
         camera.aspect = width / height;
-        camera.left = width / - 2;
+        camera.left = width / -2;
         camera.right = width / 2;
         camera.top = height / 2;
-        camera.bottom = height / - 2;
+        camera.bottom = height / -2;
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
     }

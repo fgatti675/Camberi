@@ -22,3 +22,14 @@
 .swiper-pagination-bullet-active {
     background: white;
 }
+
+
+@media screen and (max-width: 55em) {
+    .swiper-container {
+        padding: 0 5vw;
+    }
+    .swiper-slide,
+    .swiper-wrapper {
+        width: 90vw;
+    }
+}

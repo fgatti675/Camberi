@@ -3,6 +3,7 @@
     position: absolute;
     top: 0;
     margin: 0;
+    transition: 300ms;
 
     .page {
         // height: 100vh;
@@ -11,6 +12,11 @@
 
     .page.sticky {
         // height: var(--page-height);
+    }
+
+    &.displaced{
+        transform: translateX(-100vw);
+        transition: 300ms;
     }
     
 }
