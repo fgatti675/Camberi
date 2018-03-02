@@ -2,9 +2,10 @@
 .scene {
     will-change: filter;
     position: fixed;
+    z-index: -1;
     &.scene--full {
-        margin: -5vh -5vw;
-        width: 110vw;
+        margin: -5vh 0;
+        width: 100vw;
         height: 110vh;
     }
 }

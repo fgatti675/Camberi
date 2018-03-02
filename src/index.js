@@ -97,7 +97,8 @@ import './main.scss';
     const header = document.querySelector('header');
     const location = document.querySelector('.location');
     const background = document.getElementById('background');
-    const content = window.document.documentElement;
+    // const content = window.document.documentElement;
+    const content = document.querySelector('.content');
     const body = document.querySelector('body');
     const pages = document.querySelectorAll('main .page');
     const fadingPages = document.getElementsByClassName('fade-page');
@@ -149,8 +150,8 @@ import './main.scss';
 
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("scroll", onScroll);
     window.addEventListener("hashchange", onHashChange);
+    content.addEventListener("scroll", onScroll);
 
     shuffleButton.addEventListener("click", onShuffleClick);
 
@@ -369,13 +370,13 @@ import './main.scss';
     }
 
     function setUpScrollReveal() {
-        let sr = ScrollReveal();
+        let sr = ScrollReveal({
+            container: document.querySelector('.content')
+        });
         sr.reveal('.reveal', {
             duration: 2000
         }, 300);
-        sr.reveal('.reveal2', {
-            viewFactor: 0.1
-        });
+        sr.reveal('.reveal2');
     }
 
     function setUpScrollSnap() {
@@ -505,24 +506,24 @@ import './main.scss';
         };
     }
 
-    function getScroll() {
-        if (window.pageYOffset != undefined) {
-            return (pageYOffset) / (docheight - window.innerHeight);
-        } else {
-            let sx, sy, d = document,
-                r = d.documentElement,
-                b = d.body;
-            sy = r.scrollTop || b.scrollTop || 0;
-            return (sy) / (docheight - window.innerHeight);
-        }
-    }
+    // function getScroll() {
+    //     if (window.pageYOffset != undefined) {
+    //         return (pageYOffset) / (docheight - window.innerHeight);
+    //     } else {
+    //         let sx, sy, d = document,
+    //             r = d.documentElement,
+    //             b = d.body;
+    //         sy = r.scrollTop || b.scrollTop || 0;
+    //         return (sy) / (docheight - window.innerHeight);
+    //     }
+    // }
 
-    /*function getScroll() {
+    function getScroll() {
         let o = content.scrollTop;
         let i = window.innerHeight;
         let h = content.scrollHeight;
         return (o) / (h - i);
-    }*/
+    }
 
     function getShapeRotation(scroll) {
         return scroll * Math.PI * 2;
@@ -548,8 +549,10 @@ import './main.scss';
     }
 
     function onUrlFragmentChange(newFragment, oldFragment) {
+
         if (newFragment === "about") {
-            prevScroll = content.scrollTop;
+
+            // prevScroll = content.scrollTop;
             window.removeEventListener("scroll", onScroll);
             console.log(prevScroll);
             main.classList.add('displaced');
@@ -557,18 +560,21 @@ import './main.scss';
             background.classList.add('displaced');
             aboutPage.classList.add('active');
             aboutPage.classList.add('displayedOnce');
-        } else {
+
+        } 
+        
+        else {
+
             main.classList.remove('displaced');
             background.classList.remove('displaced');
             aboutPage.classList.remove('active');
             body.classList.remove('blocked');
-            if (oldFragment === "about")
-                // setTimeout(function () {
-                content.scrollTo({
-                    top: prevScroll
-                });
-            // }, 400);
+            // if (oldFragment === "about")
+            //     content.scrollTo({
+            //         top: prevScroll
+            //     });
             window.addEventListener("scroll", onScroll);
+
         }
     }
 
@@ -662,7 +668,7 @@ import './main.scss';
     }
 
     function updateURL() {
-        var c = content.scrollTop - 100;
+        var c = content.scrollTop - height/3;
         for (var i = 0; i < pages.length; i++) {
             var page = pages[i];
             if (c <= page.offsetTop) {

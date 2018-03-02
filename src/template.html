@@ -33,11 +33,13 @@
     <%= require('html-loader!./partials/icons.html') %>
     <%= require('html-loader!./partials/header.html') %>
     <%= require('html-loader!./partials/nav.html') %>
-    <%= require('html-loader!./partials/background.html') %>
-    <%= require('html-loader!./partials/canvas.html') %>
-    <%= require('html-loader!./partials/about.html') %>
-    <%= require('html-loader!./partials/content.html') %>
+    <div class="content">
+      <%= require('html-loader!./partials/background.html') %>
+      <%= require('html-loader!./partials/canvas.html') %>
+      <%= require('html-loader!./partials/content.html') %>
+    </div>
     <%= require('html-loader!./partials/location.html') %>
+    <%= require('html-loader!./partials/about.html') %>
   </body>
   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://use.typekit.net/ujy0gmh.css">
