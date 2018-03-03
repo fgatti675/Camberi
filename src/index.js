@@ -8,8 +8,9 @@ import {
 } from 'three';
 import Swiper from 'swiper';
 import ScrollReveal from 'scrollreveal';
-import * as ScrollSnap from 'scrollSnap';
 import './main.scss';
+import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
+
 
 (function () {
 
@@ -112,8 +113,14 @@ import './main.scss';
     const mouseProjection = new Vector3(0, 0, 0);
     const mouse = new THREE.Vector2(0, 0);
 
+    const blurEnabled = !navigator.userAgent.includes("Firefox");
+
     const scrollTween = {
         y: getScroll()
+    }
+
+    const aboutTween = {
+        position: 0
     }
 
     let width = canvas.offsetWidth,
@@ -130,11 +137,9 @@ import './main.scss';
 
     let onScrollEnd;
 
-    console.log(document.URL);
-
+    scrollSnapPolyfill()
     setUpSwiper();
     setUpScrollReveal();
-    setUpScrollSnap();
 
     shuffle(COLORS);
     setUpLightColors();
@@ -145,8 +150,10 @@ import './main.scss';
 
     let scroll = getScroll();
     updateSceneMaterials(scroll);
-    updateBlur(scroll);
+    updateBlur(scroll, aboutPage.position);
     updateHeader(scroll);
+
+    onUrlFragmentChange(getUrlFragment(document.URL));
 
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMouseMove);
@@ -379,34 +386,6 @@ import './main.scss';
         sr.reveal('.reveal2');
     }
 
-    function setUpScrollSnap() {
-        ScrollSnap.init({
-
-            // NodeList of snap-elements (required) 
-            // scrollSnap always snaps to the nearest element 
-            elements: pages,
-
-            // Integer - Set a minimum window-size (required) 
-            // scrollSnap will be deactivated when the window is smaller than the given dimensions 
-            minWidth: 600,
-            minHeight: 400,
-
-            // Boolean - Deactivate scrollSnap on mobile devices (optional) 
-            detectMobile: true,
-
-            // Boolean - Keyboard-navigation (optional) 
-            keyboard: true,
-
-            // Integer - Snap-animation-speed (optional) 
-            // Higher = slower 
-            duration: 8,
-
-            // Function - Set a custom timing-function for the snap-animation (optional) 
-            timing: ScrollSnap._timing
-
-        });
-    }
-
     function shuffle(a) {
         for (let i = a.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -467,13 +446,15 @@ import './main.scss';
         return 1 / (1 + Math.exp(-t));
     }
 
-    function updateVertices(time) {
-
-        var s = sigmoid((scrollTween.y - .7) * 24 - 6) * SCALE_INCREMENT;
+    function updateScale(scroll, aboutPosition) {
+        var s = sigmoid((scroll - .7) * 24 - 6) * SCALE_INCREMENT;
         var scale = BASE_SCALE + s;
         shape.scale.set(scale, scale, scale);
         shape2.scale.set(scale, scale, scale);
         shape3.scale.set(scale, scale, scale);
+    }
+
+    function updateVertices(time) {
 
         // const ratio = (sigmoid((scrollTween.y - .5) * 10));
         const ratio = (sinoid(scrollTween.y, 2));
@@ -495,10 +476,10 @@ import './main.scss';
             let v1, v2;
             if (scrollTween.y < .5)
                 v1 = getSphereScalar(scrollTween.y),
-                v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
+                    v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
             else
                 v1 = getSpikeScalar(vector, scrollTween.y, time),
-                v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
+                    v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
 
             vector.multiplyScalar((1 - ratio) * v1 + ratio * v2 + 1);
 
@@ -538,7 +519,7 @@ import './main.scss';
         updateSceneMaterials(scrollTween.y);
     }
 
-    let prevScroll = content.scrollTop;
+    // let prevScroll = content.scrollTop;
 
     function getUrlFragment(url) {
         return url.split('#')[1];
@@ -553,16 +534,21 @@ import './main.scss';
         if (newFragment === "about") {
 
             // prevScroll = content.scrollTop;
-            window.removeEventListener("scroll", onScroll);
-            console.log(prevScroll);
+            // window.removeEventListener("scroll", onScroll);
             main.classList.add('displaced');
             body.classList.add('blocked');
             background.classList.add('displaced');
             aboutPage.classList.add('active');
             aboutPage.classList.add('displayedOnce');
+            TweenMax.to(aboutTween,
+                4, {
+                    position: 1,
+                    ease: Power3.easeOut
+                });
+            disableBlur();
 
-        } 
-        
+        }
+
         else {
 
             main.classList.remove('displaced');
@@ -573,7 +559,12 @@ import './main.scss';
             //     content.scrollTo({
             //         top: prevScroll
             //     });
-            window.addEventListener("scroll", onScroll);
+            // window.addEventListener("scroll", onScroll);
+            TweenMax.to(aboutTween,
+                4, {
+                    position: 0,
+                    ease: Power3.easeOut
+                });
 
         }
     }
@@ -587,19 +578,14 @@ import './main.scss';
         TweenMax.to(scrollTween,
             4, {
                 y: scroll,
-                yoyo: true,
                 ease: Power3.easeOut
             });
 
-        updateSceneMaterials(scroll);
-        updateBlur(scroll);
-        updateHeader(scroll);
-
 
         clearTimeout(onScrollEnd);
-        onScrollEnd = setTimeout(function () {
-            updateURL();
-        }, 17);
+        // onScrollEnd = setTimeout(function () {
+        updateURL();
+        // }, 15);
 
         fadePages();
 
@@ -617,17 +603,31 @@ import './main.scss';
         }
     }
 
-    function updateBlur(scroll) {
-        if (scroll > (1 - 1 / pages.length) + .05) {
-            let blurValue = (scroll - .8) / .2 * BLUR_PIXELS;
-            // canvas.style = "-webkit-filter:blur(" + blurValue + "px)";
-            // canvas.setAttribute("style","-ms-filter:blur(" + blurValue + "px)")
-            canvas.setAttribute("style", "-webkit-filter:blur(10px)")
+    function updateBlur(scroll, aboutPosition) {
 
-            // canvas.style.filter = "blur(10px)";
-        } else {
-            canvas.style.filter = null;
+        if (!blurEnabled) return;
+
+        if (aboutPosition == 1) {
+            disableBlur();
+            return;
         }
+
+        if (scroll > (1 - 1 / pages.length) + .05) {
+            enableBlur(scroll, aboutPosition);
+        } else {
+            disableBlur();
+        }
+    }
+
+    function enableBlur(scroll, aboutPosition) {
+        if (!blurEnabled) return;
+        let blurValue = Math.min((scroll - .8) / .2, (1 - aboutPosition)) * BLUR_PIXELS;
+        canvas.setAttribute("style", "-webkit-filter:blur(" + blurValue + "px)");
+    }
+
+    function disableBlur() {
+        if (!blurEnabled) return;
+        canvas.style.filter = null;
     }
 
     function updateCameraPosition(scroll) {
@@ -668,7 +668,7 @@ import './main.scss';
     }
 
     function updateURL() {
-        var c = content.scrollTop - height/3;
+        var c = content.scrollTop - height / 3;
         for (var i = 0; i < pages.length; i++) {
             var page = pages[i];
             if (c <= page.offsetTop) {
@@ -685,15 +685,13 @@ import './main.scss';
         var o3 = quadratic(scroll, -25, 6, .5);
         // console.log(scroll + ": " + o2);
 
-        shape.visible = o1 > 0;
-        shape2.visible = o2 > 0;
-        shape3.visible = o3 > 0;
+        // shape.visible = o1 > 0;
+        // shape2.visible = o2 > 0;
+        // shape3.visible = o3 > 0;
 
-        material.opacity = o1;
-        material2.opacity = o2;
-        material3.opacity = o3;
-
-        // grid.material.opacity = 1 - o3;
+        material.opacity = o1 * (1 - aboutTween.position);
+        material2.opacity = o2 * (1 - aboutTween.position);
+        material3.opacity = Math.max(o3, aboutTween.position);
 
         light.groundColor = LIGHT_1_COLOR_BASE;
         material.emissive.set(MATERIAL_COLOR_FROM.clone().lerp(MATERIAL_COLOR_TO, scroll));
@@ -742,13 +740,21 @@ import './main.scss';
         return vector;
     }
 
-    function render(a) {
+    function render(time) {
         requestAnimationFrame(render);
+
+        const scroll = getScroll();
+        updateSceneMaterials(scroll);
+
+        updateBlur(scroll, aboutTween.position);
+        updateHeader(scroll);
 
         updateCameraPosition(scrollTween.y);
         updateGrid(scrollTween.y);
 
-        updateVertices(a);
+        updateVertices(time);
+        updateScale(scrollTween.y, aboutTween.position);
+
         geometry.verticesNeedUpdate = true;
         renderer.render(scene, camera);
     }

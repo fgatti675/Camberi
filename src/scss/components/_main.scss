@@ -16,7 +16,7 @@ main {
     position: absolute;
     transition: 300ms;
     &.displaced{
-        transform: translateX(-99vw);
+        transform: translateX(-99.9vw);
         transition: 300ms;
     }
 }
@@ -28,14 +28,18 @@ main {
 	overflow-y: auto;
 	-webkit-scroll-snap-type: mandatory;
 	-ms-scroll-snap-type: mandatory;
-	scroll-snap-type: mandatory;
+    scroll-snap-type: mandatory;
 	-webkit-scroll-behavior: smooth;
 	-ms-scroll-scroll-behavior: smooth;
 	scroll-behavior: smooth;
 }
 
-.page {   
-	-webkit-scroll-snap-coordinate: 0vw 0vw;
-	-ms-scroll-snap-coordinate: 0vw 0vw;
-	scroll-snap-coordinate: 0vw 0vw;
+main .page {   
+	// -webkit-scroll-snap-coordinate: 0vw 0vw;
+	// -ms-scroll-snap-coordinate: 0vw 0vw;
+    // scroll-snap-coordinate: 0vw 0vw;
+    // -webkit-scroll-snap-align: start;
+    // -ms-scroll-snap-align: start;
+    scroll-snap-align: center;
+    // scroll-snap-points-y: 0;
 }
