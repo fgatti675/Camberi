@@ -5,12 +5,12 @@
     margin: 0;
     transition: 300ms;
 
-    .page {
-        // height: 100vh;
-        // width: 100vw;
+    .bg_page {
+        height: 100vh;
+        width: 100vw;
     }
 
-    .page.sticky {
+    .bg_page.sticky {
         // height: var(--page-height);
     }
 

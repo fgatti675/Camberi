@@ -22,7 +22,11 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         MOUSE_LIGHT_INTENSITY = .4,
         BASE_SCALE = 1.2,
         BLUR_PIXELS = 8,
+        ABOUT_POINTS_SIZE = 2,
+        ABOUT_POINTS_SCALE = 2,
+        ABOUT_POINTS_OPACITY = 1,
         CAMERA_Y_OFFSET = -300,
+        CAMERA_Z_OFFSET = 1400,
         GRID_SPEED = 1400,
         SCALE_INCREMENT = 1.7,
         LIGHT_COLOR_SATURATION = .9,
@@ -33,6 +37,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         SHAPE_RADIUS_SMALL = 120;
 
     const WHITE = new THREE.Color(0xFFFFFF),
+        GREY = new THREE.Color(0x666666),
         RED = new THREE.Color(0xFF0000),
         GREEN = new THREE.Color(0x09CAA1),
         YELLOW = new THREE.Color(0xFFFF00),
@@ -99,7 +104,6 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     const location = document.querySelector('.location');
     const background = document.getElementById('background');
     // const content = window.document.documentElement;
-    const content = document.querySelector('.content');
     const body = document.querySelector('body');
     const pages = document.querySelectorAll('main .page');
     const fadingPages = document.getElementsByClassName('fade-page');
@@ -127,17 +131,21 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         height = canvas.offsetHeight;
 
     let renderer,
-        shape, shape2, shape3,
+        shape, shape2,
+        shapeWireframe,
+        shapePoints,
         geometry,
         grid,
-        material, material2, material3,
+        material, material2,
+        materialWireframe,
+        materialPoints,
         scene,
         camera,
         light, light2, light3, mouseLight;
 
     let onScrollEnd;
 
-    scrollSnapPolyfill()
+    // scrollSnapPolyfill()
     setUpSwiper();
     setUpScrollReveal();
 
@@ -149,7 +157,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     requestAnimationFrame(render);
 
     let scroll = getScroll();
-    updateSceneMaterials(scroll);
+    updateSceneMaterials(scroll, aboutTween.position);
     updateBlur(scroll, aboutPage.position);
     updateHeader(scroll);
 
@@ -158,7 +166,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("hashchange", onHashChange);
-    content.addEventListener("scroll", onScroll);
+    main.addEventListener("scroll", onScroll);
 
     shuffleButton.addEventListener("click", onShuffleClick);
 
@@ -177,7 +185,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
         camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 1, 2000);
         // camera = new THREE.PerspectiveCamera(60, width / height, 1, 1000);
-        camera.position.set(0, 0, 1400);
+        camera.position.set(0, 0, CAMERA_Z_OFFSET);
 
 
         light = new THREE.HemisphereLight(WHITE, LIGHT_1_COLOR_BASE, AMBIENT_LIGHT_INTENSITY);
@@ -223,12 +231,12 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
             }
         });
 
-        // var newFaces = [];
+        // let newFaces = [];
         // geometry.faces.forEach((f, i) => {
-        //     var a = geometry.vertices[f.a];
-        //     var b = geometry.vertices[f.b];
-        //     var c = geometry.vertices[f.c];
-        //     var dist = 50;
+        //     let a = geometry.vertices[f.a];
+        //     let b = geometry.vertices[f.b];
+        //     let c = geometry.vertices[f.c];
+        //     let dist = 50;
         //     if (a.distanceTo(b) < dist && c.distanceTo(b) < dist && a.distanceTo(c) < dist)
         //         newFaces.push(f);
         // });
@@ -238,6 +246,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
             emissive: MATERIAL_COLOR_FROM,
             emissiveIntensity: .6,
             transparent: true,
+            premultipliedAlpha: true,
             shininess: .3
         });
 
@@ -260,27 +269,35 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         //     shininess: 0
         // });
 
-        material3 = material.clone();
-        // material3 = new THREE.PointsMaterial({ color: WHITE, size: 10 })
+        materialWireframe = material.clone();
+        materialWireframe.wireframe = true;
 
-        material3.wireframe = true;
+        materialPoints = new THREE.PointsMaterial({
+            color: GREY,
+            size: ABOUT_POINTS_SIZE,
+            transparent: true,
+            opacity: 0,
+            sizeAttenuation: false
+        });
+
+
 
         shape = new THREE.Mesh(geometry, material);
         shape2 = new THREE.Mesh(geometry, material2);
-        shape3 = new THREE.Mesh(geometry, material3);
-        // shape3 = new THREE.Points(geometry, material3);
+        shapeWireframe = new THREE.Mesh(geometry, materialWireframe);
+        shapePoints = new THREE.Points(geometry, materialPoints);
 
         scene.add(shape);
         scene.add(shape2);
-        scene.add(shape3);
+        scene.add(shapeWireframe);
+        scene.add(shapePoints);
 
-
-        var gridGeometry = new THREE.Geometry();
-        var size = 1800,
+        let gridGeometry = new THREE.Geometry();
+        let size = 1800,
             step = 75;
-        for (var i = -size; i <= size; i += step) {
-            for (var j = -size; j <= size; j += step) {
-                var star = new THREE.Vector3(i, j, 0);
+        for (let i = -size; i <= size; i += step) {
+            for (let j = -size; j <= size; j += step) {
+                let star = new THREE.Vector3(i, j, 0);
                 gridGeometry.vertices.push(star);
             }
         }
@@ -350,7 +367,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     }
 
     function setUpBackgroundColors() {
-        let bgPages = background.getElementsByClassName('page');
+        let bgPages = document.getElementsByClassName('bg_page');
 
         // let bodyBackground = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, .5);
         // document.body.style.backgroundColor = bodyBackground.getStyle();
@@ -359,8 +376,8 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
         RENDERER_CLEAR_COLOR_TO.getHSL().h = RENDERER_CLEAR_COLOR_FROM.getHSL.h + .5;
 
-        for (var i = 0; i < bgPages.length; i++) {
-            var page = bgPages[i];
+        for (let i = 0; i < bgPages.length; i++) {
+            let page = bgPages[i];
             let bg = RENDERER_CLEAR_COLOR_FROM.lerp(RENDERER_CLEAR_COLOR_TO, i * 1 / bgPages.length);
 
             // hue += 1 / pages.length;
@@ -378,7 +395,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
     function setUpScrollReveal() {
         let sr = ScrollReveal({
-            container: document.querySelector('.content')
+            container: main
         });
         sr.reveal('.reveal', {
             duration: 2000
@@ -406,26 +423,21 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         return scalar + 1.;
     }
 
-    function getBlobScalar(vector, time, mouseProjection, scroll) {
+    function getPerlinScalar(vector, time, mouseProjection, scroll) {
 
-        let rotation = getShapeRotation(scroll);
+        let rotation = getShapeRotation(scroll); // compensate for shape rotation
+
         let m = mouseProjection.clone();
         m.applyAxisAngle(X_AXIS, -rotation);
-
-        var i = 1 / vector.distanceTo(m) * 20;
-        var value = i * i;
-        // vector.multiplyScalar(value + 1);
+        let i = 1 / vector.distanceTo(m) * 20;
+        let value = i * i;
 
         const perlin = Perlin.noise.simplex3(
-            (vector.x * 0.008) + (time * 0.00045) + (value),
-            (vector.y * 0.008) + (time * 0.00045) + (value),
-            (vector.z * 0.008) + (time * 0.00045) + (value)
+            (vector.x * 0.007) + (time * 0.00045) + (value),
+            (vector.y * 0.007) + (time * 0.00045) + (value),
+            (vector.z * 0.007) + (time * 0.00045) + (value)
         );
-        // const perlin = Perlin.noise.simplex3(
-        //     (vector.x * 0.008) + (time * 0.0003),
-        //     (vector.y * 0.008) + (time * 0.0003),
-        //     (vector.z * 0.008) + (time * 0.0003)
-        // );
+
         const scalar = perlin + value + 1;
         return scalar;
     }
@@ -447,44 +459,41 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     }
 
     function updateScale(scroll, aboutPosition) {
-        var s = sigmoid((scroll - .7) * 24 - 6) * SCALE_INCREMENT;
-        var scale = BASE_SCALE + s;
-        shape.scale.set(scale, scale, scale);
-        shape2.scale.set(scale, scale, scale);
-        shape3.scale.set(scale, scale, scale);
+        let value = sigmoid((scroll - .7) * 24 - 6) * (1 - aboutPosition);
+        let scale = BASE_SCALE + value * SCALE_INCREMENT + (aboutPosition) * ABOUT_POINTS_SCALE;
+        shape.scale.set(scale+ 2 * aboutPosition, scale, scale);
+        shape2.scale.set(scale+ 2 * aboutPosition, scale, scale);
+        shapeWireframe.scale.set(scale + 2 * aboutPosition, scale, scale);
+        shapePoints.scale.set(scale + 2 * aboutPosition, scale, scale);
     }
 
-    function updateVertices(time) {
+    function updateVertices(time, scroll, aboutPosition) {
 
-        // const ratio = (sigmoid((scrollTween.y - .5) * 10));
-        const ratio = (sinoid(scrollTween.y, 2));
+        const ratio = (sinoid(scroll, 2));
 
-        let rotation = getShapeRotation(scrollTween.y);
-
-        updateShapePosition(getScroll(), mouse);
-
-        shape.rotation.x = rotation;
-        shape2.rotation.x = rotation;
-        shape3.rotation.x = rotation;
-
-        // const MAGNET_DISTANCE = 50;
-        for (var i = 0; i < geometry.vertices.length; i++) {
+        for (let i = 0; i < geometry.vertices.length; i++) {
             let vector = geometry.vertices[i];
 
             vector.copy(vector._original);
 
+            let shereScalar = scroll < .5 ? getSphereScalar(scroll) : 0;
+            let spikeScalar = scroll > .5 ? getSpikeScalar(vector, scroll, time) : 0;
+            let perlinScalar = getPerlinScalar(vector, time, mouseProjection, scroll);
+
             let v1, v2;
-            if (scrollTween.y < .5)
-                v1 = getSphereScalar(scrollTween.y),
-                    v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
+            if (scroll < .5)
+                v1 = shereScalar, v2 = perlinScalar;
             else
-                v1 = getSpikeScalar(vector, scrollTween.y, time),
-                    v2 = getBlobScalar(vector, time, mouseProjection, scrollTween.y);
+                v1 = spikeScalar, v2 = perlinScalar;
 
-            vector.multiplyScalar((1 - ratio) * v1 + ratio * v2 + 1);
+            let regularScrollScalar = (1 - ratio) * v1 + ratio * v2;
+            let aboutScalar = perlinScalar * .6;
 
+            vector.multiplyScalar((regularScrollScalar * (1 - aboutPosition) + aboutScalar * aboutPosition) + 1);
 
         };
+
+        geometry.verticesNeedUpdate = true;
     }
 
     // function getScroll() {
@@ -500,9 +509,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     // }
 
     function getScroll() {
-        let o = content.scrollTop;
+        let o = main.scrollTop;
         let i = window.innerHeight;
-        let h = content.scrollHeight;
+        let h = main.scrollHeight;
         return (o) / (h - i);
     }
 
@@ -516,10 +525,8 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         shuffle(COLORS);
         setUpLightColors();
         setUpBackgroundColors();
-        updateSceneMaterials(scrollTween.y);
+        updateSceneMaterials(scrollTween.y, aboutTween.position);
     }
-
-    // let prevScroll = content.scrollTop;
 
     function getUrlFragment(url) {
         return url.split('#')[1];
@@ -529,19 +536,23 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         onUrlFragmentChange(getUrlFragment(e.newURL), getUrlFragment(e.oldURL));
     }
 
+    // let prevScroll = content.scrollTop;
     function onUrlFragmentChange(newFragment, oldFragment) {
 
         if (newFragment === "about") {
 
             // prevScroll = content.scrollTop;
             // window.removeEventListener("scroll", onScroll);
-            main.classList.add('displaced');
+            for (let i = 0; i < pages.length; i++) {
+                let page = pages[i];
+                page.classList.add('displaced');
+            }
             body.classList.add('blocked');
             background.classList.add('displaced');
             aboutPage.classList.add('active');
             aboutPage.classList.add('displayedOnce');
             TweenMax.to(aboutTween,
-                4, {
+                3, {
                     position: 1,
                     ease: Power3.easeOut
                 });
@@ -550,8 +561,10 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         }
 
         else {
-
-            main.classList.remove('displaced');
+            for (let i = 0; i < pages.length; i++) {
+                let page = pages[i];
+                page.classList.remove('displaced');
+            }
             background.classList.remove('displaced');
             aboutPage.classList.remove('active');
             body.classList.remove('blocked');
@@ -561,9 +574,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
             //     });
             // window.addEventListener("scroll", onScroll);
             TweenMax.to(aboutTween,
-                4, {
+                2, {
                     position: 0,
-                    ease: Power3.easeOut
+                    ease: Power3.easeInOut
                 });
 
         }
@@ -587,14 +600,14 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         updateURL();
         // }, 15);
 
-        fadePages();
+        // fadePages();
 
     };
 
 
     function updateHeader(scroll) {
         let page = pages[0];
-        if (page.offsetHeight < content.scrollTop * 2) {
+        if (page.offsetHeight < main.scrollTop * 2) {
             header.style.opacity = 1;
             location.style.opacity = 0;
         } else {
@@ -630,13 +643,21 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         canvas.style.filter = null;
     }
 
-    function updateCameraPosition(scroll) {
+    function updateCameraPosition(scroll, aboutPosition) {
         let s = 1 - 2 * (1 - scroll);
         s = CAMERA_Y_OFFSET - s * s * CAMERA_Y_OFFSET; // https://www.desmos.com/calculator/xkxkvj1qwi
-        camera.position.y = s;
+        camera.position.y = s * (1 - aboutPosition);
+        camera.rotation.x = (aboutPosition) * Math.PI / 6;
+        // camera.position.z = CAMERA_Z_OFFSET * (1-aboutPosition) + 500;
     }
 
     function updateShapePosition(scroll, mouse) {
+
+        let rotation = getShapeRotation(scroll);
+        shape.rotation.x = rotation;
+        shape2.rotation.x = rotation;
+        shapeWireframe.rotation.x = rotation;
+        shapePoints.rotation.x = rotation;
 
         let posX = (mouse.x) * 50;
         let posY = (mouse.y) * 50;
@@ -645,8 +666,10 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         shape.position.y = posY;
         shape2.position.x = posX;
         shape2.position.y = posY;
-        shape3.position.x = posX;
-        shape3.position.y = posY;
+        shapeWireframe.position.x = posX;
+        shapeWireframe.position.y = posY;
+        shapePoints.position.x = posX;
+        shapePoints.position.y = posY;
 
     }
 
@@ -657,9 +680,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     }
 
     function fadePages() {
-        for (var i = 0; i < fadingPages.length; i++) {
-            var page = fadingPages[i];
-            let off = page.offsetTop - content.scrollTop;
+        for (let i = 0; i < fadingPages.length; i++) {
+            let page = fadingPages[i];
+            let off = page.offsetTop - main.scrollTop;
             let h = page.offsetHeight;
             let o = off < -h ? 0 : (off > 0 ? 1 : (h + off) / h);
             if (o != 0, 1)
@@ -668,9 +691,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     }
 
     function updateURL() {
-        var c = content.scrollTop - height / 3;
-        for (var i = 0; i < pages.length; i++) {
-            var page = pages[i];
+        let c = main.scrollTop - height / 3;
+        for (let i = 0; i < pages.length; i++) {
+            let page = pages[i];
             if (c <= page.offsetTop) {
                 history.replaceState({}, 'Camberí', '#' + page.id);
                 break;
@@ -678,20 +701,21 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         }
     }
 
-    function updateSceneMaterials(scroll) {
+    function updateSceneMaterials(scroll, aboutPosition) {
 
-        var o1 = 1 - sigmoid(scroll * 18 - 11.5);
-        var o2 = quadratic(scroll, -25, 6, .75); // https://www.desmos.com/calculator/la8eufllq5
-        var o3 = quadratic(scroll, -25, 6, .5);
+        let o1 = 1 - sigmoid(scroll * 18 - 11.5);
+        let o2 = quadratic(scroll, -25, 6, .75); // https://www.desmos.com/calculator/la8eufllq5
+        let o3 = quadratic(scroll, -25, 6, .5);
         // console.log(scroll + ": " + o2);
 
         // shape.visible = o1 > 0;
         // shape2.visible = o2 > 0;
         // shape3.visible = o3 > 0;
 
-        material.opacity = o1 * (1 - aboutTween.position);
-        material2.opacity = o2 * (1 - aboutTween.position);
-        material3.opacity = Math.max(o3, aboutTween.position);
+        material.opacity = o1 * (1 - aboutPosition);
+        material2.opacity = o2 * (1 - aboutPosition);
+        materialWireframe.opacity = Math.max(o3 * (1 - aboutPosition), .5 * aboutPosition);
+        materialPoints.opacity = aboutPosition * ABOUT_POINTS_OPACITY;
 
         light.groundColor = LIGHT_1_COLOR_BASE;
         material.emissive.set(MATERIAL_COLOR_FROM.clone().lerp(MATERIAL_COLOR_TO, scroll));
@@ -703,12 +727,21 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
         // e.preventDefault();
 
-        var ny = -(event.clientY / window.innerHeight) * 2 + 1;
-        var nx = (event.clientX / window.innerWidth) * 2 - 1;
+        let ny = -(event.clientY / window.innerHeight) * 2 + 1;
+        let nx = (event.clientX / window.innerWidth) * 2 - 1;
+
+        // let p = projectCanvasLocation(nx, ny);
 
         mouseProjection.copy(projectCanvasLocation(nx, ny));
         updateMouseLight(mouseProjection);
 
+        // TweenMax.to(mouseProjection,
+        //     1, {
+        //         y: p.y,
+        //         x: p.x,
+        //         z: p.z,
+        //         ease: Power1.easeOut
+        //     });
         TweenMax.to(mouse,
             1, {
                 y: ny,
@@ -734,7 +767,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     }
 
     function projectCanvasLocation(x, y) {
-        var vector = new THREE.Vector3(x, y, 0);
+        let vector = new THREE.Vector3(x, y, 0);
         vector.unproject(camera);
         vector.setLength(SHAPE_RADIUS + 40);
         return vector;
@@ -744,18 +777,19 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         requestAnimationFrame(render);
 
         const scroll = getScroll();
-        updateSceneMaterials(scroll);
+        updateSceneMaterials(scrollTween.y, aboutTween.position);
 
-        updateBlur(scroll, aboutTween.position);
-        updateHeader(scroll);
+        updateBlur(scrollTween.y, aboutTween.position);
+        updateHeader(scrollTween.y);
 
-        updateCameraPosition(scrollTween.y);
+        updateCameraPosition(scrollTween.y, aboutTween.position);
         updateGrid(scrollTween.y);
 
-        updateVertices(time);
+        updateShapePosition(scrollTween.y, mouse);
+
+        updateVertices(time, scrollTween.y, aboutTween.position);
         updateScale(scrollTween.y, aboutTween.position);
 
-        geometry.verticesNeedUpdate = true;
         renderer.render(scene, camera);
     }
 
@@ -772,5 +806,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
     }
+
+    // setInterval(function(){
+    //     onShuffleClick();
+    // }, 800);
 
 })();
