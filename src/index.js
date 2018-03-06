@@ -25,7 +25,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         ABOUT_POINTS_SIZE = 2,
         ABOUT_POINTS_SCALE = 2,
         ABOUT_POINTS_OPACITY = 1,
-        CAMERA_Y_OFFSET = -300,
+        SHAPE_Y_OFFSET = 200,
+        CAMERA_Y_OFFSET_SCROLL = -300,
+        CAMERA_Y_OFFSET_ABOUT = 800,
         CAMERA_Z_OFFSET = 1400,
         GRID_SPEED = 1400,
         SCALE_INCREMENT = 1.7,
@@ -175,7 +177,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         renderer = new THREE.WebGLRenderer({
             alpha: true,
             canvas: canvas,
-            // antialias: true
+            antialias: true
         });
         console.log(width);
         renderer.setPixelRatio(window.devicePixelRatio > 1 ? 1.5 : 1);
@@ -314,7 +316,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         new Swiper('.swiper-container', {
             // Optional parameters
             direction: 'horizontal',
-            spaceBetween: 15,
+            spaceBetween: 16,
             speed: 800,
             autoplay: {
                 delay: 5000,
@@ -322,9 +324,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
             loop: true,
 
             // If we need pagination
-            pagination: {
-                el: '.swiper-pagination',
-            },
+            // pagination: {
+            //     el: '.swiper-pagination',
+            // },
 
             // // Navigation arrows
             // navigation: {
@@ -352,12 +354,14 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
 
         let adjustLightness = function (color) {
-            color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .38);
+            color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .36);
         };
         adjustLightness(LIGHT_1_COLOR_BASE);
         adjustLightness(MATERIAL_COLOR_FROM);
         adjustLightness(LIGHT_2_COLOR_FROM);
         adjustLightness(LIGHT_3_COLOR_FROM);
+        adjustLightness(LIGHT_2_COLOR_TO);
+        adjustLightness(LIGHT_3_COLOR_TO);
 
         let colorString = "const COLORS = [";
         colorString += COLORS.map(c => c.string).reduce((a, b) => a + ", " + b);
@@ -378,14 +382,13 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
         for (let i = 0; i < bgPages.length; i++) {
             let page = bgPages[i];
-            let bg = RENDERER_CLEAR_COLOR_FROM.lerp(RENDERER_CLEAR_COLOR_TO, i * 1 / bgPages.length);
+            let bg = RENDERER_CLEAR_COLOR_FROM.lerp(RENDERER_CLEAR_COLOR_TO, i * 1.001 / bgPages.length);
 
             // hue += 1 / pages.length;
             bg.setHSL(bg.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
 
             // let a = 'rgba(' + bg.r*255 + ', '+ bg.g*255 + ', '+ bg.b*255 + ', '+ 0.2 + ')';
             // console.log(a);
-            console.log(bg.getHSL().h);
             page.style.backgroundColor = bg.getStyle();
 
             // if (i == 0)
@@ -400,7 +403,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         sr.reveal('.reveal', {
             duration: 2000
         }, 300);
-        sr.reveal('.reveal2');
+        sr.reveal('.reveal2', {
+            reset: true
+        });
     }
 
     function shuffle(a) {
@@ -423,19 +428,21 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         return scalar + 1.;
     }
 
-    function getPerlinScalar(vector, time, mouseProjection, scroll) {
+    function getPerlinScalar(vector, time, mouseProjection, scroll, aboutPosition) {
 
-        let rotation = getShapeRotation(scroll); // compensate for shape rotation
+        let rotation = getShapeRotation(scroll, time, aboutPosition); // compensate for shape rotation
 
         let m = mouseProjection.clone();
         m.applyAxisAngle(X_AXIS, -rotation);
         let i = 1 / vector.distanceTo(m) * 20;
-        let value = i * i;
+        let value = i * i ;
 
+        let s = ((1.2-aboutPosition)/12) * 0.07;
+        let r = ((1.2-aboutPosition)/12) * (time * 0.0045);
         const perlin = Perlin.noise.simplex3(
-            (vector.x * 0.007) + (time * 0.00045) + (value),
-            (vector.y * 0.007) + (time * 0.00045) + (value),
-            (vector.z * 0.007) + (time * 0.00045) + (value)
+            (vector.x * s) + r + (value),
+            (vector.y * s) + r + (value),
+            (vector.z * s) + r + (value)
         );
 
         const scalar = perlin + value + 1;
@@ -458,15 +465,6 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         return 1 / (1 + Math.exp(-t));
     }
 
-    function updateScale(scroll, aboutPosition) {
-        let value = sigmoid((scroll - .7) * 24 - 6) * (1 - aboutPosition);
-        let scale = BASE_SCALE + value * SCALE_INCREMENT + (aboutPosition) * ABOUT_POINTS_SCALE;
-        shape.scale.set(scale+ 2 * aboutPosition, scale, scale);
-        shape2.scale.set(scale+ 2 * aboutPosition, scale, scale);
-        shapeWireframe.scale.set(scale + 2 * aboutPosition, scale, scale);
-        shapePoints.scale.set(scale + 2 * aboutPosition, scale, scale);
-    }
-
     function updateVertices(time, scroll, aboutPosition) {
 
         const ratio = (sinoid(scroll, 2));
@@ -478,7 +476,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
             let shereScalar = scroll < .5 ? getSphereScalar(scroll) : 0;
             let spikeScalar = scroll > .5 ? getSpikeScalar(vector, scroll, time) : 0;
-            let perlinScalar = getPerlinScalar(vector, time, mouseProjection, scroll);
+            let perlinScalar = getPerlinScalar(vector, time, mouseProjection, scroll, aboutPosition);
 
             let v1, v2;
             if (scroll < .5)
@@ -515,8 +513,10 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         return (o) / (h - i);
     }
 
-    function getShapeRotation(scroll) {
-        return scroll * Math.PI * 2;
+    function getShapeRotation(scroll, time, aboutPosition) {
+        let a =  ( (time) / 5000 %   Math.PI);
+        // console.log(a);
+        return (scroll * Math.PI * 2 * (1-aboutPosition) + aboutPosition * a)   ;
     }
 
 
@@ -558,9 +558,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
                 });
             disableBlur();
 
-        }
-
-        else {
+        } else {
             for (let i = 0; i < pages.length; i++) {
                 let page = pages[i];
                 page.classList.remove('displaced');
@@ -589,7 +587,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         const scroll = getScroll();
 
         TweenMax.to(scrollTween,
-            4, {
+            3, {
                 y: scroll,
                 ease: Power3.easeOut
             });
@@ -635,7 +633,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     function enableBlur(scroll, aboutPosition) {
         if (!blurEnabled) return;
         let blurValue = Math.min((scroll - .8) / .2, (1 - aboutPosition)) * BLUR_PIXELS;
-        canvas.setAttribute("style", "-webkit-filter:blur(" + blurValue + "px)");
+        canvas.setAttribute("style", "filter:blur(" + blurValue + "px)");
     }
 
     function disableBlur() {
@@ -643,21 +641,46 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         canvas.style.filter = null;
     }
 
-    function updateCameraPosition(scroll, aboutPosition) {
-        let s = 1 - 2 * (1 - scroll);
-        s = CAMERA_Y_OFFSET - s * s * CAMERA_Y_OFFSET; // https://www.desmos.com/calculator/xkxkvj1qwi
-        camera.position.y = s * (1 - aboutPosition);
-        camera.rotation.x = (aboutPosition) * Math.PI / 6;
-        // camera.position.z = CAMERA_Z_OFFSET * (1-aboutPosition) + 500;
-    }
-
-    function updateShapePosition(scroll, mouse) {
-
-        let rotation = getShapeRotation(scroll);
+    function updateShapeRotation(scroll, time, aboutPosition) {
+        // camera.rotation.x = (aboutPosition) * Math.PI / 6;
+        let rotation = getShapeRotation(scroll, time, aboutPosition);
         shape.rotation.x = rotation;
         shape2.rotation.x = rotation;
         shapeWireframe.rotation.x = rotation;
         shapePoints.rotation.x = rotation;
+    }
+
+
+
+    function updateScale(scroll, aboutPosition) {
+        let value = sigmoid((scroll - .7) * 24 - 6) * (1 - aboutPosition);
+        let scale = BASE_SCALE + value * SCALE_INCREMENT + (aboutPosition) * ABOUT_POINTS_SCALE;
+        shape.scale.set(scale + 2 * aboutPosition, scale, scale);
+        shape2.scale.set(scale + 2 * aboutPosition, scale, scale);
+        shapeWireframe.scale.set(scale + 2 * aboutPosition, scale, scale);
+        shapePoints.scale.set(scale + 2 * aboutPosition, scale, scale);
+    }
+
+    
+
+    function updateCameraPosition(scroll, aboutPosition) {
+        let s = 1 - 2 * (1 - scroll);
+        s = CAMERA_Y_OFFSET_SCROLL - s * s * CAMERA_Y_OFFSET_SCROLL; // https://www.desmos.com/calculator/xkxkvj1qwi
+        camera.position.y = s * (1 - aboutPosition) + aboutPosition * CAMERA_Y_OFFSET_ABOUT;
+
+        // console.log(s)
+        // camera.position.y = CAMERA_Y_OFFSET * aboutPosition;
+
+        // camera.position.z = CAMERA_Z_OFFSET * (1-aboutPosition) + 500;
+    }
+
+
+    function updateShapePosition(scroll, mouse, time, aboutPosition) {
+
+        let s = 1 - 2 * (1 - scroll);
+        s = SHAPE_Y_OFFSET - s * s * SHAPE_Y_OFFSET; // https://www.desmos.com/calculator/xkxkvj1qwi
+        // camera.position.y = s * (1 - aboutPosition) + aboutPosition;
+
 
         let posX = (mouse.x) * 50;
         let posY = (mouse.y) * 50;
@@ -783,9 +806,10 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         updateHeader(scrollTween.y);
 
         updateCameraPosition(scrollTween.y, aboutTween.position);
+        updateShapeRotation(scrollTween.y, time, aboutTween.position);
+        updateShapePosition(scrollTween.y, mouse, time, aboutTween.position);
         updateGrid(scrollTween.y);
 
-        updateShapePosition(scrollTween.y, mouse);
 
         updateVertices(time, scrollTween.y, aboutTween.position);
         updateScale(scrollTween.y, aboutTween.position);
