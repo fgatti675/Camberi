@@ -29,6 +29,12 @@ nav {
             }
         }
     }
+
+    body.light_bg & {
+        svg path {
+            fill: var(--color-text-dark);
+        }
+    }
 }
 
 @media screen and (max-width: 55em) {

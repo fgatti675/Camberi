@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {
-    TweenMax
+    TweenLite
 } from "gsap";
 import * as Perlin from 'perlin';
 import {
@@ -22,19 +22,20 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         MOUSE_LIGHT_INTENSITY = .4,
         BASE_SCALE = 1.2,
         BLUR_PIXELS = 8,
-        ABOUT_POINTS_SIZE = 2,
+        ABOUT_POINTS_SIZE = 3,
         ABOUT_POINTS_SCALE = 2,
         ABOUT_POINTS_OPACITY = 1,
+        ABOUT_ROTATION_SPEED = 1500,
+        ABOUT_CAMERA_Y_OFFSET = 600,
         SHAPE_Y_OFFSET = 200,
         CAMERA_Y_OFFSET_SCROLL = -300,
-        CAMERA_Y_OFFSET_ABOUT = 800,
-        CAMERA_Z_OFFSET = 1400,
+        CAMERA_Z_OFFSET = 1600,
         GRID_SPEED = 1400,
         SCALE_INCREMENT = 1.7,
         LIGHT_COLOR_SATURATION = .9,
         BG_COLOR_SATURATION = .75,
         COLOR_LIGHTNESS = .6,
-        MOUSE_LIGHT_DISTANCE_TO_CENTER = 650,
+        MOUSE_LIGHT_DISTANCE_TO_CENTER = 700,
         SHAPE_RADIUS = 160,
         SHAPE_RADIUS_SMALL = 120;
 
@@ -93,8 +94,8 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         LIGHT_3_COLOR_TO,
         MATERIAL_COLOR_FROM,
         MATERIAL_COLOR_TO,
-        RENDERER_CLEAR_COLOR_FROM,
-        RENDERER_CLEAR_COLOR_TO;
+        BACKGROUND_COLOR_FROM,
+        BACKGROUND_COLOR_TO;
 
 
     const shuffleButton = document.getElementById('shuffle_colors_btn');
@@ -133,12 +134,14 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         height = canvas.offsetHeight;
 
     let renderer,
-        shape, shape2,
+        shape,
+        shape2,
         shapeWireframe,
         shapePoints,
         geometry,
         grid,
-        material, material2,
+        material,
+        material2,
         materialWireframe,
         materialPoints,
         scene,
@@ -172,14 +175,15 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
     shuffleButton.addEventListener("click", onShuffleClick);
 
+    onShuffleClick();
+
     function initScene() {
 
         renderer = new THREE.WebGLRenderer({
             alpha: true,
             canvas: canvas,
-            antialias: true
+            // antialias: true
         });
-        console.log(width);
         renderer.setPixelRatio(window.devicePixelRatio > 1 ? 1.5 : 1);
         renderer.setSize(width, height);
 
@@ -202,7 +206,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         light3.position.set(-400, 0, 500);
         scene.add(light3);
 
-        mouseLight = new THREE.SpotLight(RENDERER_CLEAR_COLOR_FROM, MOUSE_LIGHT_INTENSITY);
+        mouseLight = new THREE.SpotLight(BACKGROUND_COLOR_FROM, MOUSE_LIGHT_INTENSITY);
         mouseLight.angle = Math.PI / 4;
         mouseLight.distance = 300;
         mouseLight.position.set(0, 0, MOUSE_LIGHT_DISTANCE_TO_CENTER);
@@ -244,12 +248,13 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         // });
         // geometry.faces = newFaces;
 
-        material = new THREE.MeshPhongMaterial({
+        material = new THREE.MeshLambertMaterial({
             emissive: MATERIAL_COLOR_FROM,
             emissiveIntensity: .6,
             transparent: true,
-            premultipliedAlpha: true,
-            shininess: .3
+            // reflectivity: 10,
+            // flatShading: true,
+            // shininess: 2
         });
 
         // material2 = new THREE.MeshStandardMaterial({
@@ -261,7 +266,13 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         //     shininess: 1
         // });
 
-        material2 = material.clone();
+        material2 = new THREE.MeshPhongMaterial({
+            emissive: MATERIAL_COLOR_FROM,
+            emissiveIntensity: .6,
+            transparent: true,
+            // premultipliedAlpha: true,
+            shininess: 2
+        });
         material2.flatShading = true;
 
         // material2 = new THREE.MeshToonMaterial({
@@ -271,7 +282,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         //     shininess: 0
         // });
 
-        materialWireframe = material.clone();
+        materialWireframe = new THREE.MeshLambertMaterial({
+            transparent: true
+        });
         materialWireframe.wireframe = true;
 
         materialPoints = new THREE.PointsMaterial({
@@ -281,8 +294,6 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
             opacity: 0,
             sizeAttenuation: false
         });
-
-
 
         shape = new THREE.Mesh(geometry, material);
         shape2 = new THREE.Mesh(geometry, material2);
@@ -305,7 +316,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         }
         grid = new THREE.Points(gridGeometry, new THREE.PointsMaterial({
             color: WHITE,
-            size: 4
+            size: 6
         }));
 
         scene.add(grid);
@@ -324,9 +335,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
             loop: true,
 
             // If we need pagination
-            // pagination: {
-            //     el: '.swiper-pagination',
-            // },
+            pagination: {
+                el: '.swiper-pagination',
+            },
 
             // // Navigation arrows
             // navigation: {
@@ -350,11 +361,11 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         LIGHT_3_COLOR_TO = COLORS[3];
         MATERIAL_COLOR_FROM = COLORS[4];
         MATERIAL_COLOR_TO = COLORS[5];
-        RENDERER_CLEAR_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
-        RENDERER_CLEAR_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
+        BACKGROUND_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
+        BACKGROUND_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
 
         let adjustLightness = function (color) {
-            color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .36);
+            color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .37);
         };
         adjustLightness(LIGHT_1_COLOR_BASE);
         adjustLightness(MATERIAL_COLOR_FROM);
@@ -376,13 +387,13 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         // let bodyBackground = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, .5);
         // document.body.style.backgroundColor = bodyBackground.getStyle();
 
-        RENDERER_CLEAR_COLOR_FROM.setHSL(RENDERER_CLEAR_COLOR_FROM.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
-        RENDERER_CLEAR_COLOR_TO.setHSL(RENDERER_CLEAR_COLOR_TO.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
-        RENDERER_CLEAR_COLOR_TO.getHSL().h = RENDERER_CLEAR_COLOR_FROM.getHSL.h + .5;
+        BACKGROUND_COLOR_FROM.setHSL(BACKGROUND_COLOR_FROM.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
+        BACKGROUND_COLOR_TO.setHSL(BACKGROUND_COLOR_TO.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
+        BACKGROUND_COLOR_TO.getHSL().h = BACKGROUND_COLOR_FROM.getHSL.h + .5;
 
         for (let i = 0; i < bgPages.length; i++) {
             let page = bgPages[i];
-            let bg = RENDERER_CLEAR_COLOR_FROM.lerp(RENDERER_CLEAR_COLOR_TO, i * 1.001 / bgPages.length);
+            let bg = BACKGROUND_COLOR_FROM.lerp(BACKGROUND_COLOR_TO, i * 1.001 / bgPages.length);
 
             // hue += 1 / pages.length;
             bg.setHSL(bg.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
@@ -429,23 +440,22 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     }
 
     function getPerlinScalar(vector, time, mouseProjection, scroll, aboutPosition) {
-
         let rotation = getShapeRotation(scroll, time, aboutPosition); // compensate for shape rotation
 
         let m = mouseProjection.clone();
         m.applyAxisAngle(X_AXIS, -rotation);
         let i = 1 / vector.distanceTo(m) * 20;
-        let value = i * i ;
+        let value = i * i;
 
-        let s = ((1.2-aboutPosition)/12) * 0.07;
-        let r = ((1.2-aboutPosition)/12) * (time * 0.0045);
+        let s = ((1.2) / 12) * 0.07;
+        let r = ((1.2) / 12) * (time * 0.0045);
         const perlin = Perlin.noise.simplex3(
             (vector.x * s) + r + (value),
             (vector.y * s) + r + (value),
             (vector.z * s) + r + (value)
         );
 
-        const scalar = perlin + value + 1;
+        const scalar = perlin + value * 2 + 1;
         return scalar;
     }
 
@@ -475,7 +485,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
             vector.copy(vector._original);
 
             let shereScalar = scroll < .5 ? getSphereScalar(scroll) : 0;
-            let spikeScalar = scroll > .5 ? getSpikeScalar(vector, scroll, time) : 0;
+            let spikeScalar = scroll > .5 || aboutTween.position !== 0 ? getSpikeScalar(vector, scroll, time) : 0;
             let perlinScalar = getPerlinScalar(vector, time, mouseProjection, scroll, aboutPosition);
 
             let v1, v2;
@@ -485,7 +495,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
                 v1 = spikeScalar, v2 = perlinScalar;
 
             let regularScrollScalar = (1 - ratio) * v1 + ratio * v2;
-            let aboutScalar = perlinScalar * .6;
+            let aboutScalar = perlinScalar * .3 + spikeScalar * .02;
 
             vector.multiplyScalar((regularScrollScalar * (1 - aboutPosition) + aboutScalar * aboutPosition) + 1);
 
@@ -513,14 +523,27 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         return (o) / (h - i);
     }
 
+    let i = 0;
     function getShapeRotation(scroll, time, aboutPosition) {
-        let a =  ( (time) / 5000 %   Math.PI);
-        // console.log(a);
-        return (scroll * Math.PI * 2 * (1-aboutPosition) + aboutPosition * a)   ;
+        // return 0;
+        let a = (time / ABOUT_ROTATION_SPEED % (Math.PI * 2));
+        // return a;
+        // if (i%1000==0)
+        //     console.log(a);
+        // i++;
+        return (scroll * Math.PI * 2 + aboutPosition * a);
     }
 
-
     function onShuffleClick() {
+        let shuffleInterval = 150;
+        setTimeout(() => shuffleColors(), shuffleInterval);
+        setTimeout(() => shuffleColors(), shuffleInterval * 2);
+        setTimeout(() => shuffleColors(), shuffleInterval * 3);
+        setTimeout(() => shuffleColors(), shuffleInterval * 4);
+        setTimeout(() => shuffleColors(), shuffleInterval * 5);
+    }
+
+    function shuffleColors() {
         console.log("Shuffle up!");
         shuffle(COLORS);
         setUpLightColors();
@@ -547,16 +570,17 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
                 let page = pages[i];
                 page.classList.add('displaced');
             }
-            body.classList.add('blocked');
+            body.classList.add('displaced');
+            body.classList.add('light_bg');
             background.classList.add('displaced');
             aboutPage.classList.add('active');
             aboutPage.classList.add('displayedOnce');
-            TweenMax.to(aboutTween,
+            TweenLite.to(aboutTween,
                 3, {
                     position: 1,
-                    ease: Power3.easeOut
+                    ease: Power4.easeOut
                 });
-            disableBlur();
+            // disableBlur();
 
         } else {
             for (let i = 0; i < pages.length; i++) {
@@ -565,14 +589,15 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
             }
             background.classList.remove('displaced');
             aboutPage.classList.remove('active');
-            body.classList.remove('blocked');
+            body.classList.remove('displaced');
+            body.classList.remove('light_bg');
             // if (oldFragment === "about")
             //     content.scrollTo({
             //         top: prevScroll
             //     });
             // window.addEventListener("scroll", onScroll);
-            TweenMax.to(aboutTween,
-                2, {
+            TweenLite.to(aboutTween,
+                1, {
                     position: 0,
                     ease: Power3.easeInOut
                 });
@@ -586,8 +611,8 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
         const scroll = getScroll();
 
-        TweenMax.to(scrollTween,
-            3, {
+        TweenLite.to(scrollTween,
+            4, {
                 y: scroll,
                 ease: Power3.easeOut
             });
@@ -603,14 +628,18 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     };
 
 
-    function updateHeader(scroll) {
+    function updateHeader(scroll, aboutPosition) {
         let page = pages[0];
-        if (page.offsetHeight < main.scrollTop * 2) {
-            header.style.opacity = 1;
-            location.style.opacity = 0;
+        if (page.offsetHeight < main.scrollTop * 2 || aboutPosition > .1) {
+            header.classList.remove('hidden');
+            location.classList.add('hidden');
+            // header.style.opacity = 1;
+            // location.style.opacity = 0;
         } else {
-            header.style.opacity = 0;
-            location.style.opacity = 1;
+            header.classList.add('hidden');
+            location.classList.remove('hidden');
+            // header.style.opacity = 0;
+            // location.style.opacity = 1;
         }
     }
 
@@ -655,18 +684,19 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     function updateScale(scroll, aboutPosition) {
         let value = sigmoid((scroll - .7) * 24 - 6) * (1 - aboutPosition);
         let scale = BASE_SCALE + value * SCALE_INCREMENT + (aboutPosition) * ABOUT_POINTS_SCALE;
-        shape.scale.set(scale + 2 * aboutPosition, scale, scale);
-        shape2.scale.set(scale + 2 * aboutPosition, scale, scale);
-        shapeWireframe.scale.set(scale + 2 * aboutPosition, scale, scale);
-        shapePoints.scale.set(scale + 2 * aboutPosition, scale, scale);
+        let aboutXScaleMultiplier = 3;
+        shape.scale.set(scale + aboutXScaleMultiplier * aboutPosition, scale, scale);
+        shape2.scale.set(scale + aboutXScaleMultiplier * aboutPosition, scale, scale);
+        shapeWireframe.scale.set(scale + aboutXScaleMultiplier * aboutPosition, scale, scale);
+        shapePoints.scale.set(scale + aboutXScaleMultiplier * aboutPosition, scale, scale);
     }
 
-    
+
 
     function updateCameraPosition(scroll, aboutPosition) {
         let s = 1 - 2 * (1 - scroll);
         s = CAMERA_Y_OFFSET_SCROLL - s * s * CAMERA_Y_OFFSET_SCROLL; // https://www.desmos.com/calculator/xkxkvj1qwi
-        camera.position.y = s * (1 - aboutPosition) + aboutPosition * CAMERA_Y_OFFSET_ABOUT;
+        camera.position.y = s * (1 - aboutPosition) + aboutPosition * ABOUT_CAMERA_Y_OFFSET;
 
         // console.log(s)
         // camera.position.y = CAMERA_Y_OFFSET * aboutPosition;
@@ -677,9 +707,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
     function updateShapePosition(scroll, mouse, time, aboutPosition) {
 
-        let s = 1 - 2 * (1 - scroll);
-        s = SHAPE_Y_OFFSET - s * s * SHAPE_Y_OFFSET; // https://www.desmos.com/calculator/xkxkvj1qwi
-        // camera.position.y = s * (1 - aboutPosition) + aboutPosition;
+        // let s = 1 - 2 * (1 - scroll);
+        // s = SHAPE_Y_OFFSET - s * s * SHAPE_Y_OFFSET; // https://www.desmos.com/calculator/xkxkvj1qwi
+        // // camera.position.y = s * (1 - aboutPosition) + aboutPosition;
 
 
         let posX = (mouse.x) * 50;
@@ -728,20 +758,34 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
         let o1 = 1 - sigmoid(scroll * 18 - 11.5);
         let o2 = quadratic(scroll, -25, 6, .75); // https://www.desmos.com/calculator/la8eufllq5
-        let o3 = quadratic(scroll, -25, 6, .5);
+        let o3 = quadratic(scroll, -25, 6, .4);
         // console.log(scroll + ": " + o2);
 
         // shape.visible = o1 > 0;
         // shape2.visible = o2 > 0;
         // shape3.visible = o3 > 0;
 
-        material.opacity = o1 * (1 - aboutPosition);
-        material2.opacity = o2 * (1 - aboutPosition);
+        material.opacity = o1 * 2 * (1 - aboutPosition);
+        material2.opacity = Math.max(o2 * 2 * (1 - aboutPosition), aboutPosition * .2);
+
+        // if (material.opacity < .1) 
+        // scene.remove(shape);
+        // else 
+        // scene.add(shape);
+        // if (material2.opacity < .1) scene.remove(shape2);
+        // else scene.add(shape2);
+        // if (materialWireframe.opacity < .1) scene.remove(shapeWireframe);
+        // else scene.add(shapeWireframe);
+
         materialWireframe.opacity = Math.max(o3 * (1 - aboutPosition), .5 * aboutPosition);
         materialPoints.opacity = aboutPosition * ABOUT_POINTS_OPACITY;
 
         light.groundColor = LIGHT_1_COLOR_BASE;
-        material.emissive.set(MATERIAL_COLOR_FROM.clone().lerp(MATERIAL_COLOR_TO, scroll));
+        let materialColor = MATERIAL_COLOR_FROM.clone().lerp(MATERIAL_COLOR_TO, scroll);
+        material.emissive.set(materialColor);
+        material2.emissive.set(materialColor);
+        materialWireframe.color.set(LIGHT_1_COLOR_BASE);
+
         light2.color.set(LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_TO, scroll));
         light3.color.set(LIGHT_3_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_TO, scroll));
     }
@@ -758,14 +802,14 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         mouseProjection.copy(projectCanvasLocation(nx, ny));
         updateMouseLight(mouseProjection);
 
-        // TweenMax.to(mouseProjection,
+        // TweenLite.to(mouseProjection,
         //     1, {
         //         y: p.y,
         //         x: p.x,
         //         z: p.z,
         //         ease: Power1.easeOut
         //     });
-        TweenMax.to(mouse,
+        TweenLite.to(mouse,
             1, {
                 y: ny,
                 x: nx,
@@ -779,7 +823,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         let v = new THREE.Vector3();
         v.copy(pos);
         v.setLength(MOUSE_LIGHT_DISTANCE_TO_CENTER);
-        TweenMax.to(mouseLight.position,
+        TweenLite.to(mouseLight.position,
             .4, {
                 y: v.y,
                 x: v.x,
@@ -803,7 +847,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         updateSceneMaterials(scrollTween.y, aboutTween.position);
 
         updateBlur(scrollTween.y, aboutTween.position);
-        updateHeader(scrollTween.y);
+        updateHeader(scrollTween.y, aboutTween.position);
 
         updateCameraPosition(scrollTween.y, aboutTween.position);
         updateShapeRotation(scrollTween.y, time, aboutTween.position);

@@ -3,5 +3,11 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    transition: 400ms;
+    transition: 300ms;
+
+    &.hidden {
+        opacity: 0;
+        display: none;
+    }
+    
 }
