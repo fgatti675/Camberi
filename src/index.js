@@ -182,7 +182,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         renderer = new THREE.WebGLRenderer({
             alpha: true,
             canvas: canvas,
-            // antialias: true
+            antialias: true
         });
         renderer.setPixelRatio(window.devicePixelRatio > 1 ? 1.5 : 1);
         renderer.setSize(width, height);
@@ -361,8 +361,12 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         LIGHT_3_COLOR_TO = COLORS[3];
         MATERIAL_COLOR_FROM = COLORS[4];
         MATERIAL_COLOR_TO = COLORS[5];
-        BACKGROUND_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
-        BACKGROUND_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
+        BACKGROUND_COLOR_FROM = MATERIAL_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3), .5);
+        BACKGROUND_COLOR_TO = MATERIAL_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3), .5);
+        // BACKGROUND_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
+        // BACKGROUND_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
+        // BACKGROUND_COLOR_FROM = MATERIAL_COLOR_FROM;
+        // BACKGROUND_COLOR_TO = MATERIAL_COLOR_TO;
 
         let adjustLightness = function (color) {
             color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .37);
@@ -374,11 +378,13 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         adjustLightness(LIGHT_2_COLOR_TO);
         adjustLightness(LIGHT_3_COLOR_TO);
 
+    }
+
+    function printColorScheme(){
         let colorString = "const COLORS = [";
         colorString += COLORS.map(c => c.string).reduce((a, b) => a + ", " + b);
         colorString += "];";
         console.log(colorString);
-
     }
 
     function setUpBackgroundColors() {
@@ -536,15 +542,16 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
     function onShuffleClick() {
         let shuffleInterval = 150;
+        console.log("Shuffle up!");
         setTimeout(() => shuffleColors(), shuffleInterval);
         setTimeout(() => shuffleColors(), shuffleInterval * 2);
         setTimeout(() => shuffleColors(), shuffleInterval * 3);
         setTimeout(() => shuffleColors(), shuffleInterval * 4);
         setTimeout(() => shuffleColors(), shuffleInterval * 5);
+        printColorScheme();
     }
 
     function shuffleColors() {
-        console.log("Shuffle up!");
         shuffle(COLORS);
         setUpLightColors();
         setUpBackgroundColors();
