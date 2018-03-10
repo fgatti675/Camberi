@@ -16,7 +16,9 @@ h1{
     font-size: 16vw;
     opacity: .9;
     // mix-blend-mode: overlay;
-    text-align: center;
+    .page & {
+        text-align: center;
+    }
     line-height: .85;
     @media (min-width:55em){
         font-size: 14vw;
@@ -33,7 +35,9 @@ h2 {
     line-height: .85;
     opacity: .9;
     // mix-blend-mode: overlay;
-    text-align: center;
+    .page & {
+        text-align: center;
+    }
     @media (min-width:55em){
         font-size: 11vw;
         line-height: .75;

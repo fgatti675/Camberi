@@ -80,3 +80,14 @@ svg path {
 .text_dark {
     color: var(--color-text-dark) !important;
 }
+
+.icon {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+}
+.icon-small {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+}

@@ -62,14 +62,15 @@
     align-self: start;
     font-weight: 500;
     line-height: 1.5;
-    margin-top: 20px;
+    margin-top: 1.2rem;
+    
     @media screen and (max-width: 55em) {
         background: rgba(0, 0, 0, 0.2);
         padding: 2rem;
         border-radius: 16px;
         font-size: 0.85em;
         max-width: 90vw;
-        box-shadow: 0px 0px 33px rgba(0, 0, 0, 0.1);
+        // box-shadow: 0px 0px 33px rgba(0, 0, 0, 0.1);
     }
 }
 

@@ -25,7 +25,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         ABOUT_POINTS_SIZE = 3,
         ABOUT_POINTS_SCALE = 2,
         ABOUT_POINTS_OPACITY = 1,
-        ABOUT_ROTATION_SPEED = 1500,
+        ABOUT_ROTATION_SPEED = 3000,
         ABOUT_CAMERA_Y_OFFSET = 600,
         SHAPE_Y_OFFSET = 200,
         CAMERA_Y_OFFSET_SCROLL = -300,
@@ -33,13 +33,15 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         GRID_SPEED = 1400,
         SCALE_INCREMENT = 1.7,
         LIGHT_COLOR_SATURATION = .9,
+        COLOR_LIGHTNESS = .37,
         BG_COLOR_SATURATION = .75,
-        COLOR_LIGHTNESS = .6,
+        BG_COLOR_LIGHTNESS = .5,
         MOUSE_LIGHT_DISTANCE_TO_CENTER = 700,
         SHAPE_RADIUS = 160,
         SHAPE_RADIUS_SMALL = 120;
 
-    const WHITE = new THREE.Color(0xFFFFFF),
+
+        const WHITE = new THREE.Color(0xFFFFFF),
         GREY = new THREE.Color(0x666666),
         RED = new THREE.Color(0xFF0000),
         GREEN = new THREE.Color(0x09CAA1),
@@ -52,16 +54,19 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         MAGENTA = new THREE.Color(0xC6A0C0),
         PINK = new THREE.Color(0xCE70A5);
 
-    ORANGE.string = "ORANGE";
-    PURPLE.string = "PURPLE";
-    YELLOW.string = "YELLOW";
-    STRONG_BLUE.string = "STRONG_BLUE";
-    DARKENED_GREEN.string = "DARKENED_GREEN";
-    RED.string = "RED";
-    PINK.string = "PINK";
-    GREEN.string = "GREEN";
+        ORANGE.string = "ORANGE";
+        PURPLE.string = "PURPLE";
+        YELLOW.string = "YELLOW";
+        STRONG_BLUE.string = "STRONG_BLUE";
+        DARKENED_GREEN.string = "DARKENED_GREEN";
+        RED.string = "RED";
+        PINK.string = "PINK";
+        GREEN.string = "GREEN";
+        // const COLORS = [ORANGE, PURPLE, YELLOW, DARKENED_GREEN, RED, PINK, GREEN, STRONG_BLUE];
 
-    const COLORS = [ORANGE, PURPLE, YELLOW, DARKENED_GREEN, RED, PINK, GREEN, STRONG_BLUE];
+    const randomColor = _ => new THREE.Color().setHSL(Math.random(), LIGHT_COLOR_SATURATION, COLOR_LIGHTNESS);
+
+    const COLORS = [randomColor(), randomColor(), randomColor(), randomColor(), randomColor(), randomColor(), randomColor(), randomColor()];
 
     // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, DARKENED_GREEN, RED, PINK, GREEN];
     // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, PINK, RED, DARKENED_GREEN, GREEN];
@@ -282,7 +287,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         //     shininess: 0
         // });
 
-        materialWireframe = new THREE.MeshLambertMaterial({
+        materialWireframe = new THREE.MeshPhongMaterial({
+            emissive: MATERIAL_COLOR_FROM,
+            emissiveIntensity: .6,
             transparent: true
         });
         materialWireframe.wireframe = true;
@@ -371,12 +378,12 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         let adjustLightness = function (color) {
             color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .37);
         };
-        adjustLightness(LIGHT_1_COLOR_BASE);
-        adjustLightness(MATERIAL_COLOR_FROM);
-        adjustLightness(LIGHT_2_COLOR_FROM);
-        adjustLightness(LIGHT_3_COLOR_FROM);
-        adjustLightness(LIGHT_2_COLOR_TO);
-        adjustLightness(LIGHT_3_COLOR_TO);
+        // adjustLightness(LIGHT_1_COLOR_BASE);
+        // adjustLightness(MATERIAL_COLOR_FROM);
+        // adjustLightness(LIGHT_2_COLOR_FROM);
+        // adjustLightness(LIGHT_3_COLOR_FROM);
+        // adjustLightness(LIGHT_2_COLOR_TO);
+        // adjustLightness(LIGHT_3_COLOR_TO);
 
     }
 
@@ -393,16 +400,15 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         // let bodyBackground = RENDERER_CLEAR_COLOR_FROM.clone().lerp(RENDERER_CLEAR_COLOR_TO, .5);
         // document.body.style.backgroundColor = bodyBackground.getStyle();
 
-        BACKGROUND_COLOR_FROM.setHSL(BACKGROUND_COLOR_FROM.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
-        BACKGROUND_COLOR_TO.setHSL(BACKGROUND_COLOR_TO.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
-        BACKGROUND_COLOR_TO.getHSL().h = BACKGROUND_COLOR_FROM.getHSL.h + .5;
+        BACKGROUND_COLOR_FROM.setHSL(BACKGROUND_COLOR_FROM.getHSL().h, BG_COLOR_SATURATION, BG_COLOR_LIGHTNESS);
+        BACKGROUND_COLOR_TO.setHSL(BACKGROUND_COLOR_TO.getHSL().h, BG_COLOR_SATURATION, BG_COLOR_LIGHTNESS);
+        // BACKGROUND_COLOR_TO.getHSL().h = BACKGROUND_COLOR_FROM.getHSL.h + .5;
 
         for (let i = 0; i < bgPages.length; i++) {
             let page = bgPages[i];
-            let bg = BACKGROUND_COLOR_FROM.lerp(BACKGROUND_COLOR_TO, i * 1.001 / bgPages.length);
-
+            let bg = BACKGROUND_COLOR_FROM.lerp(BACKGROUND_COLOR_TO, i * 1 / bgPages.length);
             // hue += 1 / pages.length;
-            bg.setHSL(bg.getHSL().h, BG_COLOR_SATURATION, COLOR_LIGHTNESS);
+            bg.setHSL(bg.getHSL().h, BG_COLOR_SATURATION, BG_COLOR_LIGHTNESS);
 
             // let a = 'rgba(' + bg.r*255 + ', '+ bg.g*255 + ', '+ bg.b*255 + ', '+ 0.2 + ')';
             // console.log(a);
@@ -454,7 +460,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         let value = i * i;
 
         let s = ((1.2) / 12) * 0.07;
-        let r = ((1.2) / 12) * (time * 0.0045);
+        let r = ((1.2) / 12) * (time * 0.0035);
         const perlin = Perlin.noise.simplex3(
             (vector.x * s) + r + (value),
             (vector.y * s) + r + (value),
@@ -704,6 +710,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         let s = 1 - 2 * (1 - scroll);
         s = CAMERA_Y_OFFSET_SCROLL - s * s * CAMERA_Y_OFFSET_SCROLL; // https://www.desmos.com/calculator/xkxkvj1qwi
         camera.position.y = s * (1 - aboutPosition) + aboutPosition * ABOUT_CAMERA_Y_OFFSET;
+        // camera.position.x = -s * (1 - aboutPosition) + aboutPosition * ABOUT_CAMERA_Y_OFFSET;
 
         // console.log(s)
         // camera.position.y = CAMERA_Y_OFFSET * aboutPosition;
@@ -773,7 +780,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         // shape3.visible = o3 > 0;
 
         material.opacity = o1 * 2 * (1 - aboutPosition);
-        material2.opacity = Math.max(o2 * 2 * (1 - aboutPosition), aboutPosition * .2);
+        material2.opacity = Math.max(o2 * 2 * (1 - aboutPosition), aboutPosition * .0);
 
         // if (material.opacity < .1) 
         // scene.remove(shape);
@@ -784,7 +791,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         // if (materialWireframe.opacity < .1) scene.remove(shapeWireframe);
         // else scene.add(shapeWireframe);
 
-        materialWireframe.opacity = Math.max(o3 * (1 - aboutPosition), .5 * aboutPosition);
+        materialWireframe.opacity = Math.max(o3 * (1 - aboutPosition), .4 * aboutPosition);
         materialPoints.opacity = aboutPosition * ABOUT_POINTS_OPACITY;
 
         light.groundColor = LIGHT_1_COLOR_BASE;
