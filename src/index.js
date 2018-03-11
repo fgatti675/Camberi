@@ -20,6 +20,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         AMBIENT_LIGHT_INTENSITY = .22,
         DIRECTIONAL_LIGHT_INTENSITY = .8,
         MOUSE_LIGHT_INTENSITY = .4,
+        COLOR_VARIANCE = .8,
         BASE_SCALE = 1.2,
         BLUR_PIXELS = 8,
         ABOUT_POINTS_SIZE = 3,
@@ -41,7 +42,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         SHAPE_RADIUS_SMALL = 120;
 
 
-        const WHITE = new THREE.Color(0xFFFFFF),
+    const WHITE = new THREE.Color(0xFFFFFF),
         GREY = new THREE.Color(0x666666),
         RED = new THREE.Color(0xFF0000),
         GREEN = new THREE.Color(0x09CAA1),
@@ -54,19 +55,17 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         MAGENTA = new THREE.Color(0xC6A0C0),
         PINK = new THREE.Color(0xCE70A5);
 
-        ORANGE.string = "ORANGE";
-        PURPLE.string = "PURPLE";
-        YELLOW.string = "YELLOW";
-        STRONG_BLUE.string = "STRONG_BLUE";
-        DARKENED_GREEN.string = "DARKENED_GREEN";
-        RED.string = "RED";
-        PINK.string = "PINK";
-        GREEN.string = "GREEN";
-        // const COLORS = [ORANGE, PURPLE, YELLOW, DARKENED_GREEN, RED, PINK, GREEN, STRONG_BLUE];
+    ORANGE.string = "ORANGE";
+    PURPLE.string = "PURPLE";
+    YELLOW.string = "YELLOW";
+    STRONG_BLUE.string = "STRONG_BLUE";
+    DARKENED_GREEN.string = "DARKENED_GREEN";
+    RED.string = "RED";
+    PINK.string = "PINK";
+    GREEN.string = "GREEN";
+    // const COLORS = [ORANGE, PURPLE, YELLOW, DARKENED_GREEN, RED, PINK, GREEN, STRONG_BLUE];
 
-    const randomColor = _ => new THREE.Color().setHSL(Math.random(), LIGHT_COLOR_SATURATION, COLOR_LIGHTNESS);
-
-    const COLORS = [randomColor(), randomColor(), randomColor(), randomColor(), randomColor(), randomColor(), randomColor(), randomColor()];
+    // const COLORS = [randomColor(), randomColor(), randomColor(), randomColor(), randomColor(), randomColor(), randomColor(), randomColor()];
 
     // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, DARKENED_GREEN, RED, PINK, GREEN];
     // const COLORS = [ORANGE, PURPLE, STRONG_BLUE, PINK, RED, DARKENED_GREEN, GREEN];
@@ -87,9 +86,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     // const COLORS = [GREEN, PURPLE, PINK, STRONG_BLUE, ORANGE, DARKENED_GREEN, RED];
     // const COLORS = [GREEN, PURPLE, PINK, STRONG_BLUE, ORANGE, DARKENED_GREEN, RED];
 
-    COLORS.forEach(color => {
-        // color.setHSL(color.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
-    });
+    // COLORS.forEach(color => {
+    //     // color.setHSL(color.getHSL().h, COLOR_SATURATION, COLOR_LIGHTNESS);
+    // });
 
     let
         LIGHT_1_COLOR_BASE,
@@ -159,7 +158,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     setUpSwiper();
     setUpScrollReveal();
 
-    shuffle(COLORS);
+    // shuffle(COLORS);
     setUpLightColors();
     setUpBackgroundColors();
     initScene();
@@ -167,7 +166,8 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     requestAnimationFrame(render);
 
     let scroll = getScroll();
-    updateSceneMaterials(scroll, aboutTween.position);
+    updateSceneMaterialsOpacity(scroll, aboutTween.position);
+    updateSceneColors(scrollTween.y);
     updateBlur(scroll, aboutPage.position);
     updateHeader(scroll);
 
@@ -361,19 +361,26 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
     function setUpLightColors() {
 
-        LIGHT_1_COLOR_BASE = COLORS[6];
-        LIGHT_2_COLOR_FROM = COLORS[0];
-        LIGHT_2_COLOR_TO = COLORS[1];
-        LIGHT_3_COLOR_FROM = COLORS[2];
-        LIGHT_3_COLOR_TO = COLORS[3];
-        MATERIAL_COLOR_FROM = COLORS[4];
-        MATERIAL_COLOR_TO = COLORS[5];
+        const randomColor = _ => new THREE.Color().setHSL(Math.random(), LIGHT_COLOR_SATURATION, COLOR_LIGHTNESS);
+        const colorWithHue = hue => new THREE.Color().setHSL(hue, LIGHT_COLOR_SATURATION, COLOR_LIGHTNESS);
+        MATERIAL_COLOR_FROM = randomColor();
+        MATERIAL_COLOR_TO = randomColor();
+        LIGHT_1_COLOR_BASE = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h + (Math.random() - .5) * COLOR_VARIANCE);
+        LIGHT_2_COLOR_FROM = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h + (Math.random() - .5) * COLOR_VARIANCE);
+        LIGHT_3_COLOR_FROM = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h + (Math.random() - .5) * COLOR_VARIANCE);
+        LIGHT_2_COLOR_TO = colorWithHue(MATERIAL_COLOR_TO.getHSL().h + (Math.random() - .5) * COLOR_VARIANCE);
+        LIGHT_3_COLOR_TO = colorWithHue(MATERIAL_COLOR_TO.getHSL().h + (Math.random() - .5) * COLOR_VARIANCE);
         BACKGROUND_COLOR_FROM = MATERIAL_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3), .5);
         BACKGROUND_COLOR_TO = MATERIAL_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3), .5);
         // BACKGROUND_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
         // BACKGROUND_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
         // BACKGROUND_COLOR_FROM = MATERIAL_COLOR_FROM;
         // BACKGROUND_COLOR_TO = MATERIAL_COLOR_TO;
+
+        console.log("m " +MATERIAL_COLOR_FROM.getHSL().h);
+        console.log(LIGHT_1_COLOR_BASE.getHSL().h);
+        console.log(LIGHT_2_COLOR_FROM.getHSL().h);
+        
 
         let adjustLightness = function (color) {
             color.setHSL(color.getHSL().h, LIGHT_COLOR_SATURATION, .37);
@@ -387,11 +394,11 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
     }
 
-    function printColorScheme(){
-        let colorString = "const COLORS = [";
-        colorString += COLORS.map(c => c.string).reduce((a, b) => a + ", " + b);
-        colorString += "];";
-        console.log(colorString);
+    function printColorScheme() {
+        // let colorString = "const COLORS = [";
+        // colorString += COLORS.map(c => c.string).reduce((a, b) => a + ", " + b);
+        // colorString += "];";
+        // console.log(colorString);
     }
 
     function setUpBackgroundColors() {
@@ -558,10 +565,11 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
     }
 
     function shuffleColors() {
-        shuffle(COLORS);
+        // shuffle(COLORS);
         setUpLightColors();
         setUpBackgroundColors();
-        updateSceneMaterials(scrollTween.y, aboutTween.position);
+        updateSceneMaterialsOpacity(scrollTween.y, aboutTween.position);
+        updateSceneColors(scrollTween.y);
     }
 
     function getUrlFragment(url) {
@@ -768,7 +776,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         }
     }
 
-    function updateSceneMaterials(scroll, aboutPosition) {
+    function updateSceneMaterialsOpacity(scroll, aboutPosition) {
 
         let o1 = 1 - sigmoid(scroll * 18 - 11.5);
         let o2 = quadratic(scroll, -25, 6, .75); // https://www.desmos.com/calculator/la8eufllq5
@@ -793,8 +801,12 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
         materialWireframe.opacity = Math.max(o3 * (1 - aboutPosition), .4 * aboutPosition);
         materialPoints.opacity = aboutPosition * ABOUT_POINTS_OPACITY;
+    }
+
+    function updateSceneColors(scroll) {
 
         light.groundColor = LIGHT_1_COLOR_BASE;
+
         let materialColor = MATERIAL_COLOR_FROM.clone().lerp(MATERIAL_COLOR_TO, scroll);
         material.emissive.set(materialColor);
         material2.emissive.set(materialColor);
@@ -858,7 +870,8 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         requestAnimationFrame(render);
 
         const scroll = getScroll();
-        updateSceneMaterials(scrollTween.y, aboutTween.position);
+        updateSceneMaterialsOpacity(scrollTween.y, aboutTween.position);
+        updateSceneColors(scrollTween.y);
 
         updateBlur(scrollTween.y, aboutTween.position);
         updateHeader(scrollTween.y, aboutTween.position);
