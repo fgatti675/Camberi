@@ -187,7 +187,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         renderer = new THREE.WebGLRenderer({
             alpha: true,
             canvas: canvas,
-            antialias: true
+            // antialias: true
         });
         renderer.setPixelRatio(window.devicePixelRatio > 1 ? 1.5 : 1);
         renderer.setSize(width, height);
@@ -377,9 +377,9 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         // BACKGROUND_COLOR_FROM = MATERIAL_COLOR_FROM;
         // BACKGROUND_COLOR_TO = MATERIAL_COLOR_TO;
 
-        console.log("m " + MATERIAL_COLOR_TO.getHSL().h);
-        console.log(LIGHT_2_COLOR_TO.getHSL().h);
-        console.log(LIGHT_3_COLOR_TO.getHSL().h);
+        // console.log("m " + MATERIAL_COLOR_TO.getHSL().h);
+        // console.log(LIGHT_2_COLOR_TO.getHSL().h);
+        // console.log(LIGHT_3_COLOR_TO.getHSL().h);
 
 
         let adjustLightness = function (color) {
