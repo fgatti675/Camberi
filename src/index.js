@@ -20,7 +20,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         AMBIENT_LIGHT_INTENSITY = .22,
         DIRECTIONAL_LIGHT_INTENSITY = .8,
         MOUSE_LIGHT_INTENSITY = .4,
-        COLOR_VARIANCE = .5,
+        COLOR_VARIANCE = .44,
         BASE_SCALE = 1.2,
         BLUR_PIXELS = 8,
         ABOUT_POINTS_SIZE = 3,
@@ -370,8 +370,8 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
         LIGHT_3_COLOR_FROM = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h - COLOR_VARIANCE/2);
         LIGHT_2_COLOR_TO = colorWithHue(MATERIAL_COLOR_TO.getHSL().h - COLOR_VARIANCE/2);
         LIGHT_3_COLOR_TO = colorWithHue(MATERIAL_COLOR_TO.getHSL().h + COLOR_VARIANCE/2);
-        BACKGROUND_COLOR_FROM = MATERIAL_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3), .5);
-        BACKGROUND_COLOR_TO = MATERIAL_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3), .5);
+        BACKGROUND_COLOR_FROM = MATERIAL_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3), .3);
+        BACKGROUND_COLOR_TO = MATERIAL_COLOR_TO.clone().lerp(LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3), .3);
         // BACKGROUND_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
         // BACKGROUND_COLOR_TO = LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
         // BACKGROUND_COLOR_FROM = MATERIAL_COLOR_FROM;
