@@ -10,6 +10,7 @@ import Swiper from 'swiper';
 import ScrollReveal from 'scrollreveal';
 import './main.scss';
 import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
+import Rellax from 'rellax'
 
 
 (function () {
