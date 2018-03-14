@@ -21,7 +21,7 @@ import './main.scss';
         BASE_SCALE = 1.2,
         BLUR_PIXELS = 8,
         ABOUT_POINTS_SIZE = 3,
-        ABOUT_POINTS_SCALE = 2,
+        ABOUT_SCALE_INCREMENT = 3,
         ABOUT_POINTS_OPACITY = 1,
         ABOUT_ROTATION_SPEED = 3000,
         ABOUT_CAMERA_Y_OFFSET = 600,
@@ -29,7 +29,7 @@ import './main.scss';
         CAMERA_Y_OFFSET_SCROLL = -300,
         CAMERA_Z_OFFSET = 1600,
         GRID_SPEED = 1400,
-        SCALE_INCREMENT = 1.7,
+        CONTACT_SCALE_INCREMENT = 1.7,
         LIGHT_COLOR_SATURATION = .9,
         COLOR_LIGHTNESS = .37,
         BG_COLOR_SATURATION = .75,
@@ -595,9 +595,9 @@ import './main.scss';
             aboutPage.classList.add('active');
             aboutPage.classList.add('displayedOnce');
             TweenLite.to(aboutTween,
-                3, {
+                1, {
                     position: 1,
-                    ease: Power4.easeOut
+                    ease: Power3.easeOut
                 });
             // disableBlur();
 
@@ -618,7 +618,7 @@ import './main.scss';
             TweenLite.to(aboutTween,
                 1, {
                     position: 0,
-                    ease: Power3.easeInOut
+                    ease: Power3.easeOut
                 });
 
         }
@@ -702,12 +702,11 @@ import './main.scss';
 
     function updateScale(scroll, aboutPosition) {
         let value = sigmoid((scroll - .7) * 24 - 6) * (1 - aboutPosition);
-        let scale = BASE_SCALE + value * SCALE_INCREMENT + (aboutPosition) * ABOUT_POINTS_SCALE;
-        let aboutXScaleMultiplier = 3;
-        shape.scale.set(scale + aboutXScaleMultiplier * aboutPosition, scale, scale);
-        shape2.scale.set(scale + aboutXScaleMultiplier * aboutPosition, scale, scale);
-        shapeWireframe.scale.set(scale + aboutXScaleMultiplier * aboutPosition, scale, scale);
-        shapePoints.scale.set(scale + aboutXScaleMultiplier * aboutPosition, scale, scale);
+        let scale = BASE_SCALE + value * CONTACT_SCALE_INCREMENT + (aboutPosition) * ABOUT_SCALE_INCREMENT;
+        shape.scale.set(scale, scale, scale);
+        shape2.scale.set(scale, scale, scale);
+        shapeWireframe.scale.set(scale, scale, scale);
+        shapePoints.scale.set(scale, scale, scale);
     }
 
 
@@ -715,9 +714,9 @@ import './main.scss';
     function updateCameraPosition(scroll, aboutPosition) {
         let s = 1 - 2 * (1 - scroll);
         s = CAMERA_Y_OFFSET_SCROLL - s * s * CAMERA_Y_OFFSET_SCROLL; // https://www.desmos.com/calculator/xkxkvj1qwi
-        camera.position.y = s * (1 - aboutPosition) + aboutPosition * ABOUT_CAMERA_Y_OFFSET;
+        camera.position.y = s * (1 - aboutPosition);
         // camera.position.x = -s * (1 - aboutPosition) + aboutPosition * ABOUT_CAMERA_Y_OFFSET;
-
+        camera.position.x = aboutPosition * width / 2;
         // console.log(s)
         // camera.position.y = CAMERA_Y_OFFSET * aboutPosition;
 
