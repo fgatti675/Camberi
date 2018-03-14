@@ -10,6 +10,7 @@ import Swiper from 'swiper';
 import ScrollReveal from 'scrollreveal';
 import './main.scss';
 import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
+import Rellax from 'rellax'
 
 
 (function () {
@@ -344,6 +345,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
             // If we need pagination
             pagination: {
                 el: '.swiper-pagination',
+                clickable: true
             },
 
             // // Navigation arrows

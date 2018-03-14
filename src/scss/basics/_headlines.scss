@@ -53,6 +53,12 @@ h3 {
     line-height: .9;
 }
 
+h4 {
+    @extend .main-title;
+    font-size: 20px;
+    line-height: .9;
+}
+
 .email_headline {
     text-transform: inherit;
     font-family:$font-family;

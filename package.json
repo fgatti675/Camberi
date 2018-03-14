@@ -7,6 +7,7 @@
     "css-scroll-snap-polyfill": "^0.1.2",
     "gsap": "^1.20.4",
     "perlin": "^1.0.0",
+    "rellax": "^1.6.0",
     "scrollreveal": "^3.3.6",
     "swiper": "^4.1.6",
     "three": "^0.90.0"
