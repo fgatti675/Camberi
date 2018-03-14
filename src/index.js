@@ -344,6 +344,7 @@ import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
             // If we need pagination
             pagination: {
                 el: '.swiper-pagination',
+                clickable: true
             },
 
             // // Navigation arrows

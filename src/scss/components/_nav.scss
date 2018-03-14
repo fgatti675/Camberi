@@ -21,6 +21,9 @@ nav {
             outline: none;
         }
     }
+    .btn:first-child {
+        margin-right: 10px;
+    }
     
     svg {
         &:hover {
