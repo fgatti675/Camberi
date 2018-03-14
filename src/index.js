@@ -3,14 +3,10 @@ import {
     TweenLite
 } from "gsap";
 import * as Perlin from 'perlin';
-import {
-    Vector3
-} from 'three';
 import Swiper from 'swiper';
 import ScrollReveal from 'scrollreveal';
 import './main.scss';
-import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
-import Rellax from 'rellax'
+// import scrollSnapPolyfill from 'css-scroll-snap-polyfill'
 
 
 (function () {
@@ -122,7 +118,7 @@ import Rellax from 'rellax'
         document.documentElement.scrollHeight,
         document.documentElement.offsetHeight);
 
-    const mouseProjection = new Vector3(0, 0, 0);
+    const mouseProjection = new THREE.Vector3(0, 0, 0);
     const mouse = new THREE.Vector2(0, 0);
 
     const blurEnabled = !navigator.userAgent.includes("Firefox");
@@ -368,10 +364,10 @@ import Rellax from 'rellax'
         MATERIAL_COLOR_FROM = randomColor();
         MATERIAL_COLOR_TO = randomColor();
         LIGHT_1_COLOR_BASE = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h + (Math.random() - .5) * COLOR_VARIANCE);
-        LIGHT_2_COLOR_FROM = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h + COLOR_VARIANCE/2);
-        LIGHT_3_COLOR_FROM = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h - COLOR_VARIANCE/2);
-        LIGHT_2_COLOR_TO = colorWithHue(MATERIAL_COLOR_TO.getHSL().h - COLOR_VARIANCE/2);
-        LIGHT_3_COLOR_TO = colorWithHue(MATERIAL_COLOR_TO.getHSL().h + COLOR_VARIANCE/2);
+        LIGHT_2_COLOR_FROM = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h + COLOR_VARIANCE / 2);
+        LIGHT_3_COLOR_FROM = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h - COLOR_VARIANCE / 2);
+        LIGHT_2_COLOR_TO = colorWithHue(MATERIAL_COLOR_TO.getHSL().h - COLOR_VARIANCE / 2);
+        LIGHT_3_COLOR_TO = colorWithHue(MATERIAL_COLOR_TO.getHSL().h + COLOR_VARIANCE / 2);
         BACKGROUND_COLOR_FROM = MATERIAL_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3), .3);
         BACKGROUND_COLOR_TO = MATERIAL_COLOR_TO.clone().lerp(LIGHT_2_COLOR_TO.clone().lerp(LIGHT_3_COLOR_TO.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3), .3);
         // BACKGROUND_COLOR_FROM = LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_FROM.clone(), .5).lerp(LIGHT_1_COLOR_BASE.clone(), .3);
@@ -902,6 +898,7 @@ import Rellax from 'rellax'
         camera.bottom = height / -2;
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
+        setUpSwiper();
     }
 
     // setInterval(function(){
