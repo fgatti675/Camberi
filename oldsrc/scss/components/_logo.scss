@@ -1,0 +1,16 @@
+.logo {
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 700;
+    font-size: 16px;
+    @media (min-width:55em){
+        font-size: 22px;
+    }
+}
+
+.logo_header{
+    // mix-blend-mode: overlay;
+    font-size: 2em;
+    text-align: center;
+    margin-top: 2rem;
+}

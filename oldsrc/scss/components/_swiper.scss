@@ -1,0 +1,35 @@
+@import "../node_modules/swiper/dist/css/swiper.css";
+
+
+.swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction {
+    width: 100%;
+    max-width: 900px;
+    right: 0;
+    line-height: 16px;
+    left: 50%;
+    text-align: right;
+    // top: 260px;
+    height: 16px;
+    transform: translateX(-50%);
+}
+
+.swiper-pagination-bullet {  
+    width: 30px;
+    height: 7px;
+    border-radius:  0;
+}
+
+.swiper-pagination-bullet-active {
+    background: white;
+}
+
+
+@media screen and (max-width: 55em) {
+    .swiper-container {
+        padding: 0 5vw;
+    }
+    .swiper-slide,
+    .swiper-wrapper {
+        width: 90vw;
+    }
+}

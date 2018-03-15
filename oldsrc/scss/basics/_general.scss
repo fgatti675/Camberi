@@ -16,14 +16,14 @@ body {
     font-family: $font-family;
     margin: 0;
     overflow-x: hidden;
-    background: #000;
+    background: #FFFFFF;
     font-weight: 400;
     color: var(--color-text);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     
     font-size: $body-font-size;
-    //opacity: 0;
+    opacity: 0;
     transition: 1s ease opacity;
 
     &.render  {

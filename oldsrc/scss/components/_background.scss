@@ -1,0 +1,22 @@
+.background {
+    z-index: -10;
+    position: absolute;
+    top: 0;
+    margin: 0;
+    transition: 300ms;
+
+    .bg_page {
+        height: 100vh;
+        width: 100vw;
+    }
+
+    .bg_page.sticky {
+        // height: var(--page-height);
+    }
+
+    &.displaced{
+        transform: translateX(-100vw);
+        transition: 300ms;
+    }
+    
+}
