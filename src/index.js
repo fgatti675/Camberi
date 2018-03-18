@@ -680,8 +680,9 @@ import './main.scss';
 
     function enableBlur(scroll, aboutPosition) {
         if (!blurEnabled) return;
-        let blurValue = Math.min((scroll - .8) / .2, (1 - aboutPosition)) * BLUR_PIXELS;
-        canvas.setAttribute("style", "filter:blur(" + blurValue + "px)");
+        // let blurValue = Math.min((scroll - .8) / .2, (1 - aboutPosition)) * BLUR_PIXELS;
+        // canvas.setAttribute("style", "filter:blur(" + blurValue + "px)");
+        canvas.setAttribute("style", "filter:blur(" + BLUR_PIXELS + "px)");
     }
 
     function disableBlur() {
