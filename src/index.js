@@ -31,7 +31,7 @@ import './main.scss';
         GRID_SPEED = 1400,
         CONTACT_SCALE_INCREMENT = 1.7,
         LIGHT_COLOR_SATURATION = .9,
-        COLOR_LIGHTNESS = .37,
+        LIGHT_COLOR_LIGHTNESS = .37,
         BG_COLOR_SATURATION = .75,
         BG_COLOR_LIGHTNESS = .5,
         MOUSE_LIGHT_DISTANCE_TO_CENTER = 700,
@@ -359,10 +359,10 @@ import './main.scss';
 
     function setUpLightColors() {
 
-        const randomColor = _ => new THREE.Color().setHSL(Math.random(), LIGHT_COLOR_SATURATION, COLOR_LIGHTNESS);
-        const colorWithHue = hue => new THREE.Color().setHSL(hue, LIGHT_COLOR_SATURATION, COLOR_LIGHTNESS);
+        const randomColor = _ => new THREE.Color().setHSL(Math.random(), LIGHT_COLOR_SATURATION, LIGHT_COLOR_LIGHTNESS);
+        const colorWithHue = hue => new THREE.Color().setHSL(hue, LIGHT_COLOR_SATURATION, LIGHT_COLOR_LIGHTNESS);
         MATERIAL_COLOR_FROM = randomColor();
-        MATERIAL_COLOR_TO = randomColor();
+        MATERIAL_COLOR_TO = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h + COLOR_VARIANCE / 3 * 2);
         LIGHT_1_COLOR_BASE = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h + (Math.random() - .5) * COLOR_VARIANCE);
         LIGHT_2_COLOR_FROM = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h + COLOR_VARIANCE / 2);
         LIGHT_3_COLOR_FROM = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h - COLOR_VARIANCE / 2);
@@ -456,11 +456,10 @@ import './main.scss';
         return scalar + 1.;
     }
 
-    function getPerlinScalar(vector, time, mouseProjection, scroll, aboutPosition) {
-        let rotation = getShapeRotation(scroll, time, aboutPosition); // compensate for shape rotation
+    function getPerlinScalar(vector, time, mouseProjection, scroll, aboutPosition, shapeRotation) {
 
         let m = mouseProjection.clone();
-        m.applyAxisAngle(X_AXIS, -rotation);
+        m.applyAxisAngle(X_AXIS, -shapeRotation);
         let i = 1 / vector.distanceTo(m) * 20;
         let value = i * i;
 
@@ -492,7 +491,7 @@ import './main.scss';
         return 1 / (1 + Math.exp(-t));
     }
 
-    function updateVertices(time, scroll, aboutPosition) {
+    function updateVertices(time, scroll, aboutPosition, shapeRotation) {
 
         const ratio = (sinoid(scroll, 2));
 
@@ -503,7 +502,7 @@ import './main.scss';
 
             let shereScalar = scroll < .5 ? getSphereScalar(scroll) : 0;
             let spikeScalar = scroll > .5 || aboutTween.position !== 0 ? getSpikeScalar(vector, scroll, time) : 0;
-            let perlinScalar = getPerlinScalar(vector, time, mouseProjection, scroll, aboutPosition);
+            let perlinScalar = getPerlinScalar(vector, time, mouseProjection, scroll, aboutPosition, shapeRotation);
 
             let v1, v2;
             if (scroll < .5)
@@ -666,12 +665,12 @@ import './main.scss';
 
         if (!blurEnabled) return;
 
-        if (aboutPosition == 1) {
+        if (aboutPosition > .3) {
             disableBlur();
             return;
         }
 
-        if (scroll > (1 - 1 / pages.length) + .05) {
+        if (scroll > (1 - 1 / pages.length)) {
             enableBlur(scroll, aboutPosition);
         } else {
             disableBlur();
@@ -690,9 +689,8 @@ import './main.scss';
         canvas.style.filter = null;
     }
 
-    function updateShapeRotation(scroll, time, aboutPosition) {
+    function updateShapeRotation(rotation) {
         // camera.rotation.x = (aboutPosition) * Math.PI / 6;
-        let rotation = getShapeRotation(scroll, time, aboutPosition);
         shape.rotation.x = rotation;
         shape2.rotation.x = rotation;
         shapeWireframe.rotation.x = rotation;
@@ -868,20 +866,22 @@ import './main.scss';
         requestAnimationFrame(render);
 
         const scroll = getScroll();
+        const rotation = getShapeRotation(scrollTween.y, time, aboutTween.position);
+
         updateSceneMaterialsOpacity(scrollTween.y, aboutTween.position);
         updateSceneColors(scrollTween.y);
 
-        updateBlur(scrollTween.y, aboutTween.position);
+        updateBlur(scroll, aboutTween.position);
         updateHeader(scrollTween.y, aboutTween.position);
 
-        updateCameraPosition(scrollTween.y, aboutTween.position);
-        updateShapeRotation(scrollTween.y, time, aboutTween.position);
+        updateShapeRotation(rotation);
         updateShapePosition(scrollTween.y, mouse, time, aboutTween.position);
-        updateGrid(scrollTween.y);
+        updateVertices(time, scrollTween.y, aboutTween.position, rotation);
 
-
-        updateVertices(time, scrollTween.y, aboutTween.position);
         updateScale(scrollTween.y, aboutTween.position);
+
+        updateGrid(scrollTween.y);
+        updateCameraPosition(scrollTween.y, aboutTween.position);
 
         renderer.render(scene, camera);
     }

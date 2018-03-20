@@ -81,6 +81,6 @@ h5 {
     font-weight: 600;
     @media (min-width:55em){
         font-size: 70px;
-        color: black;
+        color: var(--color-text-dark);
     }
 }

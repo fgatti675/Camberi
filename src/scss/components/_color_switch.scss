@@ -18,6 +18,7 @@
 
     body.light_bg & {
         svg path {
+            display: none;
             fill: var(--color-text-dark);
         }
     }
