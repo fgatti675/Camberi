@@ -8,6 +8,10 @@
     .bg_page {
         height: 100vh;
         width: 100vw;
+        .is-ios & {
+            //height: calc(100vh - 113px);
+            height: calc(100vh - 74px);
+        }
     }
 
     .bg_page.sticky {

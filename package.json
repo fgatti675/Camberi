@@ -5,8 +5,10 @@
   "main": "index.js",
   "dependencies": {
     "gsap": "^1.20.4",
+    "nunjucks-html-loader": "git+https://github.com/Goldfinch/nunjucks-html-loader.git",
     "perlin": "^1.0.0",
     "scrollreveal": "^3.3.6",
+    "style-loader": "^0.20.3",
     "swiper": "^4.1.6",
     "three": "^0.90.0"
   },

@@ -152,6 +152,7 @@ import './main.scss';
     let onScrollEnd;
 
     // scrollSnapPolyfill()
+    browsersCheck();
     setUpSwiper();
     setUpScrollReveal();
 
@@ -899,6 +900,32 @@ import './main.scss';
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
         setUpSwiper();
+    }
+
+    function browsersCheck() {
+        if (iOS()){
+            console.log("fico");
+            document.body.classList.add("is-ios");
+        }
+    }
+
+    function iOS() {
+        var iDevices = [
+            'iPad Simulator',
+            'iPhone Simulator',
+            'iPod Simulator',
+            'iPad',
+            'iPhone',
+            'iPod'
+        ];
+        
+        if (!!navigator.platform) {
+            while (iDevices.length) {
+            if (navigator.platform === iDevices.pop()){ return true; }
+            }
+        }
+        
+        return false;
     }
 
     // setInterval(function(){

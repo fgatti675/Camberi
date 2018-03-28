@@ -11,6 +11,7 @@
     display: inline-block;
     cursor: pointer;
     position: relative;
+    
     body.light_bg & { 
         background: rgba(0,0,0,0.05);
         color: var(--color-text-dark);
@@ -62,13 +63,13 @@
         border-width: 10px 10px 0 10px;
         opacity: 1;
     }
-    @media screen and (max-width: 55em) {
-        padding: .8rem 1.6rem;
+    @include media(">=0", "<=tablet") {
+        padding: .65rem 1rem;
         .icon{
             display:none;
         }
         &.btn--has-icon {
-            padding-right: 1.6rem;; 
+            padding-right: 1rem; 
         }
     }
 }
