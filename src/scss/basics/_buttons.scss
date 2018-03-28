@@ -3,6 +3,7 @@
     font-weight: 700;
     font-size: 1rem;
     background-color: rgba(0,0,0,0.2);
+    
     border: none;
     color: var(--color-text);
     padding: .8rem 2rem;
@@ -41,29 +42,32 @@
         color: var(--color-text);
         background-color: rgba(0,0,0,0.5);
     }
-    &.btn--with-arrow:before {
-        pointer-events: none;
-        position: absolute;
-        z-index: -1;
-        content: '';
-        border-style: solid;
-        transition-duration: 0.3s;
-        transition-property: all;
-        left: calc(50% - 10px);
-        opacity: 0;
-        bottom: 0;
-        transform: translateY(10px);
-        border-width: 10px 0px 0 10px;
-        border-color: rgba(0,0,0,0.5) transparent transparent transparent;
-    }
-    &.btn--with-arrow:hover:before,
-    &.btn--with-arrow:focus:before,
-    &.btn--with-arrow:active:before {
-        
-        border-width: 10px 10px 0 10px;
-        opacity: 1;
+    @include media(">tablet") {
+        &.btn--with-arrow:before {
+            pointer-events: none;
+            position: absolute;
+            z-index: -1;
+            content: '';
+            border-style: solid;
+            transition-duration: 0.3s;
+            transition-property: all;
+            left: calc(50% - 10px);
+            opacity: 0;
+            bottom: 0;
+            transform: translateY(10px);
+            border-width: 10px 0px 0 10px;
+            border-color: rgba(0,0,0,0.5) transparent transparent transparent;
+        }
+        &.btn--with-arrow:hover:before,
+        &.btn--with-arrow:focus:before,
+        &.btn--with-arrow:active:before {
+            
+            border-width: 10px 10px 0 10px;
+            opacity: 1;
+        }
     }
     @include media(">=0", "<=tablet") {
+        box-shadow: 0px 0px 25px rgba(255,255,255,.3);
         padding: .7rem 1.3rem;
         font-size: .9rem;
         border-radius: 4px;

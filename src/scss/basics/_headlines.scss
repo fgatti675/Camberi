@@ -50,13 +50,13 @@ h2 {
 h3 {
     @extend .main-title;
     font-size: 120px;
-    line-height: .75;
+    line-height: .8;
     background:-webkit-linear-gradient(135deg, #46dafe 1%,#4192f4 33%,#7136e9 69%,#9f11e4 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     @include media("<=tablet") {
         font-size: 18vw;
-        line-height: .75;
+        line-height: .8;
     }
 }
 

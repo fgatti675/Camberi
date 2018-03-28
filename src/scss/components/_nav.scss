@@ -10,7 +10,6 @@ nav {
     align-self: end;
     @include media("<=tablet") {
         
-        width: 100%;
         padding: 10px;
         justify-content: flex-end;
         
