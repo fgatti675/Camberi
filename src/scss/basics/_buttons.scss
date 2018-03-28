@@ -2,7 +2,7 @@
     border-radius: 2px;
     font-weight: 700;
     font-size: 1rem;
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0,0,0,0.2);
     border: none;
     color: var(--color-text);
     padding: .8rem 2rem;
@@ -64,7 +64,9 @@
         opacity: 1;
     }
     @include media(">=0", "<=tablet") {
-        padding: .65rem 1rem;
+        padding: .45rem 1rem;
+        font-size: .9rem;
+        border-radius: 4px;
         .icon{
             display:none;
         }

@@ -23,7 +23,7 @@ header {
         a {
             color: var(--color-text-dark);
         }
-        svg path {
+        svg path {  
             fill: var(--color-text-dark);
         }
     }
@@ -31,7 +31,9 @@ header {
         animation-name: blink;
         animation-duration: 1s;
     }
-    @media screen and (max-width: 55em) {
+    @include media("<=tablet") {
+        padding: 0;
+        left: 10px;
         p {
             display: none;
         }

@@ -24,7 +24,7 @@
 }
 
 
-@media screen and (max-width: 55em) {
+@include media("<=tablet") {
     .swiper-container {
         padding: 0 5vw;
     }

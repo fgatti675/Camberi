@@ -22,7 +22,7 @@
     position: relative;
     width: 100%;
     margin-top: 20vh;
-    @media screen and (max-width: 55em) {
+    @include media("<=tablet") {
         margin-top: 0;
     }
 }
@@ -68,10 +68,17 @@
     font-weight: 500;
     line-height: 1.5;
     margin-top: 1.2rem;
+
+    p:first-child {
+        margin-top: 0;
+    }
+    p:last-child {
+        margin-bottom: 0;
+    }
     
-    @media screen and (max-width: 55em) {
+    @include media("<=tablet") {
         background: rgba(0, 0, 0, 0.2);
-        padding: 2rem;
+        padding: 1rem;
         border-radius: 16px;
         font-size: 0.85em;
         max-width: 90vw;
@@ -81,6 +88,8 @@
 
 .content__clients {
     padding-top: 50px;
+    padding-left: 15px;
+    padding-right: 15px;
     max-width: 1300px;
     width: 100%;
     margin: 0 auto;
@@ -91,7 +100,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            @media (min-width: 55em) {
+            @include media(">tablet") {
                 height: 150px;
             }
         }

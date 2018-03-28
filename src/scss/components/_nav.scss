@@ -8,15 +8,12 @@ nav {
     right: 0;
     display: flex;
     align-self: end;
-    @include media(">=0", "<=tablet") {
-        background: rgba(0,0,0,0.2) ;
+    @include media("<=tablet") {
+        
         width: 100%;
-        padding-top: 0;
-        padding-bottom: 0;
+        padding: 10px;
         justify-content: flex-end;
-        .btn {
-            background: none;
-        }
+        
     }
     >a {
         font-weight: 700;
@@ -49,7 +46,7 @@ nav {
     }
 }
 
-@media screen and (max-width: 55em) {
+@include media("<=tablet") {
     nav a {
         // display: none;
     }

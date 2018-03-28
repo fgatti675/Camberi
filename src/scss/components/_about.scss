@@ -27,7 +27,7 @@
         width: 80%;
         margin: 0 auto;
         margin-bottom: 80px;
-        @media screen and (max-width: 55em) {
+        @include media("<=tablet") {
             width: 100%;
             display: block;
         }
@@ -44,7 +44,7 @@
             padding-top: 0;
             margin-top: 0;
         }
-        @media screen and (max-width: 55em) {
+        @include media("<=tablet") {
             width: 100%;
         }
     }
@@ -70,7 +70,7 @@
         text-align: left;
         width: 50%;
         margin-top: 120px;
-        @media screen and (max-width: 55em) {
+        @include media("<=tablet") {
             width: 100%;
             max-width: 300px;
             margin: 0 auto;
@@ -78,13 +78,13 @@
         }
         &:first-child {
             padding-right: 15px;
-            @media screen and (max-width: 55em) {
+            @include media("<=tablet") {
                 padding-right: 0;
             }
         }
         &:last-child {
             padding-left: 15px;
-            @media screen and (max-width: 55em) {
+            @include media("<=tablet") {
                 padding-left: 0;
             }
         }
@@ -118,11 +118,12 @@
     .content__body {
         margin: 1.2rem auto;
 
-        @media screen and (max-width: 55em) {
+        @include media("<=tablet") {
             background: unset;
             padding: unset;
-            border-radius: unset;
+            border-radius: unset;  
         }
+        
 
     }
 
@@ -145,7 +146,7 @@
             border: 1px grey;
         }
 
-        @media screen and (max-width: 55em) {
+        @include media("<=tablet") {
             flex-direction: column;
         }
     }

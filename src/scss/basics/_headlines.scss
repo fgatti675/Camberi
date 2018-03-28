@@ -20,11 +20,11 @@ h1{
         text-align: center;
     }
     line-height: .85;
-    @media (min-width:55em){
+    @include media(">tablet") {
         font-size: 14vw;
         line-height: .75;
     }
-    @media (min-width:1400px){
+    @include media(">1400px") {
         font-size: 180px;
     }
 }
@@ -38,11 +38,11 @@ h2 {
     .page & {
         text-align: center;
     }
-    @media (min-width:55em){
+    @include media(">tablet") {
         font-size: 11vw;
         line-height: .75;
     }
-    @media (min-width:1400px){
+    @include media(">1400px") {
         font-size: 160px;
     }
 }
@@ -54,7 +54,7 @@ h3 {
     background:-webkit-linear-gradient(135deg, #46dafe 1%,#4192f4 33%,#7136e9 69%,#9f11e4 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    @media (max-width:55em){
+    @include media("<=tablet") {
         font-size: 18vw;
         line-height: .75;
     }
@@ -79,7 +79,7 @@ h5 {
     color: white;
     // mix-blend-mode: normal;
     font-weight: 600;
-    @media (min-width:55em){
+    @include media(">tablet") {
         font-size: 70px;
         color: var(--color-text-dark);
     }

@@ -6,14 +6,14 @@
     &.align-center {
         align-items: center;
     }
-    @media (min-width:55em){
+    @include media(">tablet") {
         flex-wrap: nowrap;
     }
     .col-3 {
         padding: 15px;
         width: 50%;
         text-align: center;
-        @media (min-width:55em){
+        @include media(">tablet") {
             width: 30%;
         }
     }
@@ -21,7 +21,7 @@
         padding: 15px;
         width: 50%;
         text-align: center;
-        @media (min-width:55em){
+        @include media(">tablet") {
             width: 40%;
         }
     }
