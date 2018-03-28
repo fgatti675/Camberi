@@ -44,6 +44,10 @@ header {
         svg path {
             fill: var(--color-text-dark);
         }
+        p {
+            color: var(--color-text-dark);
+            display: block;
+        }
     }
    
 }

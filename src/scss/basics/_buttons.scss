@@ -11,6 +11,10 @@
     display: inline-block;
     cursor: pointer;
     position: relative;
+    body.light_bg & { 
+        background: rgba(0,0,0,0.05);
+        color: var(--color-text-dark);
+    }
     &.btn--has-icon {
         padding-right: 50px;
     }
