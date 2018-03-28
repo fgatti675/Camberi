@@ -906,6 +906,22 @@ import './main.scss';
         if (iOS()){
             console.log("fico");
             document.body.classList.add("is-ios");
+            
+            //check if iphone X
+
+            // Get the device pixel ratio
+            var ratio = window.devicePixelRatio || 1;
+
+            // Define the users device screen dimensions
+            var screen = {
+                width : window.screen.width * ratio,
+                height : window.screen.height * ratio
+            };
+
+            // iPhone X Detection
+            if (screen.width == 1125 && screen.height === 2436) {
+                document.body.classList.add("is-ios-x");
+            }
         }
     }
 
@@ -927,6 +943,7 @@ import './main.scss';
         
         return false;
     }
+    
 
     // setInterval(function(){
     //     onShuffleClick();

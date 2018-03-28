@@ -32,7 +32,7 @@ header {
         animation-duration: 1s;
     }
     @include media("<=tablet") {
-        padding: 0;
+        padding: 3px 0px;
         left: 10px;
         p {
             display: none;

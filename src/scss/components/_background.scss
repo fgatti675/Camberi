@@ -12,6 +12,9 @@
             //height: calc(100vh - 113px);
             height: calc(100vh - 74px);
         }
+        .is-ios-x & {
+            height: calc(100vh - 113px);
+        }
     }
 
     .bg_page.sticky {
