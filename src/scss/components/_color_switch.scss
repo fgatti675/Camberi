@@ -1,3 +1,11 @@
+.light_bg {
+    
+        #color-palette-1 path {
+            fill: inherit;
+        }
+    
+}
+
 .color_switch {
     position: fixed;
     padding: 1rem;
@@ -17,6 +25,7 @@
     body.light_bg & { 
         background: rgba(0,0,0,0.05);
         color: var(--color-text-dark);
+        
         .color_switch_svg .color_switch_inner {
             fill: var(--color-text-dark);
         }
