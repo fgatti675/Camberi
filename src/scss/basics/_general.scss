@@ -16,15 +16,27 @@ body {
     font-family: $font-family;
     margin: 0;
     overflow-x: hidden;
-    background: #52D1DF;
+    background: #FFFFFF;
     font-weight: 400;
     color: var(--color-text);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    
+    font-size: $body-font-size;
+    opacity: 0;
+    transition: 1s ease opacity;
+
+    &.render  {
+        opacity: 1;
+    }
+
+    &.displaced{
+        overflow: hidden;
+    }
 }
 
 body {
-    --page-height: 180vh;
+    --page-height: 100vh;
     --color-text: #fff;
     --color-text-dark: #0f2e5c;
     --color-link-hover: #fff;
@@ -51,15 +63,6 @@ body {
     --blend-color-5: #1c1cc9;
 }
 
-body {
-    font-size: $body-font-size;
-    opacity: 0;
-    &.render  {
-        transition: 1s ease opacity;
-        opacity: 1;
-    }
-}
-
 
 a {
     text-decoration: none;
@@ -78,8 +81,19 @@ svg path {
     color: var(--color-text-dark) !important;
 }
 
-main {
-    position: absolute;
-    top: 0;
-    width: 100%;
+.text_tag{
+    background: white;
+    padding: 0 .4rem;
+    border-radius: .4rem;
+}
+
+.icon {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+}
+.icon-small {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
 }

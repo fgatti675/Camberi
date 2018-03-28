@@ -14,8 +14,11 @@
 h1{
     @extend .main-title;
     font-size: 16vw;
-    mix-blend-mode: overlay;
-    text-align: center;
+    opacity: .9;
+    // mix-blend-mode: overlay;
+    .page & {
+        text-align: center;
+    }
     line-height: .85;
     @media (min-width:55em){
         font-size: 14vw;
@@ -30,8 +33,11 @@ h2 {
     @extend .main-title;
     font-size: 14vw;
     line-height: .85;
-    mix-blend-mode: overlay;
-    text-align: center;
+    opacity: .9;
+    // mix-blend-mode: overlay;
+    .page & {
+        text-align: center;
+    }
     @media (min-width:55em){
         font-size: 11vw;
         line-height: .75;
@@ -43,7 +49,26 @@ h2 {
 
 h3 {
     @extend .main-title;
+    font-size: 120px;
+    line-height: .75;
+    background:-webkit-linear-gradient(135deg, #46dafe 1%,#4192f4 33%,#7136e9 69%,#9f11e4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    @media (max-width:55em){
+        font-size: 18vw;
+        line-height: .75;
+    }
+}
+
+h4 {
+    @extend .main-title;
     font-size: 30px;
+    line-height: .9;
+}
+
+h5 {
+    @extend .main-title;
+    font-size: 20px;
     line-height: .9;
 }
 
@@ -52,10 +77,10 @@ h3 {
     font-family:$font-family;
     font-size: 9vw;
     color: white;
-    mix-blend-mode: normal;
+    // mix-blend-mode: normal;
     font-weight: 600;
     @media (min-width:55em){
         font-size: 70px;
-        color: black;
+        color: var(--color-text-dark);
     }
 }

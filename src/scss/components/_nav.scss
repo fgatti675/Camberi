@@ -9,26 +9,36 @@ nav {
     display: flex;
     align-self: end;
 
-    > a {
+    >a {
+        font-weight: 700;
+        font-size: 1rem;
         padding-right: 1rem;
         align-self: center;
         color: var(--color-text-dark);
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
             color: var(--color-link-hover);
             outline: none;
         }
     }
-
-   svg{
+    .btn:first-child {
+        margin-right: 10px;
+    }
+    
+    svg {
         &:hover {
             path {
                 fill: var(--color-text-dark);
             }
         }
     }
+
+    body.light_bg & {
+        svg path {
+            fill: var(--color-text-dark);
+        }
+    }
 }
-
-
 
 @media screen and (max-width: 55em) {
     nav a {

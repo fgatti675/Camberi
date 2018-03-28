@@ -15,6 +15,6 @@
     ],
     "display": "standalone",
     "start_url": "/launcher=true",
-    "background_color": "#52D1DF",
-    "theme_color": "#52D1DF"
+    "background_color": "#FFFFFF",
+    "theme_color": "#FFFFFF"
   }

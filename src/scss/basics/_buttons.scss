@@ -36,7 +36,7 @@
         color: var(--color-text);
         background-color: rgba(0,0,0,0.5);
     }
-    &:before {
+    &.btn--with-arrow:before {
         pointer-events: none;
         position: absolute;
         z-index: -1;
@@ -51,9 +51,9 @@
         border-width: 10px 0px 0 10px;
         border-color: rgba(0,0,0,0.5) transparent transparent transparent;
     }
-    &:hover:before,
-    &:focus:before,
-    &:active:before {
+    &.btn--with-arrow:hover:before,
+    &.btn--with-arrow:focus:before,
+    &.btn--with-arrow:active:before {
         
         border-width: 10px 10px 0 10px;
         opacity: 1;

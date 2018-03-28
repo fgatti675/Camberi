@@ -1,0 +1,35 @@
+body {
+    overflow: hidden;
+}
+
+main {
+    -webkit-overflow-scrolling: touch;
+    position: absolute;
+    transition: 300ms;
+    position: absolute;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-scroll-snap-type: mandatory;
+    -ms-scroll-snap-type: mandatory;
+    scroll-snap-type: mandatory;
+    -webkit-scroll-behavior: smooth;
+    -ms-scroll-scroll-behavior: smooth;
+    scroll-behavior: smooth;
+    top: 0;
+
+    .displaced {
+        transform: translateX(-100vw);
+        transition: 300ms;
+    }
+    
+    .page {
+        // -webkit-scroll-snap-coordinate: 0vw 0vw;
+        // -ms-scroll-snap-coordinate: 0vw 0vw;
+        // scroll-snap-coordinate: 0vw 0vw;
+        // -webkit-scroll-snap-align: start;
+        // -ms-scroll-snap-align: start;
+        scroll-snap-align: center; // scroll-snap-points-y: 0;
+    }
+}
+

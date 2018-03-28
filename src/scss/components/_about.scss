@@ -1,0 +1,194 @@
+#about {
+    margin: 0;
+    position: fixed;
+    top:0;
+    transform: translateX(100vw);
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    
+    background: rgba(255,255,255,.85);
+
+    .content{
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2rem;
+        padding-top: 140px;
+        text-align: center;
+    }
+
+    .content-about {
+        margin-bottom: 120px;
+    }
+
+    .content-about__profiles {
+        display: flex;
+        width: 80%;
+        margin: 0 auto;
+        margin-bottom: 80px;
+        @media screen and (max-width: 55em) {
+            width: 100%;
+            display: block;
+        }
+    }
+
+    .content-about__text {
+        color: var(--color-text-dark);
+        text-align: left;
+        line-height: 1.4;
+        width: 75%;
+        margin: 0 auto;
+        text-align: center;
+        p:first-child {
+            padding-top: 0;
+            margin-top: 0;
+        }
+        @media screen and (max-width: 55em) {
+            width: 100%;
+        }
+    }
+
+    .content-about__profile-image {
+        width: 100%;
+        background: rgba(245, 249, 255, 0.87);
+        padding-top: 90%;
+        position: relative;
+        text-align: center;
+        img {
+            width: 90%;
+            position: absolute;
+            max-width: 342px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+    }
+
+    .content-about__profile {
+        text-align: left;
+        width: 50%;
+        margin-top: 120px;
+        @media screen and (max-width: 55em) {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            margin-top: 120px;
+        }
+        &:first-child {
+            padding-right: 15px;
+            @media screen and (max-width: 55em) {
+                padding-right: 0;
+            }
+        }
+        &:last-child {
+            padding-left: 15px;
+            @media screen and (max-width: 55em) {
+                padding-left: 0;
+            }
+        }
+    }
+
+   
+
+    .content-about__profile-text {
+        color: var(--color-text-dark);
+        margin-top: 15px;
+        position: relative;
+        h4 {
+            margin-bottom: 0;
+        }
+        p {
+            margin: 0;
+            font-size: .9rem;
+            margin-top: 5px;
+        }
+        .content-about__profile-icon {
+            position: absolute;
+            right: 0;
+            top: 0;
+            svg {
+                width: 20px;
+                height: 15px;
+            }
+        }
+    }
+
+    .content__body {
+        margin: 1.2rem auto;
+
+        @media screen and (max-width: 55em) {
+            background: unset;
+            padding: unset;
+            border-radius: unset;
+        }
+
+    }
+
+    .guys{
+        display: flex;   
+        flex-direction: row;
+
+        .guy{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem;
+        }
+        
+        img{
+            margin: 1rem;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 1px grey;
+        }
+
+        @media screen and (max-width: 55em) {
+            flex-direction: column;
+        }
+    }
+    
+    &.active {
+        transition: 400ms;
+        transform: translateX(0);
+    }
+    &.displayedOnce {
+        transition: 400ms;
+    }
+
+    .plus{
+        vertical-align: middle;
+        font-size: 14vw;
+    }
+
+    .services {
+        .service {
+            width: 80%;
+             margin: 0 auto;
+             align-items: center;
+
+            padding-top: 80px;
+            padding-bottom: 40px;
+            display: flex;
+            color: var(--color-text-dark);
+            h4 {
+                color: var(--color-text-dark);
+            }
+        }
+        .service__icon {
+            width: 50%;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .service__text {
+            line-height: 1.4;
+            text-align: left;
+            p {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+}
