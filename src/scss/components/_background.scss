@@ -10,7 +10,7 @@
         width: 100vw;
         
         @include media("<=tablet") {
-            height: calc(100vh - 56px);
+            // height: calc(100vh - 56px);
         }
         .is-ios & {
             //height: calc(100vh - 113px);

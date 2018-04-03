@@ -20,10 +20,11 @@ import './main.scss';
         COLOR_VARIANCE = .44,
         BASE_SCALE = 1.2,
         BLUR_PIXELS = 8,
-        ABOUT_POINTS_SIZE = 3,
+        ABOUT_POINTS_SIZE = .2,
         ABOUT_SCALE_INCREMENT = 3,
-        ABOUT_POINTS_OPACITY = 1,
-        ABOUT_ROTATION_SPEED = 3000,
+        ABOUT_POINTS_OPACITY = .5,
+        ABOUT_WIREFRAME_OPACITY = .3,
+        ABOUT_ROTATION_SPEED = 8000,
         ABOUT_CAMERA_Y_OFFSET = 600,
         SHAPE_Y_OFFSET = 200,
         CAMERA_Y_OFFSET_SCROLL = -300,
@@ -40,7 +41,7 @@ import './main.scss';
 
 
     const WHITE = new THREE.Color(0xFFFFFF),
-        GREY = new THREE.Color(0x666666),
+        GREY = new THREE.Color(0xCCCCCC),
         RED = new THREE.Color(0xFF0000),
         GREEN = new THREE.Color(0x09CAA1),
         YELLOW = new THREE.Color(0xFFFF00),
@@ -270,11 +271,11 @@ import './main.scss';
         // });
 
         material2 = new THREE.MeshPhongMaterial({
-            emissive: MATERIAL_COLOR_FROM,
-            emissiveIntensity: .6,
+            // emissive: MATERIAL_COLOR_FROM,
+            // emissiveIntensity: .3,
             transparent: true,
             // premultipliedAlpha: true,
-            shininess: 2
+            // shininess: 2
         });
         material2.flatShading = true;
 
@@ -716,7 +717,7 @@ import './main.scss';
         s = CAMERA_Y_OFFSET_SCROLL - s * s * CAMERA_Y_OFFSET_SCROLL; // https://www.desmos.com/calculator/xkxkvj1qwi
         camera.position.y = s * (1 - aboutPosition);
         // camera.position.x = -s * (1 - aboutPosition) + aboutPosition * ABOUT_CAMERA_Y_OFFSET;
-        camera.position.x = aboutPosition * width / 2;
+        camera.position.x = aboutPosition * width / 1.3;
         // console.log(s)
         // camera.position.y = CAMERA_Y_OFFSET * aboutPosition;
 
@@ -796,7 +797,7 @@ import './main.scss';
         // if (materialWireframe.opacity < .1) scene.remove(shapeWireframe);
         // else scene.add(shapeWireframe);
 
-        materialWireframe.opacity = Math.max(o3 * (1 - aboutPosition), .4 * aboutPosition);
+        materialWireframe.opacity = Math.max(o3 * (1 - aboutPosition), ABOUT_WIREFRAME_OPACITY * aboutPosition);
         materialPoints.opacity = aboutPosition * ABOUT_POINTS_OPACITY;
     }
 
@@ -926,7 +927,7 @@ import './main.scss';
     }
 
     function iOS() {
-        var iDevices = [
+        const iDevices = [
             'iPad Simulator',
             'iPhone Simulator',
             'iPod Simulator',
