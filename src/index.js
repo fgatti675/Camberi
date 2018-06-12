@@ -18,7 +18,7 @@ import './main.scss';
         DIRECTIONAL_LIGHT_INTENSITY = .8,
         MOUSE_LIGHT_INTENSITY = .4,
         COLOR_VARIANCE = .44,
-        BASE_SCALE = 1.2,
+        BASE_SCALE = 1,
         BLUR_PIXELS = 8,
         ABOUT_POINTS_SIZE = .2,
         ABOUT_SCALE_INCREMENT = 3,
@@ -162,22 +162,20 @@ import './main.scss';
     setUpBackgroundColors();
     initScene();
 
-    requestAnimationFrame(render);
-
     let scroll = getScroll();
     updateSceneMaterialsOpacity(scroll, aboutTween.position);
     updateSceneColors(scrollTween.y);
-    updateBlur(scroll, aboutPage.position);
-    updateHeader(scroll);
+    // updateBlur(scroll, aboutPage.position);
+    // updateHeader(scroll);
 
-    onUrlFragmentChange(getUrlFragment(document.URL));
+    // onUrlFragmentChange(getUrlFragment(document.URL));
 
     window.addEventListener("resize", onResize);
     window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("hashchange", onHashChange);
     main.addEventListener("scroll", onScroll);
 
-    shuffleButton.addEventListener("click", onShuffleClick);
+    // shuffleButton.addEventListener("click", onShuffleClick);
 
     onShuffleClick();
 
@@ -576,7 +574,7 @@ import './main.scss';
     }
 
     function onHashChange(e) {
-        onUrlFragmentChange(getUrlFragment(e.newURL), getUrlFragment(e.oldURL));
+        // onUrlFragmentChange(getUrlFragment(e.newURL), getUrlFragment(e.oldURL));
     }
 
     // let prevScroll = content.scrollTop;
@@ -873,8 +871,8 @@ import './main.scss';
         updateSceneMaterialsOpacity(scrollTween.y, aboutTween.position);
         updateSceneColors(scrollTween.y);
 
-        updateBlur(scroll, aboutTween.position);
-        updateHeader(scrollTween.y, aboutTween.position);
+        // updateBlur(scroll, aboutTween.position);
+        // updateHeader(scrollTween.y, aboutTween.position);
 
         updateShapeRotation(rotation);
         updateShapePosition(scrollTween.y, mouse, time, aboutTween.position);
@@ -944,7 +942,9 @@ import './main.scss';
         
         return false;
     }
-    
+
+
+    requestAnimationFrame(render);
 
     // setInterval(function(){
     //     onShuffleClick();
