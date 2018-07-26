@@ -19,8 +19,9 @@
 }
 
 .page_content {
+    display: none;
     position: relative;
-    width: 100%;
+    width: 500%;
     margin-top: 20vh;
     @include media("<=tablet") {
         margin-top: 0;

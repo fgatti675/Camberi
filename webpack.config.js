@@ -38,6 +38,7 @@ module.exports = {
         path: __dirname + '/dist'
     },
     devtool: 'source-map',
+    // target: "node",
     module: {
         rules: [
             {

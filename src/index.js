@@ -11,6 +11,15 @@ import './main.scss';
 
 (function () {
 
+
+    const capturer = new CCapture({
+        format: 'webm',
+        // framerate: 60,
+        quality: 90,
+        motionBlurFrames: 30
+    });
+
+
     const X_AXIS = new THREE.Vector3(1, 0, 0);
 
     const
@@ -29,7 +38,7 @@ import './main.scss';
         SHAPE_Y_OFFSET = 200,
         CAMERA_Y_OFFSET_SCROLL = -300,
         CAMERA_Z_OFFSET = 1600,
-        GRID_SPEED = 1400,
+        GRID_SPEED = 5000,
         CONTACT_SCALE_INCREMENT = 1.7,
         LIGHT_COLOR_SATURATION = .9,
         LIGHT_COLOR_LIGHTNESS = .37,
@@ -182,10 +191,10 @@ import './main.scss';
     function initScene() {
 
         renderer = new THREE.WebGLRenderer({
-            alpha: true,
             canvas: canvas,
-            // antialias: true
+            antialias: true
         });
+        renderer.setClearColor(0xEEEEEE);
         renderer.setPixelRatio(window.devicePixelRatio > 1 ? 1.5 : 1);
         renderer.setSize(width, height);
 
@@ -310,7 +319,7 @@ import './main.scss';
         scene.add(shapePoints);
 
         let gridGeometry = new THREE.Geometry();
-        let size = 1800,
+        let size = 5000,
             step = 75;
         for (let i = -size; i <= size; i += step) {
             for (let j = -size; j <= size; j += step) {
@@ -319,8 +328,8 @@ import './main.scss';
             }
         }
         grid = new THREE.Points(gridGeometry, new THREE.PointsMaterial({
-            color: WHITE,
-            size: 6
+            color: new THREE.Color(0x111111),
+            size: 8
         }));
 
         scene.add(grid);
@@ -515,7 +524,8 @@ import './main.scss';
 
             vector.multiplyScalar((regularScrollScalar * (1 - aboutPosition) + aboutScalar * aboutPosition) + 1);
 
-        };
+        }
+        ;
 
         geometry.verticesNeedUpdate = true;
     }
@@ -540,6 +550,7 @@ import './main.scss';
     }
 
     let i = 0;
+
     function getShapeRotation(scroll, time, aboutPosition) {
         // return 0;
         let a = (time / ABOUT_ROTATION_SPEED % (Math.PI * 2));
@@ -698,7 +709,6 @@ import './main.scss';
     }
 
 
-
     function updateScale(scroll, aboutPosition) {
         let value = sigmoid((scroll - .7) * 24 - 6) * (1 - aboutPosition);
         let scale = BASE_SCALE + value * CONTACT_SCALE_INCREMENT + (aboutPosition) * ABOUT_SCALE_INCREMENT;
@@ -707,7 +717,6 @@ import './main.scss';
         shapeWireframe.scale.set(scale, scale, scale);
         shapePoints.scale.set(scale, scale, scale);
     }
-
 
 
     function updateCameraPosition(scroll, aboutPosition) {
@@ -766,7 +775,7 @@ import './main.scss';
         for (let i = 0; i < pages.length; i++) {
             let page = pages[i];
             if (c <= page.offsetTop) {
-                history.replaceState({}, 'Camberí', '#' + page.id);
+                // history.replaceState({}, 'Camberí', '#' + page.id);
                 break;
             }
         }
@@ -862,9 +871,38 @@ import './main.scss';
         return vector;
     }
 
-    function render(time) {
-        requestAnimationFrame(render);
+    function updateMainScroll(time) {
+        // main.scrollTop = Math.abs(Math.sin(time / 10000 * (Math.PI/2))) * 10000;
+        if (reverse)
+            main.scrollTop -= sigmoid(time / 10000 - 2) * 100 * time / 800;
+        else
+            main.scrollTop += sigmoid(time / 10000 - 2) * 100 * time / 4000;
+        // console.log(main.scrollTop + main.clientHeight)
+        // console.log(main.scrollHeight)
 
+        // console.log(main.scrollHeight )
+    }
+
+    let finalFramescounter = 0;
+    let reverse = false;
+
+    function render(time) {
+
+        if (main.scrollTop + main.clientHeight >= main.scrollHeight) {
+            finalFramescounter = finalFramescounter + 1;
+        }
+
+        if (finalFramescounter > 2400) {
+            reverse = true;
+        }
+
+        if (main.scrollTop === 0 && reverse) {
+            // capturer.stop();
+            // capturer.save();
+        } else {
+            requestAnimationFrame(render);
+        }
+        updateMainScroll(time);
         const scroll = getScroll();
         const rotation = getShapeRotation(scrollTween.y, time, aboutTween.position);
 
@@ -883,7 +921,10 @@ import './main.scss';
         updateGrid(scrollTween.y);
         updateCameraPosition(scrollTween.y, aboutTween.position);
 
+
         renderer.render(scene, camera);
+        // capturer.capture(canvas);
+
     }
 
     function onResize() {
@@ -902,10 +943,9 @@ import './main.scss';
     }
 
     function browsersCheck() {
-        if (iOS()){
-            console.log("fico");
+        if (iOS()) {
             document.body.classList.add("is-ios");
-            
+
             //check if iphone X
 
             // Get the device pixel ratio
@@ -913,8 +953,8 @@ import './main.scss';
 
             // Define the users device screen dimensions
             var screen = {
-                width : window.screen.width * ratio,
-                height : window.screen.height * ratio
+                width: window.screen.width * ratio,
+                height: window.screen.height * ratio
             };
 
             // iPhone X Detection
@@ -933,18 +973,21 @@ import './main.scss';
             'iPhone',
             'iPod'
         ];
-        
+
         if (!!navigator.platform) {
             while (iDevices.length) {
-            if (navigator.platform === iDevices.pop()){ return true; }
+                if (navigator.platform === iDevices.pop()) {
+                    return true;
+                }
             }
         }
-        
+
         return false;
     }
 
-
     requestAnimationFrame(render);
+    // capturer.start();
+
 
     // setInterval(function(){
     //     onShuffleClick();
