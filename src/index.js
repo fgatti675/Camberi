@@ -763,12 +763,16 @@ import './main.scss';
         }
     }
 
+    let currentPageId;
     function updateURL() {
         let c = main.scrollTop - height / 3;
         for (let i = 0; i < pages.length; i++) {
             let page = pages[i];
             if (c <= page.offsetTop) {
-                history.replaceState({}, 'Camberí', '#' + page.id);
+                if (page.id != currentPageId) {
+                    currentPageId = page.id;
+                    history.replaceState({}, 'Camberí', '#' + page.id);
+                }
                 break;
             }
         }
@@ -904,10 +908,10 @@ import './main.scss';
     }
 
     function browsersCheck() {
-        if (iOS()){
+        if (iOS()) {
             console.log("fico");
             document.body.classList.add("is-ios");
-            
+
             //check if iphone X
 
             // Get the device pixel ratio
@@ -915,8 +919,8 @@ import './main.scss';
 
             // Define the users device screen dimensions
             var screen = {
-                width : window.screen.width * ratio,
-                height : window.screen.height * ratio
+                width: window.screen.width * ratio,
+                height: window.screen.height * ratio
             };
 
             // iPhone X Detection
@@ -935,16 +939,16 @@ import './main.scss';
             'iPhone',
             'iPod'
         ];
-        
+
         if (!!navigator.platform) {
             while (iDevices.length) {
-            if (navigator.platform === iDevices.pop()){ return true; }
+                if (navigator.platform === iDevices.pop()) { return true; }
             }
         }
-        
+
         return false;
     }
-    
+
 
     // setInterval(function(){
     //     onShuffleClick();
