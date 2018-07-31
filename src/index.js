@@ -96,6 +96,7 @@ import './main.scss';
         LIGHT_3_COLOR_TO,
         MATERIAL_COLOR_FROM,
         MATERIAL_COLOR_TO,
+        WIREFRAME_COLOR_TO,
         BACKGROUND_COLOR_FROM,
         BACKGROUND_COLOR_TO;
 
@@ -123,6 +124,8 @@ import './main.scss';
     const mouse = new THREE.Vector2(0, 0);
 
     const blurEnabled = !navigator.userAgent.includes("Firefox");
+
+    let currentPageId;
 
     const scrollTween = {
         y: getScroll()
@@ -287,7 +290,7 @@ import './main.scss';
         // });
 
         materialWireframe = new THREE.MeshPhongMaterial({
-            emissive: MATERIAL_COLOR_FROM,
+            emissive: WIREFRAME_COLOR_TO,
             emissiveIntensity: .6,
             transparent: true
         });
@@ -365,6 +368,7 @@ import './main.scss';
         const colorWithHue = hue => new THREE.Color().setHSL(hue, LIGHT_COLOR_SATURATION, LIGHT_COLOR_LIGHTNESS);
         MATERIAL_COLOR_FROM = randomColor();
         MATERIAL_COLOR_TO = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h + COLOR_VARIANCE / 3 * 2);
+        WIREFRAME_COLOR_TO = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h + COLOR_VARIANCE * 3 / 2);
         LIGHT_1_COLOR_BASE = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h + (Math.random() - .5) * COLOR_VARIANCE);
         LIGHT_2_COLOR_FROM = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h + COLOR_VARIANCE / 2);
         LIGHT_3_COLOR_FROM = colorWithHue(MATERIAL_COLOR_FROM.getHSL().h - COLOR_VARIANCE / 2);
@@ -763,7 +767,6 @@ import './main.scss';
         }
     }
 
-    let currentPageId;
     function updateURL() {
         let c = main.scrollTop - height / 3;
         for (let i = 0; i < pages.length; i++) {
@@ -812,7 +815,7 @@ import './main.scss';
         let materialColor = MATERIAL_COLOR_FROM.clone().lerp(MATERIAL_COLOR_TO, scroll);
         material.emissive.set(materialColor);
         material2.emissive.set(materialColor);
-        materialWireframe.color.set(LIGHT_1_COLOR_BASE);
+        // materialWireframe.color.set(WIREFRAME_COLOR_TO);
 
         light2.color.set(LIGHT_2_COLOR_FROM.clone().lerp(LIGHT_2_COLOR_TO, scroll));
         light3.color.set(LIGHT_3_COLOR_FROM.clone().lerp(LIGHT_3_COLOR_TO, scroll));
