@@ -1,17 +1,7 @@
 
 .scene {
-    will-change: filter;
     position: fixed;
     z-index: -1;
-    &.scene--full {
-        margin: -3vh -3vw;
-        width: 106vw;
-        height: 106vh;
-    }
+    width: 100vw;
+    height: 100vh;
 }
-
-/* @media screen and (max-width: 80em) {
-    .scene--full {
-        width: 100vw;
-    }
-} */

@@ -4,16 +4,14 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const StyleExtHtmlWebpackPlugin = require('style-ext-html-webpack-plugin');
 
 const path = require('path');
-
-
 
 const extractSass = new ExtractTextPlugin({
     filename: "[name].[contenthash].css",
     disable: process.env.NODE_ENV === "development"
 })
-
 
 let bs = null
 if (process.env.TYPE === "browsersync") {
@@ -26,13 +24,19 @@ if (process.env.TYPE === "browsersync") {
     })
 }
 
-let uglify = null;
+let prodPlugins = [];
 if (process.env.NODE_ENV === "prod") {
-    uglify = new UglifyJsPlugin();
+    prodPlugins = [
+        new UglifyJsPlugin(),
+        new StyleExtHtmlWebpackPlugin()
+    ];
 }
 
 module.exports = {
-    entry: __dirname + '/src/index.js',
+    entry: {
+        'main': __dirname + '/src/index.js',
+        'shape': __dirname + '/src/shape.js'
+    },
     output: {
         filename: '[name].bundle.js',
         path: __dirname + '/dist'
@@ -41,38 +45,40 @@ module.exports = {
     module: {
         rules: [
             {
-            test: /\.scss$/,
-            use: extractSass.extract({
-                use: [{
-                    loader: "css-loader"
-                }, {
-                    loader: "sass-loader"
-                }],
-                // use style-loader in development
-                fallback: "style-loader"
-            })
-        },
-        { 
-            test: /\.(html)$/,
-            use: { loader: 'html-loader', options: { attrs: [':data-src'] } } 
-        },
-        { 
-            test: /\.html$|njk|nunjucks/,
-            use: ['html-loader',
-            { loader: 'nunjucks-html-loader', options : { 
-                // Other super important. This will be the base
-                // directory in which webpack is going to find
-                // the layout and any other file index.njk is calling.
-                minimize: false,
-                minifyJS:true,
-                minifyCSS:true,
-                collapseWhitespace: false,
-                searchPaths: ['./src/templates'],
-                root: path.resolve(__dirname, 'production')
-            } }] 
-        }
+                test: /\.scss$/,
+                use: extractSass.extract({
+                    use: [{
+                        loader: "css-loader"
+                    }, {
+                        loader: "sass-loader"
+                    }],
+                    // use style-loader in development
+                    fallback: "style-loader"
+                })
+            },
+            {
+                test: /\.(html)$/,
+                use: { loader: 'html-loader', options: { attrs: [':data-src'] } }
+            },
+            {
+                test: /\.html$|njk|nunjucks/,
+                use: ['html-loader',
+                    {
+                        loader: 'nunjucks-html-loader', options: {
+                            // Other super important. This will be the base
+                            // directory in which webpack is going to find
+                            // the layout and any other file index.njk is calling.
+                            minimize: false,
+                            minifyJS: true,
+                            minifyCSS: true,
+                            collapseWhitespace: false,
+                            searchPaths: ['./src/templates'],
+                            root: path.resolve(__dirname, 'production')
+                        }
+                    }]
+            }
 
-    ]
+        ]
     },
     plugins: [
         extractSass,
@@ -87,6 +93,6 @@ module.exports = {
             template: 'nunjucks-html-loader!./src/about.njk',
         }),
         bs,
-        uglify
+        ...prodPlugins
     ].filter(Boolean)
 };
