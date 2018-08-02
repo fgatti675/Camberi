@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { EffectComposer, GlitchPass, FilmPass, BloomPass, RenderPass, KernelSize, DotScreenPass, BlurPass } from "postprocessing";
 import {
     TweenLite
 } from "gsap";
@@ -29,9 +30,9 @@ import './main.scss';
         CAMERA_Z_OFFSET = 1600,
         GRID_SPEED = 1400,
         CONTACT_SCALE_INCREMENT = 1.7,
-        LIGHT_COLOR_SATURATION = .8,
+        LIGHT_COLOR_SATURATION = .9,
         LIGHT_COLOR_LIGHTNESS = .37,
-        BG_COLOR_SATURATION = .7,
+        BG_COLOR_SATURATION = .75,
         BG_COLOR_LIGHTNESS = .5,
         MOUSE_LIGHT_DISTANCE_TO_CENTER = 700,
         SHAPE_RADIUS = 160,
@@ -98,6 +99,8 @@ import './main.scss';
 
     let currentPageId;
 
+    const clock = new THREE.Clock();
+
     const scrollTween = {
         y: getScroll()
     }
@@ -110,6 +113,9 @@ import './main.scss';
         height = canvas.offsetHeight;
 
     let renderer,
+        composer,
+        renderPass,
+        blurPass,
         shape,
         shape2,
         shapeWireframe,
@@ -161,11 +167,21 @@ import './main.scss';
         renderer.setPixelRatio(window.devicePixelRatio > 1 ? 1.5 : 1);
         renderer.setSize(width, height);
 
+        composer = new EffectComposer(renderer);
+
         scene = new THREE.Scene();
 
         camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 1, 2000);
         camera.position.set(0, 0, CAMERA_Z_OFFSET);
 
+        renderPass = new RenderPass(scene, camera);
+        composer.addPass(renderPass);
+
+        blurPass = new BlurPass();
+        blurPass.renderToScreen = true;
+        // blurPass.kernelSize = KernelSize.VERY_SMALL;
+        blurPass.resolutionScale = .5;
+        composer.addPass(blurPass);
 
         light = new THREE.HemisphereLight(WHITE, LIGHT_1_COLOR_BASE, AMBIENT_LIGHT_INTENSITY);
         light.position.set(400, 400, 0);
@@ -529,12 +545,17 @@ import './main.scss';
 
     function enableBlur(scroll, aboutPosition) {
         if (!blurEnabled) return;
-        canvas.setAttribute("style", "filter:blur(" + BLUR_PIXELS + "px)");
+
+        renderPass.renderToScreen = false;
+        blurPass.enabled = true;
+        // canvas.setAttribute("style", "filter:blur(" + BLUR_PIXELS + "px)");
     }
 
     function disableBlur() {
         if (!blurEnabled) return;
-        canvas.style.filter = null;
+        // canvas.style.filter = null;
+        renderPass.renderToScreen = true;
+        blurPass.enabled = false;
     }
 
     function updateShapeRotation(rotation) {
@@ -695,7 +716,7 @@ import './main.scss';
         updateGrid(scrollTween.y);
         updateCameraPosition(scrollTween.y, aboutTween.position);
 
-        renderer.render(scene, camera);
+        composer.render(clock.getDelta());
     }
 
     function onResize() {
