@@ -43,7 +43,7 @@ import './main.scss';
         for (let i = 0; i < pages.length; i++) {
             let page = pages[i];
             if (c <= page.offsetTop) {
-                if (page.id != currentPageId) {
+                if (page.id !== currentPageId) {
                     currentPageId = page.id;
                     history.replaceState({}, 'Camberí', '#' + page.id);
                 }
@@ -145,7 +145,7 @@ import './main.scss';
             let off = page.offsetTop - main.scrollTop;
             let h = page.offsetHeight;
             let o = off < -h ? 0 : (off > 0 ? 1 : (h + off) / h);
-            if (o != 0, 1)
+            if (o !== 0, 1)
                 page.style.opacity = Math.sin(o * Math.PI / 2) + .1;
         }
     }
@@ -169,7 +169,7 @@ import './main.scss';
             };
 
             // iPhone X Detection
-            if (screen.width == 1125 && screen.height === 2436) {
+            if (screen.width === 1125 && screen.height === 2436) {
                 document.body.classList.add("is-ios-x");
             }
         }

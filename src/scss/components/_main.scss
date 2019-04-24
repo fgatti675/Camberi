@@ -10,9 +10,9 @@ main {
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
-    -webkit-scroll-snap-type: mandatory;
+    scroll-snap-type: y mandatory;
+    -webkit-scroll-snap-type: y mandatory;
     -ms-scroll-snap-type: mandatory;
-    scroll-snap-type: mandatory;
     -webkit-scroll-behavior: smooth;
     -ms-scroll-scroll-behavior: smooth;
     scroll-behavior: smooth;

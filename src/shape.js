@@ -100,11 +100,11 @@ import './main.scss';
 
     const scrollTween = {
         y: getScroll()
-    }
+    };
 
     const aboutTween = {
         position: 0
-    }
+    };
 
     let width = canvas.offsetWidth,
         height = canvas.offsetHeight;
@@ -252,7 +252,7 @@ import './main.scss';
         }
         grid = new THREE.Points(gridGeometry, new THREE.PointsMaterial({
             color: WHITE,
-            size: 6
+            size: 2
         }));
 
         scene.add(grid);
@@ -368,8 +368,7 @@ import './main.scss';
 
             vector.multiplyScalar((regularScrollScalar * (1 - aboutPosition) + aboutScalar * aboutPosition) + 1);
 
-        };
-
+        }
         geometry.verticesNeedUpdate = true;
     }
 
@@ -442,8 +441,7 @@ import './main.scss';
                 ease: Power3.easeOut
             });
 
-    };
-
+    }
     function updateBlur(scroll, aboutPosition) {
 
         if (!blurEnabled) return;

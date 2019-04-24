@@ -9,7 +9,7 @@
     "postprocessing": "^4.8.2",
     "scrollreveal": "^3.3.6",
     "swiper": "^4.1.6",
-    "three": "^0.90.0"
+    "three": "^0.103.0"
   },
   "devDependencies": {
     "nunjucks-html-loader": "git+https://github.com/Goldfinch/nunjucks-html-loader.git",
