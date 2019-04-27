@@ -1,3 +1,10 @@
+{% includeData
+  'data/en.json'
+%}
+
+{% set main_title = about.title %}
+{% set main_description = about.description %}
+
 {% extends "layout.njk" %}
 {% block content %}
 {% include "partials/icons.njk" %}

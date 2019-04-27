@@ -19,7 +19,7 @@
 .page_content {
     position: relative;
     width: 100%;
-    margin-top: 20vh;
+   
     @include media("<=tablet") {
         margin-top: 0;
     }
@@ -57,7 +57,7 @@
     align-self: start;
     font-weight: 500;
     line-height: 1.5;
-    margin-top: 1.2rem;
+    margin-top: 1.5rem;
 
     p:first-child {
         margin-top: 0;

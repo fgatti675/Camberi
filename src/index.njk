@@ -1,6 +1,13 @@
+{% includeData
+  'data/en.json'
+%}
+
+{% set main_title = index.title %}
+{% set main_description = index.description %}
+
 {% extends "layout.njk" %}
 {% block content %}
-{% include "partials/icons.njk" %}
+
 {% include "nav.njk" %}
 <main>
 {% include "partials/background.njk" %}
@@ -9,4 +16,5 @@
 </main>
 {% include "partials/location.njk" %}
 {% include "partials/about.njk" %}
+{% include "partials/icons.njk" %}
 {% endblock %}       

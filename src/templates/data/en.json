@@ -1,0 +1,60 @@
+{
+    "index": {
+        "title": "Camberí - Web development Madrid",
+        "description": "Development and Creative agency based in Madrid. We develop Apps, websites and web app, with passion and top-notch technologies!"
+    },
+    "about": {
+        "title": "About Us - Camberí - Web development Madrid",
+        "description": "We have a strong background as designers and engineers and our long experience brings our work to a different level...",
+        "name_1": "Mattia Lorenzutti",
+        "name_2": "Francesco Gatti",
+        "first_text": "We have a strong background as <strong>designers</strong> and <strong>engineers</strong> and our long experience brings our work to a <strong>different</strong> level. Our focus is to develop solutions that <strong>break through the noise</strong>."
+    },
+    "portfolio": [
+        {
+            "slug": "medicalmotion",
+            "title": "Medicalmotion",
+            "year": "2019",
+            "service": "Web and mobile apps",
+            "technologies": ["Flutter", "React JS", "Redux"],
+            "partner": "",
+            "description": "Helping a startup to develop his product is always an exciting experience",
+            "location": "Hamburg, Germany"
+        },
+        {
+            "slug": "dadaki",
+            "title": "Dadaki",
+            "year": "2019",
+            "service": "Web and mobile apps",
+            "technologies": ["Flutter", "React JS", "Redux"],
+            "partner": "",
+            "description": "A beautiful and selected showcase of Amazon products",
+            "location": "Madrid, Spain"
+        },
+        {
+            "slug": "talentgarden",
+            "title": "Talent Garden",
+            "year": "2018",
+            "service": "Website",
+            "technologies": ["Wordpress", "PHP"],
+            "partner": "Sketchin",
+            "description": "Renovating the online presence of an important european co-working network",
+            "location": "Milan, Italy"
+        },
+        {
+            "slug": "lostinthecity",
+            "title": "Stylight - Lost In The City",
+            "year": "2018",
+            "service": "Website",
+            "technologies": ["React JS", "Google Maps API"],
+            "partner": "",
+            "description": "A browser game for the 20th anniversary of Sex In The City",
+            "location": "Munich, Germany"
+        }
+    ],
+    "nav": {
+        "about": "About us",
+        "contact": "Let's talk"
+    },
+    "navFooter":"Madrid . Munich . Milan"
+}

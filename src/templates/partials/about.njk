@@ -6,10 +6,11 @@
             <div class="content-about__profiles">
                 <div class="content-about__profile content-about__profile--lower">
                     <div class="content-about__profile-image">
-                        <img src="/img/mattia.webp">
+                        <img src="/img/mattia.webp" onerror="this.onerror=null; this.src='/img/mattia.png'">
+                       
                     </div>                    
                     <div class="content-about__profile-text">
-                        <h5 class="text_dark">Mattia Lorenzutti</h5>
+                        <h5 class="text_dark">{{about.name_1}}</h5>
                         <a href="https://www.linkedin.com/in/mattialorenzutti/" class="content-about__profile-icon">
                             <svg class="icon">
                                 <use xlink:href="#linkedin-1-dark" />
@@ -19,10 +20,10 @@
                 </div>
                 <div class="content-about__profile content-about__profile--higher">
                     <div class="content-about__profile-image">
-                        <img src="/img/francesco.webp">
+                        <img src="/img/francesco.webp" onerror="this.onerror=null; this.src='/img/francesco.png'">
                     </div>
                     <div class="content-about__profile-text">
-                        <h5 class="text_dark">Francesco Gatti</h5>
+                        <h5 class="text_dark">{{about.name_2}}</h5>
                         <a href="https://www.linkedin.com/in/fgatti675/" class="content-about__profile-icon">
                             <svg class="icon">
                                 <use xlink:href="#linkedin-1-dark" />
@@ -32,9 +33,7 @@
                 </div>
             </div>
              <div class="content-about__text">
-                <p>We have a strong background as <strong>designers</strong> and
-                    <strong>engineers</strong> and our long experience brings our work to a <strong>different</strong> level. 
-                    Our focus is to develop solutions that <strong>break through the noise</strong>.
+                <p>{{about.first_text | safe}}
                 </p>
             </div>
             <h5 class="text_dark">
@@ -44,7 +43,7 @@
                 </h5>
             
         </div>
-        <h3 class="text_dark">What we are good at</h3>
+        <h3 class="text_dark">What we are<br/>good at</h3>
         <div class="services">
             <div class="service">
                 <div class="service__icon">
@@ -54,7 +53,7 @@
                 </div>
                 <div class="service__text">
                     <h4>Mobile development</h4>
-                    <p>The mobile market is changing fast. We develop iOS, Android, Flutter and React Native apps, mobile back-ends, amd we provide integration and maintenance.
+                    <p>The mobile market is changing fast.<br/>We develop iOS, Android, Flutter and React Native apps, mobile back-ends, and we provide integration and maintenance.<br/>
                     Using the latest mobile technologies, we can deliver top quality applications in record time.
                     </p>
                 </div>
@@ -67,8 +66,8 @@
                 </div>
                 <div class="service__text">
                     <h4>Web development</h4>
-                    <p>Thanks to modern web technologies we create amazing web-based software and websites.
-                     From web-applications for internal use to public online services. 
+                    <p>Thanks to modern web technologies we create amazing web-based software and websites.<br/>
+                     From web-applications for internal use to public online services.<br/>
                      We use the latest Javascript frameworks on the frontend and we rely on cloud services for scalable backends (Java, Python, Node.js, you name it). 
                     </p>
                 </div>

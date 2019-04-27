@@ -58,9 +58,6 @@ import './main.scss';
             direction: 'horizontal',
             spaceBetween: 16,
             speed: 800,
-            autoplay: {
-                delay: 5000,
-            },
             loop: true,
 
             // If we need pagination

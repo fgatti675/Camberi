@@ -8,6 +8,8 @@ const StyleExtHtmlWebpackPlugin = require('style-ext-html-webpack-plugin');
 
 const path = require('path');
 
+const debug = process.env.NODE_ENV === "development";
+
 const extractSass = new ExtractTextPlugin({
     filename: "[name].[contenthash].css",
     disable: process.env.NODE_ENV === "development"
@@ -28,7 +30,7 @@ let prodPlugins = [];
 if (process.env.NODE_ENV === "prod") {
     prodPlugins = [
         new UglifyJsPlugin(),
-        new StyleExtHtmlWebpackPlugin()
+        //new StyleExtHtmlWebpackPlugin()
     ];
 }
 
@@ -48,9 +50,11 @@ module.exports = {
                 test: /\.scss$/,
                 use: extractSass.extract({
                     use: [{
-                        loader: "css-loader"
+                        loader: "css-loader",
+                        options: { minimize: true }
                     }, {
-                        loader: "sass-loader"
+                        loader: "sass-loader",
+                        options: { minimize: true }
                     }],
                     // use style-loader in development
                     fallback: "style-loader"
@@ -87,10 +91,38 @@ module.exports = {
         ]),
         new HtmlWebpackPlugin({
             template: 'nunjucks-html-loader!./src/index.njk',
+            minify: debug ? false : {
+                removeAttributeQuotes: true,
+                collapseWhitespace: true,
+                html5: true,
+                minifyCSS: true,
+                removeComments: true,
+                removeEmptyAttributes: true,
+              }
+        }),
+        new HtmlWebpackPlugin({
+            template: 'nunjucks-html-loader!./src/index.njk',
+            filename: 'es/index.html',
+            minify: debug ? false : {
+                removeAttributeQuotes: true,
+                collapseWhitespace: true,
+                html5: true,
+                minifyCSS: true,
+                removeComments: true,
+                removeEmptyAttributes: true,
+              }
         }),
         new HtmlWebpackPlugin({  // Also generate a test.html
             filename: 'about.html',
             template: 'nunjucks-html-loader!./src/about.njk',
+            minify: debug ? false : {
+                removeAttributeQuotes: true,
+                collapseWhitespace: true,
+                html5: true,
+                minifyCSS: true,
+                removeComments: true,
+                removeEmptyAttributes: true,
+              }
         }),
         bs,
         ...prodPlugins

@@ -3,12 +3,12 @@
     "name": "Camberí - Creative Development Agency",
     "icons": [
       {
-        "src": "logo.png",
+        "src": "img/logo.png",
         "type": "image/png",
         "sizes": "200x200"
       },
       {
-        "src": "logo-512.png",
+        "src": "img/logo-512.png",
         "type": "image/png",
         "sizes": "512x512"
       }
