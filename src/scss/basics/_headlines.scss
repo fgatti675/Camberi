@@ -15,7 +15,7 @@ h1{
     @extend .main-title;
     font-size: 16vw;
     opacity: .9;
-    // mix-blend-mode: overlay;
+    mix-blend-mode: overlay;
     .page & {
         text-align: center;
     }
@@ -34,7 +34,7 @@ h2 {
     font-size: 12vw;
     line-height: .85;
     opacity: .9;
-    // mix-blend-mode: overlay;
+    mix-blend-mode: overlay;
     .page & {
         text-align: center;
     }
