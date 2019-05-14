@@ -164,9 +164,12 @@ loader.load('img/texture.jpg', function (texture) {
 
 function initScene(texture) {
 
-    let repeatValueX = Math.random() * .2 + .8;
+    let repeatValueX = Math.random() * .4 + .8;
     let repeatValueY = Math.random() * .4 + .6;
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(repeatValueX, repeatValueY);
+
     renderer = new THREE.WebGLRenderer({
         alpha: true,
         canvas: canvas,
