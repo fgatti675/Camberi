@@ -10,7 +10,7 @@ import {
     BlurPass
 } from "postprocessing";
 import {
-    TweenLite
+    TweenLite, Power3, Power1
 } from "gsap";
 import * as Perlin from 'perlin';
 import './main.scss';

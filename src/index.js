@@ -1,5 +1,6 @@
 import Swiper from 'swiper';
 import ScrollReveal from 'scrollreveal';
+import 'swiper/css/swiper.css'
 import './main.scss';
 
 (function () {

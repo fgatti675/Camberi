@@ -1,8 +1,8 @@
 
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const ExtractTextPlugin = require("extract-text-webpack-plugin")
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const StyleExtHtmlWebpackPlugin = require('style-ext-html-webpack-plugin');
 
@@ -10,12 +10,12 @@ const path = require('path');
 
 const debug = process.env.NODE_ENV === "development";
 
-const extractSass = new ExtractTextPlugin({
+const extractSass = new MiniCssExtractPlugin({
     filename: "[name].[contenthash].css",
     disable: process.env.NODE_ENV === "development"
-})
+});
 
-let bs = null
+let bs = null;
 if (process.env.TYPE === "browsersync") {
     bs = new BrowserSyncPlugin({
         // browse to http://localhost:3000/ during development,
@@ -47,18 +47,24 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.scss$/,
-                use: extractSass.extract({
-                    use: [{
-                        loader: "css-loader",
-                        options: { minimize: true }
-                    }, {
-                        loader: "sass-loader",
-                        options: { minimize: true }
-                    }],
-                    // use style-loader in development
-                    fallback: "style-loader"
-                })
+                test: /\.s[ac]ss$/i,
+                use: [
+                    // Creates `style` nodes from JS strings
+                    'style-loader',
+                    // Translates CSS into CommonJS
+                    'css-loader',
+                    // Compiles Sass to CSS
+                    'sass-loader',
+                ],
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                    },
+                    'css-loader',
+                ],
             },
             {
                 test: /\.(html)$/,
@@ -85,7 +91,10 @@ module.exports = {
         ]
     },
     plugins: [
-        extractSass,
+        new MiniCssExtractPlugin({
+            filename: "[name].[contenthash].css",
+            disable: process.env.NODE_ENV === "development"
+        }),
         new CopyWebpackPlugin([
             { from: 'src/static' }
         ]),
