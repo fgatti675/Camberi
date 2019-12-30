@@ -1,19 +1,14 @@
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const StyleExtHtmlWebpackPlugin = require('style-ext-html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const path = require('path');
 
 const debug = process.env.NODE_ENV === "development";
-
-const extractSass = new MiniCssExtractPlugin({
-    filename: "[name].[contenthash].css",
-    disable: process.env.NODE_ENV === "development"
-});
 
 let bs = null;
 if (process.env.TYPE === "browsersync") {
@@ -26,11 +21,12 @@ if (process.env.TYPE === "browsersync") {
     })
 }
 
-let prodPlugins = [];
+let minimizer = [];
 if (process.env.NODE_ENV === "prod") {
-    prodPlugins = [
-        new UglifyJsPlugin(),
-        //new StyleExtHtmlWebpackPlugin()
+    minimizer = [
+        new TerserPlugin({
+            parallel: true,
+        })
     ];
 }
 
@@ -38,6 +34,10 @@ module.exports = {
     entry: {
         'main': __dirname + '/src/index.js',
         'shape': __dirname + '/src/shape.js'
+    },
+    optimization: {
+        minimize: true,
+        minimizer: minimizer,
     },
     output: {
         filename: '[name].bundle.js',
@@ -50,7 +50,13 @@ module.exports = {
                 test: /\.s[ac]ss$/i,
                 use: [
                     // Creates `style` nodes from JS strings
-                    'style-loader',
+                    {
+                        loader: 'style-loader',
+                        options: {
+                            insert: 'head', // insert style tag inside of <head>
+                            injectType: 'singletonStyleTag' // this is for wrap all your style in just one style tag
+                        },
+                    },
                     // Translates CSS into CommonJS
                     'css-loader',
                     // Compiles Sass to CSS
@@ -121,19 +127,6 @@ module.exports = {
                 removeEmptyAttributes: true,
               }
         }),
-        new HtmlWebpackPlugin({  // Also generate a test.html
-            filename: 'about.html',
-            template: 'nunjucks-html-loader!./src/about.njk',
-            minify: debug ? false : {
-                removeAttributeQuotes: true,
-                collapseWhitespace: true,
-                html5: true,
-                minifyCSS: true,
-                removeComments: true,
-                removeEmptyAttributes: true,
-              }
-        }),
         bs,
-        ...prodPlugins
     ].filter(Boolean)
 };

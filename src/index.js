@@ -30,8 +30,7 @@ import './main.scss';
         evt.preventDefault(); // prevent default browser scroll
         updateURL();
         updateHeader();
-    };
-
+    }
 
     const docheight = Math.max(document.body.scrollHeight,
         document.body.offsetHeight,
