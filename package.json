@@ -10,7 +10,7 @@
     "postprocessing": "^6.9.0",
     "scrollreveal": "^4.0.5",
     "swiper": "^5.2.1",
-    "three": "^0.112.1"
+    "three": "^0.125.0"
   },
   "devDependencies": {
     "babel-minify-webpack-plugin": "^0.3.1",
