@@ -403,7 +403,7 @@ function getScroll() {
 
 let i = 0;
 
-function getshapeRotationX(scroll, time, aboutPosition) {
+function getShapeRotationX(scroll, time, aboutPosition) {
     let a = (time / ABOUT_ROTATION_SPEED % (Math.PI * 1.5));
     return (scroll * Math.PI * 1.5 + aboutPosition * a);
 }
@@ -642,7 +642,7 @@ function render(time) {
     requestAnimationFrame(render);
 
     const scroll = getScroll();
-    const rotationX = getshapeRotationX(scrollTween.y, time, aboutTween.position);
+    const rotationX = getShapeRotationX(scrollTween.y, time, aboutTween.position);
 
     updateSceneMaterialsOpacity(scrollTween.y, aboutTween.position);
     updateSceneColors(scrollTween.y);

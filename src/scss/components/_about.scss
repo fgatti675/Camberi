@@ -8,7 +8,7 @@
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
-    
+
     // background: rgba(255,255,255,.85);
 
     .content{
@@ -20,6 +20,7 @@
     }
 
     .content-about {
+        margin-top: 80px;
         margin-bottom: 120px;
         @include media("<=tablet") {
             margin-bottom: 60px;
@@ -67,7 +68,7 @@
             left: 50%;
             transform: translateX(-50%);
         }
-        
+
     }
 
     .content-about__profile {
@@ -94,7 +95,7 @@
         }
     }
 
-   
+
 
     .content-about__profile-text {
         color: var(--color-text-dark);
@@ -138,14 +139,14 @@
         @include media("<=tablet") {
             background: unset;
             padding: unset;
-            border-radius: unset;  
+            border-radius: unset;
         }
-        
+
 
     }
 
     .guys{
-        display: flex;   
+        display: flex;
         flex-direction: row;
 
         .guy{
@@ -154,7 +155,7 @@
             align-items: center;
             margin: 2rem;
         }
-        
+
         img{
             margin: 1rem;
             width: 150px;
@@ -167,7 +168,7 @@
             flex-direction: column;
         }
     }
-    
+
     &.active {
         transition: 400ms;
         transform: translateX(0);
