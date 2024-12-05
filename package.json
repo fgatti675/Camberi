@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "firebase-tools": "^7.11.0",
-    "gsap": "^3.0.4",
+    "gsap": "^3.6.0",
     "perlin": "^1.0.0",
     "postprocessing": "^6.9.0",
     "scrollreveal": "^4.0.5",
