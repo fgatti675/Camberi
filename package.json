@@ -9,7 +9,7 @@
     "perlin": "^1.0.0",
     "postprocessing": "^6.9.0",
     "scrollreveal": "^4.0.5",
-    "swiper": "^5.2.1",
+    "swiper": "^6.5.1",
     "three": "^0.112.1"
   },
   "devDependencies": {
