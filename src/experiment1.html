@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homunculus Fluid Engine</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #0f0f0f; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+<script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+    // --- GLOBAL VARIABLES ---
+    let renderer, camera, dummyScene, noiseScene, displayScene;
+    let noiseTarget, contentTarget; // Off-screen render targets
+    let noiseMaterial, titleMaterial, stateMaterial, displayMaterial;
+    let mouseTexture, mouseCtx, mouseCanvas;
+    let time = 0;
+
+    // Configuration closely matching original GL_Config
+    const config = {
+        sepR: 7.0,
+        sepG: 5.0,
+        ease: 0.7, // Smoothness of the liquid
+        distA: 0.64,
+        distB: 2.5
+    };
+
+    const mouse = new THREE.Vector2(0.5, 0.5);
+    const windowSize = new THREE.Vector2(window.innerWidth, window.innerHeight);
+
+    // --- SHADERS (From your prompt) ---
+
+    // 1. COMMON VERTEX (Used by all)
+    const commonVertex = `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        `;
+
+    // 2. NOISE FRAGMENT (Shader 3)
+    const noiseFragment = `
+            uniform float cr;
+            uniform float cg;
+            uniform float cb;
+            varying vec2 vUv;
+
+            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+            vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+            float snoise(vec3 v) {
+                const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+                const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+                vec3 i  = floor(v + dot(v, C.yyy) );
+                vec3 x0 =  v - i + dot(i, C.xxx) ;
+                vec3 g = step(x0.yzx, x0.xyz);
+                vec3 l = 1.0 - g;
+                vec3 i1 = min( g.xyz, l.zxy );
+                vec3 i2 = max( g.xyz, l.zxy );
+                vec3 x1 = x0 - i1 + C.xxx;
+                vec3 x2 = x0 - i2 + C.yyy;
+                vec3 x3 = x0 - D.yyy;
+                i = mod289(i);
+                vec4 p = permute( permute( permute(
+                            i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+                            + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
+                            + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+                float n_ = 0.142857142857;
+                vec3  ns = n_ * D.wyz - D.xzx;
+                vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+                vec4 x_ = floor(j * ns.z);
+                vec4 y_ = floor(j - 7.0 * x_ );
+                vec4 x = x_ *ns.x + ns.yyyy;
+                vec4 y = y_ *ns.x + ns.yyyy;
+                vec4 h = 1.0 - abs(x) - abs(y);
+                vec4 b0 = vec4( x.xy, y.xy );
+                vec4 b1 = vec4( x.zw, y.zw );
+                vec4 s0 = floor(b0)*2.0 + 1.0;
+                vec4 s1 = floor(b1)*2.0 + 1.0;
+                vec4 sh = -step(h, vec4(0.0));
+                vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+                vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+                vec3 p0 = vec3(a0.xy,h.x);
+                vec3 p1 = vec3(a0.zw,h.y);
+                vec3 p2 = vec3(a1.xy,h.z);
+                vec3 p3 = vec3(a1.zw,h.w);
+                vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+                p0 *= norm.x;
+                p1 *= norm.y;
+                p2 *= norm.z;
+                p3 *= norm.w;
+                vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+                m = m * m;
+                return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
+                                                dot(p2,x2), dot(p3,x3) ) );
+            }
+
+            void main() {
+                float vr = cr;
+                float vg = cg;
+                float vb = cb;
+                float val1 = snoise(vec3(vr * vUv.x, vg * vUv.y, vb));
+                gl_FragColor = vec4( val1, val1, val1, 1.0);
+            }
+        `;
+
+    // 3. TITLE FRAGMENT (Shader 2)
+    const titleFragment = `
+            uniform sampler2D uTexture; // Renamed from texture to avoid keyword conflict
+            uniform float time;
+            uniform float alpha;
+            uniform float strength;
+            uniform float size;
+            varying vec2 vUv;
+
+            void main() {
+                // Original used size uniform, but hardcoded in snippet provided.
+                // float size = 6.0;
+                float speed = 1.0;
+                vec2 p = -1.0 + 2.0 * vUv;
+                vec2 newUV = vUv + strength * vec2(cos(time * speed + length( p * size )), sin(time * speed + length(p * size)));
+
+                vec4 col1 = texture2D( uTexture, newUV );
+                gl_FragColor = vec4( col1.rgb, col1.a * alpha );
+            }
+        `;
+
+    // 4. STATE/TEXT FRAGMENT (Shader 4)
+    const stateFragment = `
+            uniform sampler2D texture_n;
+            uniform sampler2D texture_b;
+            uniform sampler2D noise;
+            uniform float time;
+            uniform float alpha;
+            uniform float strength;
+            varying vec2 vUv;
+
+            const float size = 6.0;
+
+            void main() {
+                float speed = 1.0;
+                vec2 p = -1.0 + 2.0 * vUv;
+                vec2 newUV = vUv + strength * vec2(cos(time * speed + length( p * size )), sin(time * speed + length(p * size)));
+
+                vec4 noiseCol = texture2D( noise, vec2(newUV.x, newUV.y * 0.8) );
+
+                // Sample normal and "b" (blur or bold) textures with noise distortion
+                vec4 col1_n = texture2D( texture_n, vec2(newUV.x + noiseCol.r * 0.002, newUV.y + noiseCol.r * 0.01) );
+                vec4 col1_b = texture2D( texture_b, vec2(newUV.x + noiseCol.r * 0.008, newUV.y + noiseCol.r * 0.01) );
+
+                float nr = min(noiseCol.r * 2.0, 1.0);
+                vec4 mixCol = mix( col1_n, col1_b * 0.9, nr );
+
+                gl_FragColor = vec4( mixCol.rgb, mixCol.a * alpha );
+            }
+        `;
+
+    // 5. MASTER DISPLAY FRAGMENT (Shader 1)
+    const displayFragment = `
+            uniform sampler2D uTexture; // Renamed from texture to avoid keyword conflict
+            uniform sampler2D mouseEffect;
+            uniform sampler2D noise;
+
+            uniform float time;
+            uniform float ease;
+            uniform float alpha;
+            uniform float meEase;
+            uniform float mfBlack;
+
+            uniform float distA;
+            uniform float distB;
+
+            varying vec2 vUv;
+
+            void main() {
+                // Sample the generated noise from Pass 1
+                vec3 noiseC = texture2D( noise, vec2(vUv.x * 0.3, vUv.y * 0.3) ).rgb;
+
+                vec2 ppp = -1.0 + 2.0 * vUv;
+                float wscale = 1.6;
+
+                // The "Test 3B" wave logic from your file
+                ppp += 0.1 * cos( ( 1.5 * wscale ) * ppp.yx + 1.1 * time + vec2(0.1,1.1) );
+                ppp += 0.1 * cos( ( 2.3 * wscale ) * ppp.yx + 1.3 * time + vec2(3.2,3.4) );
+                ppp += 0.1 * cos( ( 2.2 * wscale ) * ppp.yx + 1.7 * time + vec2(1.8,5.2) );
+                ppp += distA * cos( ( distB * wscale ) * ppp.yx + 1.4 * time + vec2(6.3,3.9) );
+
+                float r = length( ppp );
+
+                float vx = (vUv.x * ease) + (r * (1.0 - ease));
+                float vy = (vUv.y * ease) + (0.0 * (1.0 - ease));
+
+                // Mouse Effect
+                vec4 mfColor = texture2D( mouseEffect, vUv );
+                float strength = meEase;
+                float mfSin = sin(mfColor.r);
+
+                // Final UV Calculation
+                vec2 effectUv = vec2(vx, vy) + strength * vec2(mfSin, mfSin);
+
+                vec4 col1 = texture2D( uTexture, effectUv );
+
+                // Alpha calculation based on noise and ease
+                float aa = col1.a * alpha - ( noiseC.r * 0.6 * ( 1.0 - ease ) );
+                vec3 mixCol = col1.rgb;
+
+                // Final Output
+                gl_FragColor = vec4( mixCol, aa * ( 1.0 - mfColor.r * mfBlack ) );
+            }
+        `;
+
+    // --- ASSET GENERATION (Text Textures) ---
+    function createTextTexture(text, size, font, color = 'white', weight = 'bold') {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 1024;
+        canvas.height = 256; // Aspect ratio fits typical title
+
+        // Debug background (optional, keeping transparent)
+        // ctx.fillStyle = 'rgba(255,0,0,0.1)'; ctx.fillRect(0,0,1024,256);
+
+        ctx.font = `${weight} ${size}px ${font}`;
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.minFilter = THREE.LinearFilter;
+        tex.magFilter = THREE.LinearFilter;
+        return tex;
+    }
+
+    // --- INITIALIZATION ---
+    function init() {
+        // 1. Core
+        renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x0f0f0f, 1); // Dark background like Homunculus
+        document.body.appendChild(renderer.domElement);
+
+        // Ortho camera for all passes (screenspace effects)
+        camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+        // 2. Render Targets (Buffers)
+        noiseTarget = new THREE.WebGLRenderTarget(window.innerWidth / 2, window.innerHeight / 2);
+        contentTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, { alpha: true });
+
+        // 3. Scenes
+        noiseScene = new THREE.Scene();
+        dummyScene = new THREE.Scene(); // Holds titles/content
+        displayScene = new THREE.Scene(); // Final composite
+
+        // --- PASS 1: NOISE SETUP ---
+        noiseMaterial = new THREE.ShaderMaterial({
+            vertexShader: commonVertex,
+            fragmentShader: noiseFragment,
+            uniforms: {
+                cr: { value: config.sepR },
+                cg: { value: config.sepG },
+                cb: { value: 0 } // Time
+            }
+        });
+        const noisePlane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), noiseMaterial);
+        noiseScene.add(noisePlane);
+
+        // --- MOUSE SETUP ---
+        mouseCanvas = document.createElement('canvas');
+        mouseCanvas.width = window.innerWidth / 4; // Lower res for blur effect
+        mouseCanvas.height = window.innerHeight / 4;
+        mouseCtx = mouseCanvas.getContext('2d');
+        mouseCtx.fillStyle = 'black';
+        mouseCtx.fillRect(0, 0, mouseCanvas.width, mouseCanvas.height);
+        mouseTexture = new THREE.CanvasTexture(mouseCanvas);
+
+        // --- PASS 2: CONTENT SETUP (Titles & Text) ---
+
+        // A. Main Title
+        const titleTex = createTextTexture("CAMBERI", 140, "Helvetica, Arial");
+        titleMaterial = new THREE.ShaderMaterial({
+            vertexShader: commonVertex,
+            fragmentShader: titleFragment,
+            uniforms: {
+                uTexture: { value: titleTex }, // Renamed here
+                time: { value: 0 },
+                alpha: { value: 1 },
+                strength: { value: 0.01 }, // Subtle wobble
+                size: { value: 4.0 }
+            },
+            transparent: true
+        });
+        // Aspect ratio correction for plane
+        const titleGeo = new THREE.PlaneGeometry(1.2, 0.3);
+        const titleMesh = new THREE.Mesh(titleGeo, titleMaterial);
+        dummyScene.add(titleMesh);
+
+        // B. Sub Text (State)
+        const stateTexN = createTextTexture("stacking, mixing and melting.", 40, "Helvetica", "white", "normal");
+        const stateTexB = createTextTexture("stacking, mixing and melting.", 40, "Helvetica", "cyan", "bold"); // Glitch color
+
+        stateMaterial = new THREE.ShaderMaterial({
+            vertexShader: commonVertex,
+            fragmentShader: stateFragment,
+            uniforms: {
+                texture_n: { value: stateTexN },
+                texture_b: { value: stateTexB },
+                noise: { value: noiseTarget.texture },
+                time: { value: 0 },
+                alpha: { value: 0.8 },
+                strength: { value: 0.005 }
+            },
+            transparent: true
+        });
+        const stateMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.25), stateMaterial);
+        stateMesh.position.y = -0.4;
+        dummyScene.add(stateMesh);
+
+
+        // --- PASS 3: DISPLAY SETUP (Final Composite) ---
+        displayMaterial = new THREE.ShaderMaterial({
+            vertexShader: commonVertex,
+            fragmentShader: displayFragment,
+            uniforms: {
+                uTexture: { value: contentTarget.texture }, // Renamed here
+                mouseEffect: { value: mouseTexture },
+                noise: { value: noiseTarget.texture },
+                time: { value: 0 },
+                ease: { value: config.ease },
+                alpha: { value: 1.0 },
+                meEase: { value: 0.075 },
+                mfBlack: { value: 0.3 },
+                distA: { value: config.distA },
+                distB: { value: config.distB }
+            },
+            transparent: true
+        });
+        const displayMesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), displayMaterial);
+        displayScene.add(displayMesh);
+
+        // Event Listeners
+        window.addEventListener('resize', onResize);
+        window.addEventListener('mousemove', onMouseMove);
+    }
+
+    // --- MOUSE TRAIL LOGIC ---
+    function onMouseMove(e) {
+        // Draw soft white circles on mouse canvas
+        const x = (e.clientX / window.innerWidth) * mouseCanvas.width;
+        const y = (1 - (e.clientY / window.innerHeight)) * mouseCanvas.height; // Canvas Y is inverted relative to Texture UV usually, but let's match screen
+
+        // Correct mapping: DOM Y is top-down, Canvas Y is top-down.
+        // However, Three.js UV (0,0) is Bottom-Left.
+        // We draw to canvas top-down.
+        const drawY = (e.clientY / window.innerHeight) * mouseCanvas.height;
+
+        mouseCtx.globalCompositeOperation = 'source-over';
+        // Fade out existing trail
+        // This happens in the loop, here we just draw
+        const gradient = mouseCtx.createRadialGradient(x, drawY, 0, x, drawY, 30);
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.5)');
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+        mouseCtx.fillStyle = gradient;
+        mouseCtx.beginPath();
+        mouseCtx.arc(x, drawY, 30, 0, Math.PI * 2);
+        mouseCtx.fill();
+    }
+
+    function updateMouseCanvas() {
+        // Fade effect
+        mouseCtx.globalCompositeOperation = 'source-over';
+        mouseCtx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Fast fade
+        mouseCtx.fillRect(0, 0, mouseCanvas.width, mouseCanvas.height);
+        mouseTexture.needsUpdate = true;
+    }
+
+    function onResize() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        renderer.setSize(w, h);
+        noiseTarget.setSize(w/2, h/2);
+        contentTarget.setSize(w, h);
+        // In a real app we'd update Aspect Ratios of planes here
+    }
+
+    // --- ANIMATION LOOP ---
+    function animate() {
+        requestAnimationFrame(animate);
+        time += 0.01;
+
+        // 1. Update Mouse Trail
+        updateMouseCanvas();
+
+        // 2. Update Uniforms
+        noiseMaterial.uniforms.cb.value += 0.01;
+
+        titleMaterial.uniforms.time.value = time;
+        stateMaterial.uniforms.time.value = time;
+
+        displayMaterial.uniforms.time.value = time;
+
+        // 3. Render Pass 1: Noise -> Texture
+        renderer.setRenderTarget(noiseTarget);
+        renderer.render(noiseScene, camera);
+
+        // 4. Render Pass 2: Content (Titles) -> Texture
+        renderer.setRenderTarget(contentTarget);
+        renderer.setClearColor(0x000000, 0); // Transparent clear
+        renderer.clear();
+        renderer.render(dummyScene, camera);
+
+        // 5. Render Pass 3: Final Composite -> Screen
+        renderer.setRenderTarget(null);
+        renderer.setClearColor(0x0f0f0f, 1); // Screen background
+        renderer.render(displayScene, camera);
+    }
+
+    init();
+    animate();
+
+</script>
+</body>
+</html>

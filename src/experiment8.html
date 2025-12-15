@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Fluid Header Replication (Exp 8)</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            /* Dark gray background */
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loader">LOADING EXPERIMENT 8...</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.min.js"></script>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+        }
+    }
+</script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // =========================================================================
+        // CONFIGURATION
+        // =========================================================================
+        // CONFIGURATION
+        const CONFIG = {
+            // Fluid Settings
+            distA: 1.0,
+            distB: 2.5,
+            flowSpeed: 0.002, // Slower flow for smoother movement
+            wscale: 1.6,
+
+            // Mouse Settings
+            meEase: 0.4, // Stronger displacement but softer brush
+            mfBlack: 0.2, // Less darkening, subtler
+            brushSize: 0.5,
+
+            // Visuals
+            ease: 0.4,
+            uvScale: 1.0,
+            alpha: 1.0,
+            noiseInfluence: 0.3, // Reduced from 0.6 to prevent "hiding" colors
+
+            // Masking & Banding
+            maskContrast: 1.2,
+            bandDensity: 3.5,
+            bandWidth: 0.45,
+            edgeSoftness: 0.02,
+            alphaPower: 4.0,
+            minAlpha: 0.0,
+            maxAlpha: 1.0,
+
+            noiseBias: 0.4,
+            noiseScale: 0.6,
+
+            // Colors
+            colorBg: '#ffcccc', // Pinkish background
+            color1: '#006677',
+            color2: '#cc6633',
+            color3: '#993366',
+            color4: '#00aacc',
+            color5: '#ffffff',
+            color6: '#ffd700', // Gold/Yellow
+
+            seed: 123, // For deterministic generation
+        };
+
+        // =========================================================================
+        // SHADERS (Extracted from prompt)
+        // =========================================================================
+
+        const vertexShader = `
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    `;
+
+        // NOISE SHADER (GL_NoiseSet)
+        const noiseFragment = `
+        // Simplex noise functions
+        vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+        vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+        float snoise(vec3 v) {
+            const vec2  C = vec2(1.0/6.0, 1.0/3.0);
+            const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+            vec3 i  = floor(v + dot(v, C.yyy));
+            vec3 x0 =  v - i + dot(i, C.xxx);
+            vec3 g = step(x0.yzx, x0.xyz);
+            vec3 l = 1.0 - g;
+            vec3 i1 = min(g.xyz, l.zxy);
+            vec3 i2 = max(g.xyz, l.zxy);
+            vec3 x1 = x0 - i1 + C.xxx;
+            vec3 x2 = x0 - i2 + C.yyy;
+            vec3 x3 = x0 - D.yyy;
+            i = mod289(i);
+            vec4 p = permute(permute(permute(
+                        i.z + vec4(0.0, i1.z, i2.z, 1.0))
+                        + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+                        + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+            float n_ = 0.142857142857;
+            vec3  ns = n_ * D.wyz - D.xzx;
+            vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+            vec4 x_ = floor(j * ns.z);
+            vec4 y_ = floor(j - 7.0 * x_);
+            vec4 x = x_ *ns.x + ns.yyyy;
+            vec4 y = y_ *ns.x + ns.yyyy;
+            vec4 h = 1.0 - abs(x) - abs(y);
+            vec4 b0 = vec4(x.xy, y.xy);
+            vec4 b1 = vec4(x.zw, y.zw);
+            vec4 s0 = floor(b0)*2.0 + 1.0;
+            vec4 s1 = floor(b1)*2.0 + 1.0;
+            vec4 sh = -step(h, vec4(0.0));
+            vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+            vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+            vec3 p0 = vec3(a0.xy,h.x);
+            vec3 p1 = vec3(a0.zw,h.y);
+            vec3 p2 = vec3(a1.xy,h.z);
+            vec3 p3 = vec3(a1.zw,h.w);
+            vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+            p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+            vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+            m = m * m;
+            return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+        }
+
+        uniform float cr;
+        uniform float cg;
+        uniform float cb;
+        varying vec2 vUv;
+        
+        void main() {
+            float val1 = snoise(vec3(cr * vUv.x, cg * vUv.y, cb));
+            gl_FragColor = vec4(val1, val1, val1, 1.0);
+        }
+    `;
+
+        // DISPLAY SHADER (GL_Display) - Banding & Masking Restored
+        const displayFragment = `
+        uniform sampler2D tDiffuse;
+        uniform sampler2D tMouse;
+        uniform sampler2D tNoise;
+        uniform sampler2D tMask;
+        
+        uniform float time;
+        uniform float ease;
+        uniform float alpha;
+        
+        uniform float meEase;
+        uniform float mfBlack;
+        uniform float distA;
+        uniform float distB;
+        uniform float wscale;
+        uniform float uvScale;
+        
+        uniform float maskContrast;
+        uniform float bandDensity;
+        uniform float bandWidth;
+        uniform float edgeSoftness;
+        uniform float alphaPower;
+        uniform float minAlpha;
+        uniform float maxAlpha;
+        
+        uniform float noiseInfluence;
+        uniform float noiseBias;
+        uniform float noiseScale;
+        
+        varying vec2 vUv;
+
+        void main() {
+            vec2 ppp = -1.0 + 2.0 * vUv;
+            
+            // Wave summation (Fluid Flow Field)
+            ppp += 0.1 * cos((1.5 * wscale) * ppp.yx + 1.1 * time + vec2(0.1, 1.1));
+            ppp += 0.1 * cos((2.3 * wscale) * ppp.yx + 1.3 * time + vec2(3.2, 3.4));
+            ppp += 0.1 * cos((2.2 * wscale) * ppp.yx + 1.7 * time + vec2(1.8, 5.2));
+            ppp += distA * cos((distB * wscale) * ppp.yx + 1.4 * time + vec2(6.3, 3.9));
+            
+            float r = length(ppp); // Distance in fluid field
+            
+            // Warp coordinates
+            float vx = (vUv.x * ease) + (r * (1.0 - ease));
+            float vy = (vUv.y * ease) + (0.0 * (1.0 - ease));
+            
+            // Mouse effect
+            vec4 mfColor = texture2D(tMouse, vUv);
+            float strength = meEase;
+            float mfSin = sin(mfColor.r);
+            vec2 effectUv = vec2(vx, vy) + strength * vec2(mfSin, mfSin);
+            
+            // Apply Zoom/Scale centered
+            vec2 centeredUv = (effectUv - 0.5) * uvScale + 0.5;
+            
+            // Sample Texture & Mask
+            vec4 col1 = texture2D(tDiffuse, centeredUv);
+            vec4 maskCol = texture2D(tMask, centeredUv);
+            
+            // 1. Calculate Radial Fluid Bands with Sharp Edges
+            float bandCoord = r * bandDensity;
+            float band = fract(bandCoord);
+            float halfW = bandWidth * 0.5;
+            float es = edgeSoftness * 0.5;
+            
+            // Sharp smoothstep window
+            float bandMask = smoothstep(0.5 - halfW - es, 0.5 - halfW + es, band) * 
+                             (1.0 - smoothstep(0.5 + halfW - es, 0.5 + halfW + es, band));
+            
+            // 2. Noise Influence
+            vec3 noiseC = texture2D(tNoise, centeredUv * noiseScale).rgb;
+            float n = noiseC.r;
+            float nShifted = clamp((n - noiseBias) * 2.0 + 0.5, 0.0, 1.0);
+            nShifted = pow(nShifted, 1.2);
+            float grain = mix(1.0, nShifted, noiseInfluence);
+            
+            // 3. Combine Masking
+            // Mix original alpha with mask texture and bandMask
+            float maskAlpha = pow(maskCol.r, maskContrast);
+            
+            // Primary Alpha Logic:
+            // Base image alpha * Global Alpha * Texture Mask * Generated Fluid Bands
+            float aa = col1.a * alpha * maskAlpha * bandMask;
+            
+            // Apply Noise Grain to color
+            vec3 mixCol = col1.rgb * grain;
+            
+            // 4. Mouse Trail Darkening
+            float mouseDark = meEase * mfBlack * mfColor.r;
+            mixCol *= (1.0 - mouseDark);
+            aa *= (1.0 - mouseDark);
+            
+            // 5. Final Curve/Contrast on Alpha
+            aa = pow(max(aa, 0.0), alphaPower);
+            aa = clamp(aa, minAlpha, maxAlpha);
+            
+            gl_FragColor = vec4(mixCol, aa);
+        }
+    `;
+
+        // =========================================================================
+        // MAIN APP
+        // =========================================================================
+
+        class Experiment8 {
+            constructor() {
+                this.width = window.innerWidth;
+                this.height = window.innerHeight;
+
+                this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+                this.renderer.setSize(this.width, this.height);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                document.body.appendChild(this.renderer.domElement);
+
+                // Cameras
+                this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+                // For Mouse Effect (GL_MouseEffect uses screen coordinates but renders to plane)
+                // Simulating GL_MouseEffect with a separate scene and FBO
+                const fSize = this.height / 2;
+                const aspect = this.width / this.height;
+                this.cameraMouse = new THREE.OrthographicCamera(
+                    -fSize * aspect, fSize * aspect,
+                    fSize, -fSize,
+                    0, 10000
+                );
+                this.cameraMouse.position.set(0, 0, 100);
+
+                // Scenes
+                this.sceneMouse = new THREE.Scene();
+                this.sceneNoise = new THREE.Scene();
+                this.sceneMain = new THREE.Scene();
+
+                // Render Targets
+                this.mouseFBO = new THREE.WebGLRenderTarget(this.width / 2, this.height / 2); // Half res as per prompt code
+                this.noiseFBO = new THREE.WebGLRenderTarget(256, 256); // 256x256 as per GL_NoiseSet
+
+                this.time = 0;
+                this.mouse = new THREE.Vector2(-1000, -1000); // Start off screen
+                this.mouseObjects = [];
+
+                this.setupGUI();
+                this.init();
+            }
+
+            setupGUI() {
+                this.gui = new dat.GUI();
+                const f1 = this.gui.addFolder('Simulation');
+                f1.add(CONFIG, 'flowSpeed', 0.0, 0.05).name('Speed');
+                f1.add(CONFIG, 'distA', 0.0, 5.0).name('Wave Amp');
+                f1.add(CONFIG, 'distB', 0.0, 10.0).name('Wave Freq');
+                f1.add(CONFIG, 'wscale', 0.0, 5.0).name('Wave Scale');
+                f1.add(CONFIG, 'ease', 0.0, 1.0).name('Ease');
+                f1.add(CONFIG, 'uvScale', 0.1, 3.0).name('Zoom');
+                f1.open();
+
+                const f2 = this.gui.addFolder('Interaction');
+                f2.add(CONFIG, 'meEase', 0.0, 0.5).name('Mouse Distort');
+                f2.add(CONFIG, 'mfBlack', 0.0, 1.0).name('Darken Trail');
+                f2.open();
+
+                const f3 = this.gui.addFolder('Masking');
+                f3.add(CONFIG, 'maskContrast', 0.5, 4.0).name('Mask Contrast');
+                f3.add(CONFIG, 'bandDensity', 0.1, 10.0).name('Band Density');
+                f3.add(CONFIG, 'bandWidth', 0.0, 1.0).name('Band Width');
+                f3.add(CONFIG, 'edgeSoftness', 0.0, 0.5).name('Edge Softness');
+                f3.add(CONFIG, 'alphaPower', 0.1, 5.0).name('Alpha Power');
+                f3.add(CONFIG, 'noiseInfluence', 0.0, 1.0).name('Noise Infl');
+                f3.add(CONFIG, 'noiseScale', 0.0, 2.0).name('Noise Scale');
+                f3.open();
+
+                const f4 = this.gui.addFolder('Colors');
+                f4.addColor(CONFIG, 'colorBg').name('Background').onChange(this.reloadTexture.bind(this));
+                f4.addColor(CONFIG, 'color1').name('Color 1').onChange(this.reloadTexture.bind(this));
+                f4.addColor(CONFIG, 'color2').name('Color 2').onChange(this.reloadTexture.bind(this));
+                f4.addColor(CONFIG, 'color3').name('Color 3').onChange(this.reloadTexture.bind(this));
+                f4.addColor(CONFIG, 'color4').name('Color 4').onChange(this.reloadTexture.bind(this));
+                f4.addColor(CONFIG, 'color5').name('Color 5').onChange(this.reloadTexture.bind(this));
+                f4.addColor(CONFIG, 'color6').name('Color 6').onChange(this.reloadTexture.bind(this));
+                f4.add(CONFIG, 'seed', 0, 1000).step(1).name('Seed').onChange(this.reloadTexture.bind(this));
+                f4.open();
+            }
+
+            reloadTexture() {
+                if (this.displayUniforms && this.displayUniforms.tDiffuse) {
+                    this.displayUniforms.tDiffuse.value = this.createProceduralTexture();
+                }
+            }
+
+            init() {
+                // 1. SETUP MOUSE EFFECT
+                const brushCanvas = document.createElement('canvas');
+                brushCanvas.width = 128; brushCanvas.height = 128;
+                const bCtx = brushCanvas.getContext('2d');
+                const grd = bCtx.createRadialGradient(64, 64, 0, 64, 64, 64);
+                grd.addColorStop(0, 'rgba(255,255,255,0.25)'); // Softer core
+                grd.addColorStop(1, 'rgba(255,255,255,0)');
+                bCtx.fillStyle = grd;
+                bCtx.fillRect(0, 0, 128, 128);
+                const brushTex = new THREE.CanvasTexture(brushCanvas);
+
+                const brushMat = new THREE.MeshBasicMaterial({
+                    map: brushTex, transparent: true, opacity: 0.8, depthTest: false
+                });
+                // Larger brush geometry
+                const brushGeo = new THREE.PlaneGeometry(300, 300);
+
+                this.brushPoolSize = 50;
+                for (let i = 0; i < this.brushPoolSize; i++) {
+                    const m = new THREE.Mesh(brushGeo, brushMat.clone());
+                    m.visible = false;
+                    this.sceneMouse.add(m);
+                    this.mouseObjects.push({ mesh: m, life: 0, active: false });
+                }
+                this.currentBrush = 0;
+                this.mouseCount = 0; // Throttling helper
+
+                // 2. SETUP NOISE
+                this.noiseMaterial = new THREE.ShaderMaterial({
+                    vertexShader: vertexShader,
+                    fragmentShader: noiseFragment,
+                    uniforms: { cr: { value: 7.0 }, cg: { value: 5.0 }, cb: { value: 0.0 } }
+                });
+                // Repurposing this.camera (simple -1..1 ortho) for noise scene:
+                const noiseQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.noiseMaterial);
+                this.sceneNoise.clear();
+                this.sceneNoise.add(noiseQuad);
+
+                // 3. SETUP MAIN
+                this.displayUniforms = {
+                    tDiffuse: { value: null },
+                    tMouse: { value: null },
+                    tNoise: { value: null },
+                    tMask: { value: null }, // NEW
+
+                    time: { value: 0 },
+                    ease: { value: CONFIG.ease },
+                    alpha: { value: CONFIG.alpha },
+
+                    meEase: { value: CONFIG.meEase },
+                    mfBlack: { value: CONFIG.mfBlack },
+                    distA: { value: CONFIG.distA },
+                    distB: { value: CONFIG.distB },
+                    wscale: { value: CONFIG.wscale },
+                    uvScale: { value: CONFIG.uvScale },
+                    maskContrast: { value: CONFIG.maskContrast },
+
+                    bandDensity: { value: CONFIG.bandDensity },
+                    bandWidth: { value: CONFIG.bandWidth },
+                    edgeSoftness: { value: CONFIG.edgeSoftness },
+                    alphaPower: { value: CONFIG.alphaPower },
+                    minAlpha: { value: CONFIG.minAlpha },
+                    maxAlpha: { value: CONFIG.maxAlpha },
+
+                    noiseInfluence: { value: CONFIG.noiseInfluence },
+                    noiseBias: { value: CONFIG.noiseBias },
+                    noiseScale: { value: CONFIG.noiseScale },
+                };
+
+                const displayMat = new THREE.ShaderMaterial({
+                    vertexShader: vertexShader,
+                    fragmentShader: displayFragment,
+                    uniforms: this.displayUniforms,
+                    transparent: true // Important for alpha shaping
+                });
+                this.sceneMain.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), displayMat));
+
+                // LOAD TEXTURES
+                const loader = new THREE.TextureLoader();
+
+                // A. Generate Main Texture (Procedural)
+                this.displayUniforms.tDiffuse.value = this.createProceduralTexture();
+                this.resize();
+                document.getElementById('loader').style.display = 'none';
+
+                // B. Load Mask (detailMV_g.png)
+                loader.load('static/detailMV_g.png', (tex) => {
+                    tex.minFilter = THREE.LinearFilter; tex.magFilter = THREE.LinearFilter;
+                    tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
+                    this.displayUniforms.tMask.value = tex;
+                }, undefined, (err) => {
+                    console.warn("Mask not found");
+                    // White fallback so we see something if mask fails
+                    const c = document.createElement('canvas'); c.width = 2; c.height = 2;
+                    const ctx = c.getContext('2d'); ctx.fillStyle = '#FFF'; ctx.fillRect(0, 0, 2, 2);
+                    this.displayUniforms.tMask.value = new THREE.CanvasTexture(c);
+                });
+
+                // EVENTS
+                window.addEventListener('resize', this.resize.bind(this));
+                window.addEventListener('mousemove', this.onMouseMove.bind(this));
+
+                this.animate();
+            }
+
+            onMouseMove(e) {
+                // Mouse coords for 3D scene (centered 0,0)
+                this.mouse.x = e.clientX - this.width / 2;
+                this.mouse.y = -(e.clientY - this.height / 2); // Invert Y for 3D space
+
+                // Add brush logic
+                const brush = this.mouseObjects[this.currentBrush];
+                if (!brush.active) {
+                    // Activate brush
+                    brush.active = true;
+                    brush.mesh.visible = true;
+                    brush.mesh.position.set(this.mouse.x, this.mouse.y, 0);
+                    brush.mesh.scale.set(1.0, 1.0, 1.0); // Start scale
+                    brush.mesh.rotation.z = Math.random() * Math.PI * 2;
+                    brush.mesh.material.opacity = 0.8;
+
+                    this.currentBrush = (this.currentBrush + 1) % this.brushPoolSize;
+                } else {
+                    // Or simple logic: always place new brush if moved enough?
+                    // The prompt logic: count++, check count, setPos.
+                    // Simplified: just update current head brush or cycle fast.
+                    // We will cycle every frame mouse moves for smoothness like a trail.
+                    brush.active = true;
+                    brush.mesh.visible = true;
+                    brush.mesh.position.set(this.mouse.x, this.mouse.y, 0);
+                    brush.life = 1.0; // Reset life
+                    this.currentBrush = (this.currentBrush + 1) % this.brushPoolSize;
+                }
+            }
+
+            createProceduralTexture() {
+                const canvas = document.createElement('canvas');
+                canvas.width = 1024; canvas.height = 1024;
+                const ctx = canvas.getContext('2d');
+
+                // Seeded Random Helper
+                let seed = CONFIG.seed;
+                function random() {
+                    const x = Math.sin(seed++) * 10000;
+                    return x - Math.floor(x);
+                }
+
+                // Colors Palette
+                const colors = [CONFIG.color1, CONFIG.color2, CONFIG.color3, CONFIG.color4, CONFIG.color5, CONFIG.color6];
+                function getRandColor() { return colors[Math.floor(random() * colors.length)]; }
+
+                // 1. Base Background
+                ctx.fillStyle = CONFIG.colorBg;
+                ctx.fillRect(0, 0, 1024, 1024);
+
+                // 2. Geometric Pop Shapes
+
+                // A. Large Triangles
+                for (let i = 0; i < 15; i++) {
+                    ctx.fillStyle = getRandColor();
+                    ctx.beginPath();
+                    const x = random() * 1024;
+                    const y = random() * 1024;
+                    const s = 200 + random() * 300;
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x + (random() - 0.5) * s, y + (random() - 0.5) * s);
+                    ctx.lineTo(x + (random() - 0.5) * s, y + (random() - 0.5) * s);
+                    ctx.fill();
+                }
+
+                // B. Circles / Donuts
+                for (let i = 0; i < 15; i++) {
+                    ctx.strokeStyle = getRandColor();
+                    ctx.lineWidth = 20 + random() * 40;
+                    ctx.beginPath();
+                    const x = random() * 1024;
+                    const y = random() * 1024;
+                    const r = 50 + random() * 200;
+                    ctx.arc(x, y, r, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                // C. Rectangles / Bars
+                for (let i = 0; i < 10; i++) {
+                    ctx.fillStyle = getRandColor();
+                    ctx.save();
+                    ctx.translate(random() * 1024, random() * 1024);
+                    ctx.rotate(random() * Math.PI);
+                    ctx.fillRect(-150, -20, 300, 40);
+                    ctx.restore();
+                }
+
+                // D. Squiggles (Bezier Curves)
+                ctx.lineWidth = 15;
+                ctx.lineCap = 'round';
+                for (let i = 0; i < 8; i++) {
+                    ctx.strokeStyle = getRandColor();
+                    ctx.beginPath();
+                    let x = random() * 1024;
+                    let y = random() * 1024;
+                    ctx.moveTo(x, y);
+                    for (let j = 0; j < 4; j++) {
+                        ctx.bezierCurveTo(
+                            x + (random() - 0.5) * 300, y + (random() - 0.5) * 300,
+                            x + (random() - 0.5) * 300, y + (random() - 0.5) * 300,
+                            x + (random() - 0.5) * 300, y + (random() - 0.5) * 300
+                        );
+                        x += (random() - 0.5) * 300;
+                        y += (random() - 0.5) * 300;
+                    }
+                    ctx.stroke();
+                }
+
+                // 3. Subtle Noise (Optional, for integration)
+                const id = ctx.getImageData(0, 0, 1024, 1024);
+                const data = id.data;
+                for (let i = 0; i < data.length; i += 4) {
+                    const noise = (random() - 0.5) * 20;
+                    data[i] = Math.max(0, Math.min(255, data[i] + noise));
+                    data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + noise));
+                    data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + noise));
+                }
+                ctx.putImageData(id, 0, 0);
+
+                const tex = new THREE.CanvasTexture(canvas);
+                tex.minFilter = THREE.LinearFilter;
+                tex.magFilter = THREE.LinearFilter;
+                tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy();
+                tex.wrapS = THREE.RepeatWrapping;
+                tex.wrapT = THREE.RepeatWrapping;
+                return tex;
+            }
+
+            resize() {
+                this.width = window.innerWidth;
+                this.height = window.innerHeight;
+                this.renderer.setSize(this.width, this.height);
+                this.mouseFBO.setSize(this.width / 2, this.height / 2);
+
+                if (this.displayUniforms.tDiffuse.value) {
+                    // Adjust logic if needed for aspect ratio
+                    // The shader uses raw UVs so distortion will stretch if we don't fix it.
+                    // The prompt GL_Display logic uses resolution and screenScale.
+                    // For now, simpler: Plane fills screen.
+                }
+
+                // Reset Mouse Camera
+                const fSize = this.height / 2;
+                const aspect = this.width / this.height;
+                this.cameraMouse.left = -fSize * aspect;
+                this.cameraMouse.right = fSize * aspect;
+                this.cameraMouse.top = fSize;
+                this.cameraMouse.bottom = -fSize;
+                this.cameraMouse.updateProjectionMatrix();
+            }
+
+            animate() {
+                requestAnimationFrame(this.animate.bind(this));
+                this.time += CONFIG.flowSpeed;
+
+                // 1. UPDATE MOUSE SCENE
+                // GL_RingObj enterFrame:
+                // rotation.z += .02
+                // opacity *= .98
+                // scale.x *= .982 + 6 * .018 -> ??? The prompt code is compressed.
+                // Let's simplified nice fade out.
+                this.mouseObjects.forEach(obj => {
+                    if (obj.mesh.visible) {
+                        obj.mesh.rotation.z += 0.02;
+                        obj.mesh.material.opacity *= 0.96;
+                        obj.mesh.scale.multiplyScalar(1.02); // Grow
+
+                        if (obj.mesh.material.opacity < 0.01) {
+                            obj.mesh.visible = false;
+                            obj.active = false;
+                        }
+                    }
+                });
+                // Render mouse trails to FBO
+                // GL_MouseEffect uses clear color (0,0,0,0) likely? Or maybe not cleared?
+                // "this._render=new THREE.WebGLRenderTarget..."
+                // Usually trails need autoClear = false or accumulation.
+                // But here the list of meshes is re-rendered every frame.
+                this.renderer.setRenderTarget(this.mouseFBO);
+                this.renderer.clear(); // Clear provided we redraw all active brushes
+                this.renderer.render(this.sceneMouse, this.cameraMouse);
+
+                // 2. UPDATE NOISE
+                // Slow down noise animation to prevent flickering
+                this.noiseMaterial.uniforms.cb.value += 0.002;
+                this.renderer.setRenderTarget(this.noiseFBO);
+                // GL_NoiseSet uses ortho cam too.
+                this.renderer.render(this.sceneNoise, this.camera); // Using -1..1 ortho quad
+
+                // 3. RENDER MAIN
+                this.renderer.setRenderTarget(null);
+                this.displayUniforms.time.value = this.time;
+                this.displayUniforms.tMouse.value = this.mouseFBO.texture;
+                this.displayUniforms.tNoise.value = this.noiseFBO.texture;
+
+                // Update config uniforms
+                this.displayUniforms.ease.value = CONFIG.ease;
+                this.displayUniforms.distA.value = CONFIG.distA;
+                this.displayUniforms.distB.value = CONFIG.distB;
+                this.displayUniforms.wscale.value = CONFIG.wscale;
+                this.displayUniforms.uvScale.value = CONFIG.uvScale;
+                this.displayUniforms.meEase.value = CONFIG.meEase;
+                this.displayUniforms.mfBlack.value = CONFIG.mfBlack;
+                this.displayUniforms.maskContrast.value = CONFIG.maskContrast;
+
+                this.displayUniforms.bandDensity.value = CONFIG.bandDensity;
+                this.displayUniforms.bandWidth.value = CONFIG.bandWidth;
+                this.displayUniforms.edgeSoftness.value = CONFIG.edgeSoftness;
+                this.displayUniforms.alphaPower.value = CONFIG.alphaPower;
+                this.displayUniforms.noiseInfluence.value = CONFIG.noiseInfluence;
+                this.displayUniforms.noiseScale.value = CONFIG.noiseScale;
+                this.displayUniforms.noiseBias.value = CONFIG.noiseBias;
+                this.displayUniforms.minAlpha.value = CONFIG.minAlpha;
+                this.displayUniforms.maxAlpha.value = CONFIG.maxAlpha;
+
+                this.renderer.render(this.sceneMain, this.camera);
+            }
+        }
+
+        new Experiment8();
+    </script>
+</body>
+
+</html>

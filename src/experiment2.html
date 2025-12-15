@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homunculus Fluid Engine</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+<script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+    // --- GLOBAL VARIABLES ---
+    let renderer, camera, noiseScene, displayScene;
+    let noiseTarget; // Off-screen render target for the noise engine
+    let noiseMaterial, displayMaterial;
+    let mouseTexture, mouseCtx, mouseCanvas;
+    let time = 0;
+
+    // Configuration
+    const config = {
+        sepR: 7.0, // Noise frequency Red
+        sepG: 5.0, // Noise frequency Green
+        distA: 0.64, // Distortion amplitude
+        distB: 2.5   // Distortion frequency
+    };
+
+    // --- SHADERS ---
+
+    // 1. COMMON VERTEX
+    const commonVertex = `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        `;
+
+    // 2. NOISE GENERATOR (The Engine)
+    const noiseFragment = `
+            uniform float cr;
+            uniform float cg;
+            uniform float cb;
+            varying vec2 vUv;
+
+            // Simplex Noise (Ashima Arts)
+            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+            vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+            float snoise(vec3 v) {
+                const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+                const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+                vec3 i  = floor(v + dot(v, C.yyy) );
+                vec3 x0 =  v - i + dot(i, C.xxx) ;
+                vec3 g = step(x0.yzx, x0.xyz);
+                vec3 l = 1.0 - g;
+                vec3 i1 = min( g.xyz, l.zxy );
+                vec3 i2 = max( g.xyz, l.zxy );
+                vec3 x1 = x0 - i1 + C.xxx;
+                vec3 x2 = x0 - i2 + C.yyy;
+                vec3 x3 = x0 - D.yyy;
+                i = mod289(i);
+                vec4 p = permute( permute( permute(
+                            i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+                            + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
+                            + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+                float n_ = 0.142857142857;
+                vec3  ns = n_ * D.wyz - D.xzx;
+                vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+                vec4 x_ = floor(j * ns.z);
+                vec4 y_ = floor(j - 7.0 * x_ );
+                vec4 x = x_ *ns.x + ns.yyyy;
+                vec4 y = y_ *ns.x + ns.yyyy;
+                vec4 h = 1.0 - abs(x) - abs(y);
+                vec4 b0 = vec4( x.xy, y.xy );
+                vec4 b1 = vec4( x.zw, y.zw );
+                vec4 s0 = floor(b0)*2.0 + 1.0;
+                vec4 s1 = floor(b1)*2.0 + 1.0;
+                vec4 sh = -step(h, vec4(0.0));
+                vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+                vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+                vec3 p0 = vec3(a0.xy,h.x);
+                vec3 p1 = vec3(a0.zw,h.y);
+                vec3 p2 = vec3(a1.xy,h.z);
+                vec3 p3 = vec3(a1.zw,h.w);
+                vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+                p0 *= norm.x;
+                p1 *= norm.y;
+                p2 *= norm.z;
+                p3 *= norm.w;
+                vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+                m = m * m;
+                return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
+                                                dot(p2,x2), dot(p3,x3) ) );
+            }
+
+            void main() {
+                float vr = cr;
+                float vg = cg;
+                float vb = cb;
+                float val1 = snoise(vec3(vr * vUv.x, vg * vUv.y, vb));
+                gl_FragColor = vec4( val1, val1, val1, 1.0);
+            }
+        `;
+
+    // 3. FLUID VISUALIZER (The "Nice Shapes" Logic)
+    const displayFragment = `
+            uniform sampler2D uNoise;
+            uniform sampler2D uMouse;
+            uniform float time;
+            uniform float distA;
+            uniform float distB;
+
+            varying vec2 vUv;
+
+            void main() {
+                // 1. Get the Raw Noise
+                // We use uv * 0.3 just like the original code to zoom in on the noise cloud
+                vec3 noiseVal = texture2D( uNoise, vec2(vUv.x * 0.3, vUv.y * 0.3) ).rgb;
+
+                // 2. The "Test 3B" Wave Distortion Function
+                // This is the exact math from the source that creates the "Homunculus" shape
+                vec2 ppp = -1.0 + 2.0 * vUv;
+                float wscale = 1.6;
+
+                // Layered Cosine Waves for complexity
+                ppp += 0.1 * cos( ( 1.5 * wscale ) * ppp.yx + 1.1 * time + vec2(0.1,1.1) );
+                ppp += 0.1 * cos( ( 2.3 * wscale ) * ppp.yx + 1.3 * time + vec2(3.2,3.4) );
+                ppp += 0.1 * cos( ( 2.2 * wscale ) * ppp.yx + 1.7 * time + vec2(1.8,5.2) );
+
+                // The final "kick" that creates the main distortion flow
+                ppp += distA * cos( ( distB * wscale ) * ppp.yx + 1.4 * time + vec2(6.3,3.9) );
+
+                // 3. Calculate Field Strength
+                // 'r' is the distance field. This represents the shapes.
+                float r = length( ppp );
+
+                // 4. Mouse Interaction
+                vec4 mColor = texture2D( uMouse, vUv );
+                // Add mouse influence to the field
+                r -= mColor.r * 0.5;
+
+                // 5. COLORIZATION (The "Nice Shapes")
+                // Instead of using 'r' to move a photo, we map 'r' to colors directly.
+
+                // Base Dark Background
+                vec3 bg = vec3(0.08, 0.08, 0.09);
+
+                // Generate Banding (Contour lines)
+                // We take the sine of the distance field to create repeating rings
+                float bands = sin(r * 12.0 - time * 0.5);
+                float sharpBands = smoothstep(0.9, 0.95, bands); // Make them sharp lines
+
+                // Secondary wider bands
+                float bands2 = sin(r * 18.0 + time * 0.2);
+                float sharpBands2 = smoothstep(0.85, 0.9, bands2);
+
+                // Define Colors (Matching the dark/teal/brown aesthetic)
+                vec3 teal = vec3(0.0, 0.6, 0.65);
+                vec3 brown = vec3(0.6, 0.35, 0.2);
+                vec3 white = vec3(0.9, 0.95, 0.9);
+
+                // Mix the colors based on the bands
+                vec3 col = bg;
+
+                // Add the Noise texture subtlely to the background for grain
+                col += noiseVal * 0.05;
+
+                // Add the colored contour lines
+                col = mix(col, teal, sharpBands * 0.6);
+                col = mix(col, brown, sharpBands2 * 0.5);
+
+                // Add a very thin white highlight line on the crest of the waves
+                float highlight = smoothstep(0.98, 1.0, sin(r * 12.0 - time * 0.5));
+                col = mix(col, white, highlight * 0.8);
+
+                // Vignette (Darken corners)
+                float vign = 1.0 - length(vUv - 0.5) * 0.8;
+                col *= vign;
+
+                gl_FragColor = vec4( col, 1.0 );
+            }
+        `;
+
+    // --- INITIALIZATION ---
+    function init() {
+        // 1. Setup Three.js
+        renderer = new THREE.WebGLRenderer({ antialias: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        document.body.appendChild(renderer.domElement);
+
+        camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+        // 2. Create Render Targets
+        noiseTarget = new THREE.WebGLRenderTarget(window.innerWidth / 2, window.innerHeight / 2);
+
+        // 3. Create Scenes
+        noiseScene = new THREE.Scene();
+        displayScene = new THREE.Scene();
+
+        // --- PASS 1: NOISE GENERATION ---
+        noiseMaterial = new THREE.ShaderMaterial({
+            vertexShader: commonVertex,
+            fragmentShader: noiseFragment,
+            uniforms: {
+                cr: { value: config.sepR },
+                cg: { value: config.sepG },
+                cb: { value: 0 } // Time driver
+            }
+        });
+        const noisePlane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), noiseMaterial);
+        noiseScene.add(noisePlane);
+
+        // --- MOUSE TRAIL SETUP ---
+        mouseCanvas = document.createElement('canvas');
+        mouseCanvas.width = window.innerWidth / 4;
+        mouseCanvas.height = window.innerHeight / 4;
+        mouseCtx = mouseCanvas.getContext('2d');
+        mouseCtx.fillStyle = 'black';
+        mouseCtx.fillRect(0, 0, mouseCanvas.width, mouseCanvas.height);
+        mouseTexture = new THREE.CanvasTexture(mouseCanvas);
+
+        // --- PASS 2: FINAL DISPLAY ---
+        displayMaterial = new THREE.ShaderMaterial({
+            vertexShader: commonVertex,
+            fragmentShader: displayFragment,
+            uniforms: {
+                uNoise: { value: noiseTarget.texture },
+                uMouse: { value: mouseTexture },
+                time: { value: 0 },
+                distA: { value: config.distA },
+                distB: { value: config.distB }
+            }
+        });
+        const displayMesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), displayMaterial);
+        displayScene.add(displayMesh);
+
+        // Listeners
+        window.addEventListener('resize', onResize);
+        window.addEventListener('mousemove', onMouseMove);
+    }
+
+    // --- MOUSE LOGIC ---
+    function onMouseMove(e) {
+        const x = (e.clientX / window.innerWidth) * mouseCanvas.width;
+        const y = (e.clientY / window.innerHeight) * mouseCanvas.height;
+
+        mouseCtx.globalCompositeOperation = 'source-over';
+        // Draw white circle (which becomes distortion in the shader)
+        const gradient = mouseCtx.createRadialGradient(x, y, 0, x, y, 40);
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+        mouseCtx.fillStyle = gradient;
+        mouseCtx.beginPath();
+        mouseCtx.arc(x, y, 40, 0, Math.PI * 2);
+        mouseCtx.fill();
+    }
+
+    function updateMouse() {
+        // Fade out trail
+        mouseCtx.globalCompositeOperation = 'source-over';
+        mouseCtx.fillStyle = 'rgba(0, 0, 0, 0.02)'; // Slow fade for long trails
+        mouseCtx.fillRect(0, 0, mouseCanvas.width, mouseCanvas.height);
+        mouseTexture.needsUpdate = true;
+    }
+
+    function onResize() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        renderer.setSize(w, h);
+        noiseTarget.setSize(w / 2, h / 2);
+    }
+
+    // --- RENDER LOOP ---
+    function animate() {
+        requestAnimationFrame(animate);
+        time += 0.005; // Slow, viscous movement
+
+        updateMouse();
+
+        // 1. Generate Noise
+        noiseMaterial.uniforms.cb.value += 0.005;
+        renderer.setRenderTarget(noiseTarget);
+        renderer.render(noiseScene, camera);
+
+        // 2. Render Final Display
+        displayMaterial.uniforms.time.value = time;
+        renderer.setRenderTarget(null);
+        renderer.render(displayScene, camera);
+    }
+
+    init();
+    animate();
+
+</script>
+</body>
+</html>

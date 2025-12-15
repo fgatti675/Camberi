@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homunculus.jp Hero Effect</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000; }
+        canvas { display: block; }
+        #loader {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: white; font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+<div id="loader">LOADING VISCOSITY...</div>
+
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+        }
+    }
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+
+    // =========================================================================
+    // CONFIGURATION & ASSETS
+    // =========================================================================
+    const CONFIG = {
+        gridSize: 50,        // Number of ripples available (Brush Pool)
+        brushSize: 0.2,      // Size of the ripple source
+        maxScale: 1.5,       // Max expansion of the ripple
+        fadeSpeed: 0.012,    // How fast ripples disappear (Lower = more viscous/oily)
+        growthSpeed: 0.04,   // How fast ripples expand
+        distortionStr: 0.3,  // Intensity of the liquid warping
+    };
+
+    // We generate a "Brush" texture programmatically to avoid external asset loading issues.
+    // This mimics the soft radial gradient used on the original site.
+    function createBrushTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 64;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        const grd = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        grd.addColorStop(0, 'rgba(255, 255, 255, 1.0)'); // Center is high displacement
+        grd.addColorStop(1, 'rgba(0, 0, 0, 0.0)');       // Edge is zero displacement
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, 64, 64);
+        const texture = new THREE.CanvasTexture(canvas);
+        return texture;
+    }
+
+    // =========================================================================
+    // SHADERS
+    // =========================================================================
+
+    const vertexShader = `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+
+    const fragmentShader = `
+            uniform float time;
+            uniform float progress; // Scroll progress (not used in this mouse-only demo but key to original)
+            uniform sampler2D tDiffuse; // The Background Image
+            uniform sampler2D tDisplacement; // The Ripple FBO
+            uniform vec4 resolution;
+            uniform float distortion; // Distortion intensity
+            varying vec2 vUv;
+
+            #define PI 3.14159265359
+
+            // Helper to make texture cover the screen (background-size: cover)
+            vec2 getCoverUv(vec2 uv, vec2 resolution, vec2 texResolution) {
+                vec2 s = resolution;
+                vec2 i = texResolution;
+                float rs = s.x / s.y;
+                float ri = i.x / i.y;
+                vec2 newUv = rs < ri? vec2(i.x * s.y / i.y, s.y) : vec2(s.x, s.y * i.x / s.x);
+                vec2 offset = (rs < ri? vec2((newUv.x - s.x) / 2.0, 0.0) : vec2(0.0, (newUv.y - s.y) / 2.0)) / newUv;
+                vec2 scale = s / newUv;
+                return (uv - offset) * scale;
+            }
+
+            void main() {
+                // 1. Sample the Displacement Map (The "Shapes")
+                vec4 disp = texture2D(tDisplacement, vUv);
+
+                // Use the red channel for displacement magnitude
+                // The theta calculates the direction of the warp based on the gradient slope
+                float theta = disp.r * 2.0 * PI;
+
+                // 2. Create the Warp Vector
+                // We add a slight RGB split (Chromatic Aberration) for that "glassy/oily" look
+                vec2 dir = vec2(sin(theta), cos(theta));
+
+                // Correct UVs for aspect ratio (assuming a 1920x1080 image)
+                vec2 uv = getCoverUv(vUv, resolution.xy, vec2(1920., 1080.));
+
+                // Apply Displacement
+                // We multiply by disp.r to only warp where the ripples are
+                vec2 uvR = uv + dir * disp.r * distortion * 1.0;
+                vec2 uvG = uv + dir * disp.r * distortion * 1.05; // Slight offset
+                vec2 uvB = uv + dir * disp.r * distortion * 1.1;  // Slight offset
+
+                // 3. Sample the Background Image
+                float r = texture2D(tDiffuse, uvR).r;
+                float g = texture2D(tDiffuse, uvG).g;
+                float b = texture2D(tDiffuse, uvB).b;
+
+                gl_FragColor = vec4(r, g, b, 1.0);
+            }
+        `;
+
+    // =========================================================================
+    // MAIN APP
+    // =========================================================================
+
+    class App {
+        constructor() {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+
+            // Renderer Setup
+            this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            this.renderer.setSize(this.width, this.height);
+            this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            document.body.appendChild(this.renderer.domElement);
+
+            // Camera (Orthographic for 2D screen space effects)
+            const frustumSize = this.height;
+            const aspect = this.width / this.height;
+            this.camera = new THREE.OrthographicCamera(
+                frustumSize * aspect / -2, frustumSize * aspect / 2,
+                frustumSize / 2, frustumSize / -2,
+                -1000, 1000
+            );
+            this.camera.position.z = 2;
+
+            // Scene 1: The "Physics" World (Ripples)
+            // This scene is never shown directly. It renders to the FBO.
+            this.sceneFBO = new THREE.Scene();
+
+            // Scene 2: The "Visual" World (Background)
+            this.sceneMain = new THREE.Scene();
+
+            // State
+            this.time = 0;
+            this.mouse = new THREE.Vector2(0, 0);
+            this.prevMouse = new THREE.Vector2(0, 0);
+            this.currentWaveIdx = 0;
+
+            this.init();
+        }
+
+        init() {
+            // 1. Setup the FBO (Render Target)
+            // This texture will store the white ripple shapes on a black background
+            this.renderTarget = new THREE.WebGLRenderTarget(
+                this.width,
+                this.height,
+                {
+                    minFilter: THREE.LinearFilter,
+                    magFilter: THREE.LinearFilter,
+                    format: THREE.RGBAFormat,
+                }
+            );
+
+            // 2. Setup the Brush Pool (The "Shapes")
+            // We create N meshes that we recycle to create the trails
+            this.brushes = [];
+            const brushGeo = new THREE.PlaneGeometry(64, 64, 1, 1);
+            const brushMat = new THREE.MeshBasicMaterial({
+                map: createBrushTexture(),
+                transparent: true,
+                blending: THREE.AdditiveBlending, // Key for merging ripples
+                depthTest: false,
+                depthWrite: false,
+            });
+
+            for (let i = 0; i < CONFIG.gridSize; i++) {
+                const mesh = new THREE.Mesh(brushGeo, brushMat);
+                mesh.rotation.z = Math.random() * Math.PI * 2;
+                mesh.visible = false; // Hidden by default
+                this.sceneFBO.add(mesh);
+                this.brushes.push(mesh);
+            }
+
+            // 3. Setup the Main Background Quad
+            // This fills the screen and displays the distorted image
+            const loader = new THREE.TextureLoader();
+            // Using a placeholder image that resembles the dark aesthetic
+            const bgTexture = loader.load('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop', () => {
+                document.getElementById('loader').style.display = 'none';
+            });
+
+            const material = new THREE.ShaderMaterial({
+                extensions: { derivatives: "#extension GL_OES_standard_derivatives : enable" },
+                side: THREE.DoubleSide,
+                uniforms: {
+                    time: { value: 0 },
+                    distortion: { value: CONFIG.distortionStr },
+                    tDiffuse: { value: bgTexture },
+                    tDisplacement: { value: null }, // Will be linked to FBO
+                    resolution: { value: new THREE.Vector4() },
+                },
+                vertexShader: vertexShader,
+                fragmentShader: fragmentShader,
+            });
+
+            const geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+            this.quad = new THREE.Mesh(geometry, material);
+            this.sceneMain.add(this.quad);
+
+            // Event Listeners
+            window.addEventListener('resize', this.resize.bind(this));
+            window.addEventListener('mousemove', this.onMouseMove.bind(this));
+
+            this.resize();
+            this.animate();
+        }
+
+        onMouseMove(e) {
+            // Convert mouse to Three.js coordinates (center is 0,0)
+            this.mouse.x = e.clientX - this.width / 2;
+            this.mouse.y = this.height / 2 - e.clientY;
+        }
+
+        setNewWave(x, y, index) {
+            // Activate a brush at the mouse position
+            const mesh = this.brushes[index];
+            mesh.visible = true;
+            mesh.position.x = x;
+            mesh.position.y = y;
+            mesh.scale.setScalar(CONFIG.brushSize);
+            mesh.material.opacity = 0.5; // Start opacity
+            mesh.rotation.z = Math.random() * Math.PI;
+        }
+
+        trackMouse() {
+            // Calculate distance moved
+            const dx = this.mouse.x - this.prevMouse.x;
+            const dy = this.mouse.y - this.prevMouse.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+
+            // Only spawn a new ripple if mouse moved enough
+            if (dist > 5) {
+                this.currentWaveIdx = (this.currentWaveIdx + 1) % CONFIG.gridSize;
+                this.setNewWave(this.mouse.x, this.mouse.y, this.currentWaveIdx);
+
+                this.prevMouse.x = this.mouse.x;
+                this.prevMouse.y = this.mouse.y;
+            }
+        }
+
+        updateBrushes() {
+            // Animate all active brushes
+            this.brushes.forEach((mesh) => {
+                if (mesh.visible) {
+                    // 1. Rotate slightly for organic feel
+                    mesh.rotation.z += 0.02;
+
+                    // 2. Fade out ("Viscosity" decay)
+                    mesh.material.opacity *= (1 - CONFIG.fadeSpeed);
+
+                    // 3. Expand ("Fluid" spread)
+                    mesh.scale.x += CONFIG.growthSpeed;
+                    mesh.scale.y = mesh.scale.x;
+
+                    // 4. Kill if invisible
+                    if (mesh.material.opacity < 0.01) {
+                        mesh.visible = false;
+                    }
+                }
+            });
+        }
+
+        resize() {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+            this.renderer.setSize(this.width, this.height);
+            this.renderTarget.setSize(this.width, this.height);
+
+            // Update Camera for Fullscreen Orthographic
+            const frustumSize = this.height;
+            const aspect = this.width / this.height;
+            this.camera.left = -frustumSize * aspect / 2;
+            this.camera.right = frustumSize * aspect / 2;
+            this.camera.top = frustumSize / 2;
+            this.camera.bottom = -frustumSize / 2;
+            this.camera.updateProjectionMatrix();
+
+            // Update Quad to fill screen
+            this.quad.scale.set(this.width, this.height, 1);
+
+            // Update Shader resolution
+            this.quad.material.uniforms.resolution.value.set(this.width, this.height, 1, 1);
+        }
+
+        animate() {
+            requestAnimationFrame(this.animate.bind(this));
+            this.time += 0.05;
+
+            // 1. Track Input
+            this.trackMouse();
+
+            // 2. Physics Step: Update the "shapes" (ripples)
+            this.updateBrushes();
+
+            // 3. Render the Physics Scene to the FBO (The invisible canvas)
+            this.renderer.setRenderTarget(this.renderTarget);
+            this.renderer.render(this.sceneFBO, this.camera);
+
+            // 4. Pass the FBO texture to the Main Shader
+            this.quad.material.uniforms.tDisplacement.value = this.renderTarget.texture;
+            this.quad.material.uniforms.time.value = this.time;
+
+            // 5. Render Main Scene to Screen
+            this.renderer.setRenderTarget(null);
+            this.renderer.render(this.sceneMain, this.camera);
+        }
+    }
+
+    new App();
+</script>
+</body>
+</html>

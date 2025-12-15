@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homunculus Fluid Engine</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #080808; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+<script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+    // --- CONFIGURATION ---
+    // Put your texture path here.
+    // The texture must be a horizontal gradient strip of colors with black gaps.
+    const TEXTURE_PATH = './static/detailMV_g.png';
+
+    const config = {
+        sepR: 7.0,
+        sepG: 5.0,
+        distA: 0.64,
+        distB: 2.5
+    };
+
+    // --- SETUP ---
+    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    document.body.appendChild(renderer.domElement);
+
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const noiseScene = new THREE.Scene();
+    const displayScene = new THREE.Scene();
+    const noiseTarget = new THREE.WebGLRenderTarget(window.innerWidth / 2, window.innerHeight / 2);
+
+    // --- TEXTURE GENERATION (Fallback for 'detailMV_g.png') ---
+    // This generates the "Ribbon" look: Horizontal bands of color separated by black.
+    function createRibbonTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1024;
+        canvas.height = 16; // Height doesn't matter much for a 1D gradient
+        const ctx = canvas.getContext('2d');
+
+        // Black Background (The Empty Space)
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, 1024, 16);
+
+        const grd = ctx.createLinearGradient(0, 0, 1024, 0);
+
+        // Define the Ribbons (Position 0.0 to 1.0)
+        // Black gaps create the spacing.
+        grd.addColorStop(0.00, '#000000');
+
+        // Band 1: Teal
+        grd.addColorStop(0.10, '#000000');
+        grd.addColorStop(0.15, '#008899');
+        grd.addColorStop(0.20, '#000000');
+
+        // Band 2: Copper/Brown
+        grd.addColorStop(0.40, '#000000');
+        grd.addColorStop(0.45, '#aa5522');
+        grd.addColorStop(0.50, '#000000');
+
+        // Band 3: Purple/Pink
+        grd.addColorStop(0.70, '#000000');
+        grd.addColorStop(0.75, '#882255');
+        grd.addColorStop(0.80, '#000000');
+
+        // Band 4: White Highlight
+        grd.addColorStop(0.95, '#ffffff');
+        grd.addColorStop(1.00, '#000000');
+
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, 1024, 16);
+
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.wrapS = THREE.RepeatWrapping; // CRITICAL: Allows waves to ripple outward
+        tex.wrapT = THREE.RepeatWrapping;
+        tex.minFilter = THREE.LinearFilter;
+        tex.magFilter = THREE.LinearFilter;
+        return tex;
+    }
+
+    // --- MOUSE TEXTURE ---
+    const mouseCanvas = document.createElement('canvas');
+    mouseCanvas.width = 128; mouseCanvas.height = 128;
+    const mouseCtx = mouseCanvas.getContext('2d');
+    mouseCtx.fillStyle = '#000000'; mouseCtx.fillRect(0,0,128,128);
+    const mouseTexture = new THREE.CanvasTexture(mouseCanvas);
+
+    // --- SHADER CODE (EXACT) ---
+
+    const commonVertex = `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        `;
+
+    const noiseFragment = `
+            uniform float cr, cg, cb;
+            varying vec2 vUv;
+            // Ashima Simplex Noise
+            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+            vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+            vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+            float snoise(vec3 v) {
+                const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+                const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+                vec3 i  = floor(v + dot(v, C.yyy) );
+                vec3 x0 =  v - i + dot(i, C.xxx) ;
+                vec3 g = step(x0.yzx, x0.xyz);
+                vec3 l = 1.0 - g;
+                vec3 i1 = min( g.xyz, l.zxy );
+                vec3 i2 = max( g.xyz, l.zxy );
+                vec3 x1 = x0 - i1 + C.xxx;
+                vec3 x2 = x0 - i2 + C.yyy;
+                vec3 x3 = x0 - D.yyy;
+                i = mod289(i);
+                vec4 p = permute( permute( permute(
+                            i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+                            + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
+                            + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+                float n_ = 0.142857142857;
+                vec3  ns = n_ * D.wyz - D.xzx;
+                vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+                vec4 x_ = floor(j * ns.z);
+                vec4 y_ = floor(j - 7.0 * x_ );
+                vec4 x = x_ *ns.x + ns.yyyy;
+                vec4 y = y_ *ns.x + ns.yyyy;
+                vec4 h = 1.0 - abs(x) - abs(y);
+                vec4 b0 = vec4( x.xy, y.xy );
+                vec4 b1 = vec4( x.zw, y.zw );
+                vec4 s0 = floor(b0)*2.0 + 1.0;
+                vec4 s1 = floor(b1)*2.0 + 1.0;
+                vec4 sh = -step(h, vec4(0.0));
+                vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+                vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+                vec3 p0 = vec3(a0.xy,h.x);
+                vec3 p1 = vec3(a0.zw,h.y);
+                vec3 p2 = vec3(a1.xy,h.z);
+                vec3 p3 = vec3(a1.zw,h.w);
+                vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+                p0 *= norm.x;
+                p1 *= norm.y;
+                p2 *= norm.z;
+                p3 *= norm.w;
+                vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+                m = m * m;
+                return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3) ) );
+            }
+            void main() {
+                float val1 = snoise(vec3(cr * vUv.x, cg * vUv.y, cb));
+                gl_FragColor = vec4( val1, val1, val1, 1.0);
+            }
+        `;
+
+    const displayFragment = `
+            uniform sampler2D uTexture;
+            uniform sampler2D mouseEffect;
+            uniform sampler2D noise;
+
+            uniform float time;
+            uniform float ease;
+            uniform float alpha;
+            uniform float meEase;
+            uniform float mfBlack;
+
+            uniform float distA;
+            uniform float distB;
+
+            varying vec2 vUv;
+
+            void main() {
+                vec3 noiseC = texture2D( noise, vec2(vUv.x * 0.3, vUv.y * 0.3) ).rgb;
+
+                vec2 ppp = -1.0 + 2.0 * vUv;
+                float wscale = 1.6;
+
+                // TEST 3B (Your Exact Logic)
+                ppp += 0.1 * cos( ( 1.5 * wscale ) * ppp.yx + 1.1 * time + vec2(0.1,1.1) );
+                ppp += 0.1 * cos( ( 2.3 * wscale ) * ppp.yx + 1.3 * time + vec2(3.2,3.4) );
+                ppp += 0.1 * cos( ( 2.2 * wscale ) * ppp.yx + 1.7 * time + vec2(1.8,5.2) );
+                ppp += distA * cos( ( distB * wscale ) * ppp.yx + 1.4 * time + vec2(6.3,3.9) );
+
+                float r = length( ppp );
+
+                // Logic Adjustment: For BG, ease is usually 0 to allow full fluid motion
+                float vx = (vUv.x * ease) + (r * (1.0 - ease));
+                float vy = (vUv.y * ease) + (0.0 * (1.0 - ease));
+
+                vec4 mfColor = texture2D( mouseEffect, vUv );
+                float strength = meEase;
+                float mfSin = sin(mfColor.r);
+
+                vec2 effectUv = vec2(vx, vy) + strength * vec2(mfSin, mfSin);
+
+                // Maps the mathematical waves to the Color Ribbons (texture)
+                vec4 col1 = texture2D( uTexture, effectUv );
+
+                float aa = col1.a * alpha - ( noiseC.r * 0.6 * ( 1.0 - ease ) );
+                vec3 mixCol = col1.rgb;
+
+                gl_FragColor = vec4( mixCol, aa * ( 1.0 - mfColor.r * mfBlack ) );
+            }
+        `;
+
+    // --- INIT & MATERIALS ---
+
+    // Load Texture with Fallback
+    const loader = new THREE.TextureLoader();
+    let displayTexture = createRibbonTexture(); // Start with generated ribbons
+
+    loader.load(
+        TEXTURE_PATH,
+        (tex) => {
+            console.log("Texture loaded successfully");
+            tex.wrapS = THREE.RepeatWrapping;
+            tex.wrapT = THREE.RepeatWrapping;
+            // Important: LinearFilter prevents issues with non-power-of-two textures not wrapping correctly
+            tex.minFilter = THREE.LinearFilter;
+            tex.magFilter = THREE.LinearFilter;
+            tex.needsUpdate = true;
+            displayMaterial.uniforms.uTexture.value = tex;
+        },
+        undefined,
+        (err) => {
+            console.warn("Texture not found, using generated ribbons.", err);
+        }
+    );
+
+    const noiseMaterial = new THREE.ShaderMaterial({
+        vertexShader: commonVertex,
+        fragmentShader: noiseFragment,
+        uniforms: { cr: { value: 7.0 }, cg: { value: 5.0 }, cb: { value: 0 } }
+    });
+
+    const displayMaterial = new THREE.ShaderMaterial({
+        vertexShader: commonVertex,
+        fragmentShader: displayFragment,
+        uniforms: {
+            uTexture: { value: displayTexture },
+            mouseEffect: { value: mouseTexture },
+            noise: { value: noiseTarget.texture },
+            time: { value: 0 },
+            ease: { value: 0.0 }, // 0.0 = Full fluid mode
+            alpha: { value: 1.0 },
+            meEase: { value: 0.075 },
+            mfBlack: { value: 0.3 },
+            distA: { value: config.distA },
+            distB: { value: config.distB }
+        }
+    });
+
+    // Add Planes
+    noiseScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), noiseMaterial));
+    displayScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), displayMaterial));
+
+    // --- ANIMATION ---
+    let time = 0;
+    function animate() {
+        requestAnimationFrame(animate);
+        time += 0.0025; // Speed of flow
+
+        // Update Mouse
+        mouseCtx.fillStyle = 'rgba(0,0,0,0.02)';
+        mouseCtx.fillRect(0,0,128,128);
+        mouseTexture.needsUpdate = true;
+
+        // Render Passes
+        noiseMaterial.uniforms.cb.value += 0.005;
+        renderer.setRenderTarget(noiseTarget);
+        renderer.render(noiseScene, camera);
+
+        displayMaterial.uniforms.time.value = time;
+        renderer.setRenderTarget(null);
+        renderer.render(displayScene, camera);
+    }
+
+    window.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth) * 128;
+        const y = (1.0 - e.clientY / window.innerHeight) * 128;
+        mouseCtx.fillStyle = 'white';
+        mouseCtx.beginPath();
+        mouseCtx.arc(x, y, 10, 0, Math.PI*2);
+        mouseCtx.fill();
+        mouseTexture.needsUpdate = true;
+    });
+
+    window.addEventListener('resize', () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        noiseTarget.setSize(window.innerWidth/2, window.innerHeight/2);
+    });
+
+    animate();
+
+</script>
+</body>
+</html>
