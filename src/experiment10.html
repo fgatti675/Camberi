@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Fluid Header Replication (Exp 10)</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #262626;
+            /* User's custom background */
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+<div id="loader">LOADING EXPERIMENT 10...</div>
+
+<script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.min.js"></script>
+
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+        }
+    }
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+
+    // =========================================================================
+    // CONFIGURATION
+    // =========================================================================
+    const CONFIG = {
+        "distA": 2.669079004049281,
+        "distB": 0.947767110014974,
+        "flowSpeed": 0.0013,
+        "wscale": 1.9522701817868526,
+        "meEase": 0.17140843829824715,
+        "mfBlack": 0.16242402889104202,
+        "ease": 0.21879679379899586,
+        "uvScale": 0.3421562582577292,
+        "alpha": 0.9290936316392143,
+        "voidLikelihood": 0.45556240641240203,
+        "voidWidthMin": 200,
+        "voidWidthMax": 486.58944772306876,
+        "bandDensity": 2.159757043163608,
+        "colorBlending": 0.01585484013036202,
+        "colorBg": "#202020",
+        "color1": "#899D99",
+        "color2": "#5f2727",
+        "color3": "#373c38",
+        "color4": "#0099bb",
+        "color5": "#303B42",
+        "color6": "#2E7075",
+        "seed": 333,
+        "preset": "Default"
+    };
+
+    // PRESET DEFINITIONS
+    const PRESETS = {
+        'Default': {...CONFIG},
+        'Neon Cyber': {
+            distA: 3.5, distB: 1.5, flowSpeed: 0.002, wscale: 3.0,
+            voidLikelihood: 0.3, bandDensity: 2.0,
+            colorBg: '#050510',
+            color1: '#FF00FF', color2: '#00FFFF', color3: '#CC00FF',
+            color4: '#00FF00', color5: '#FFFF00', color6: '#FF0099'
+        },
+        'Pastel Drift': {
+            "distA": 1.6577116180745177,
+            "distB": 0,
+            "flowSpeed": 0.0005,
+            "wscale": 2.6160486215097336,
+            "meEase": 0.17140843829824715,
+            "mfBlack": 0.16242402889104202,
+            "ease": 0.18497313485422356,
+            "uvScale": 0.7018144983704747,
+            "alpha": 1,
+            "voidLikelihood": 0.23007134678058663,
+            "voidWidthMin": 100.84118735136087,
+            "voidWidthMax": 387.37338148507,
+            "bandDensity": 0.9633841275433805,
+            "colorBlending": 0,
+            "colorBg": "#ffffff",
+            "color1": "#FFB7B2",
+            "color2": "#b7ffe6",
+            "color3": "#ffffff",
+            "color4": "#B5EAD7",
+            "color5": "#ececec",
+            "color6": "#ffe3d0",
+            "seed": 333,
+            "preset": "Pastel Drift"
+        },
+        'Deep Ocean': {
+            "distA": 0,
+            "distB": 0.2712939311195279,
+            "flowSpeed": 0.0013,
+            "wscale": 5,
+            "meEase": 0.17140843829824715,
+            "mfBlack": 0.16242402889104202,
+            "ease": 0,
+            "uvScale": 1.5519157931824188,
+            "alpha": 0.9290936316392143,
+            "voidLikelihood": 0.45556240641240203,
+            "voidWidthMin": 10,
+            "voidWidthMax": 50,
+            "bandDensity": 0.1,
+            "colorBlending": 0.01585484013036202,
+            "colorBg": "#201b3c",
+            "color1": "#899D99",
+            "color2": "#5f2727",
+            "color3": "#373c38",
+            "color4": "#0099bb",
+            "color5": "#303B42",
+            "color6": "#1e4c5f",
+            "seed": 333,
+            "preset": "Default"
+        },
+        'Magma': {
+            distA: 4.0, distB: 3.0, flowSpeed: 0.0025, wscale: 4.0,
+            voidLikelihood: 0.1, bandDensity: 0.5,
+            colorBg: '#200000',
+            color1: '#ff0000', color2: '#ff4000', color3: '#ff8000',
+            color4: '#ffbf00', color5: '#ffff00', color6: '#800000'
+        },
+        'Glitch Mono': {
+            distA: 5.0, distB: 5.0, flowSpeed: 0.005, wscale: 5.0,
+            voidLikelihood: 0.5, bandDensity: 2.5,
+            colorBg: '#000000',
+            color1: '#ffffff', color2: '#cccccc', color3: '#888888',
+            color4: '#444444', color5: '#dddddd', color6: '#111111'
+        }
+    };
+
+    // =========================================================================
+    // SHADERS
+    // =========================================================================
+
+    const vertexShader = `
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    `;
+
+    // We keep noise ONLY for subtle surface texture, not for masking shapes
+    const noiseFragment = `
+        vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+        vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+        float snoise(vec3 v) {
+            const vec2  C = vec2(1.0/6.0, 1.0/3.0);
+            const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+            vec3 i  = floor(v + dot(v, C.yyy));
+            vec3 x0 =  v - i + dot(i, C.xxx);
+            vec3 g = step(x0.yzx, x0.xyz);
+            vec3 l = 1.0 - g;
+            vec3 i1 = min(g.xyz, l.zxy);
+            vec3 i2 = max(g.xyz, l.zxy);
+            vec3 x1 = x0 - i1 + C.xxx;
+            vec3 x2 = x0 - i2 + C.yyy;
+            vec3 x3 = x0 - D.yyy;
+            i = mod289(i);
+            vec4 p = permute(permute(permute(
+                        i.z + vec4(0.0, i1.z, i2.z, 1.0))
+                        + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+                        + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+            float n_ = 0.142857142857;
+            vec3  ns = n_ * D.wyz - D.xzx;
+            vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+            vec4 x_ = floor(j * ns.z);
+            vec4 y_ = floor(j - 7.0 * x_);
+            vec4 x = x_ *ns.x + ns.yyyy;
+            vec4 y = y_ *ns.x + ns.yyyy;
+            vec4 h = 1.0 - abs(x) - abs(y);
+            vec4 b0 = vec4(x.xy, y.xy);
+            vec4 b1 = vec4(x.zw, y.zw);
+            vec4 s0 = floor(b0)*2.0 + 1.0;
+            vec4 s1 = floor(b1)*2.0 + 1.0;
+            vec4 sh = -step(h, vec4(0.0));
+            vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+            vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+            vec3 p0 = vec3(a0.xy,h.x);
+            vec3 p1 = vec3(a0.zw,h.y);
+            vec3 p2 = vec3(a1.xy,h.z);
+            vec3 p3 = vec3(a1.zw,h.w);
+            vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+            p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+            vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+            m = m * m;
+            return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+        }
+        uniform float cr; uniform float cg; uniform float cb;
+        varying vec2 vUv;
+        void main() {
+            float val1 = snoise(vec3(cr * vUv.x, cg * vUv.y, cb));
+            val1 = val1 * 0.5 + 0.5;
+            gl_FragColor = vec4(val1, val1, val1, 1.0);
+        }
+    `;
+
+    const displayFragment = `
+        uniform sampler2D tDiffuse;
+        uniform sampler2D tMouse;
+        uniform sampler2D tNoise;
+
+        uniform float time;
+        uniform float ease;
+        uniform float alpha;
+
+        uniform float meEase;
+        uniform float mfBlack;
+        uniform float distA;
+        uniform float distB;
+        uniform float wscale;
+        uniform float uvScale;
+
+        uniform float noiseScale; // For surface grain only
+
+        varying vec2 vUv;
+
+        void main() {
+            // Mouse
+            vec4 mfColor = texture2D(tMouse, vUv);
+            float strength = meEase;
+            float mfSin = sin(mfColor.r);
+            vec2 mouseDisp = strength * vec2(mfSin, mfSin);
+
+            // Flow Field
+            vec2 disturbedUv = vUv - mouseDisp * 0.2;
+            vec2 ppp = -1.0 + 2.0 * disturbedUv;
+
+            ppp += 0.1 * cos((1.5 * wscale) * ppp.yx + 1.1 * time + vec2(0.1, 1.1));
+            ppp += 0.1 * cos((2.3 * wscale) * ppp.yx + 1.3 * time + vec2(3.2, 3.4));
+            ppp += 0.1 * cos((2.2 * wscale) * ppp.yx + 1.7 * time + vec2(1.8, 5.2));
+            ppp += distA * cos((distB * wscale) * ppp.yx + 1.4 * time + vec2(6.3, 3.9));
+
+            float r = length(ppp); // Flow Distance
+
+            // Texture Sampling (Primary Logic)
+            // 'r' is used as the X-coordinate lookup.
+            // Since the texture contains transparency (black) areas,
+            // the 'mask' will naturally stretch and flow with 'r'.
+
+            float vx = (vUv.x * ease) + (r * (1.0 - ease));
+            float vy = (vUv.y * ease) + (0.0 * (1.0 - ease));
+
+            vec2 effectUv = vec2(vx, vy) + strength * vec2(mfSin, mfSin);
+            vec2 centeredUv = (effectUv - 0.5) * uvScale + 0.5;
+
+            vec4 col1 = texture2D(tDiffuse, centeredUv);
+
+            // Surface Grain (Subtle)
+            // Just adds a bit of texture to the colored parts, not masking the shape
+            float n = texture2D(tNoise, vUv * noiseScale).r;
+            vec3 finalRs = col1.rgb - (n * 0.05); // Very subtle grain
+
+            float finalAlpha = col1.a * alpha;
+
+            // Mouse Trail Darkening
+            float mouseDark = meEase * mfBlack * mfColor.r;
+            finalRs *= (1.0 - mouseDark);
+            finalAlpha *= (1.0 - mouseDark);
+
+            gl_FragColor = vec4(finalRs, finalAlpha);
+        }
+    `;
+
+    // =========================================================================
+    // MAIN APP
+    // =========================================================================
+
+    class Experiment10 {
+        constructor() {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+
+            this.renderer = new THREE.WebGLRenderer({
+                antialias: true,
+                alpha: true
+            });
+            this.renderer.setSize(this.width, this.height);
+            this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            document.body.appendChild(this.renderer.domElement);
+            document.body.style.backgroundColor = CONFIG.colorBg;
+
+            this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+            const fSize = this.height / 2;
+            const aspect = this.width / this.height;
+            this.cameraMouse = new THREE.OrthographicCamera(
+                -fSize * aspect, fSize * aspect,
+                fSize, -fSize,
+                0, 10000
+            );
+            this.cameraMouse.position.set(0, 0, 100);
+
+            this.sceneMouse = new THREE.Scene();
+            this.sceneNoise = new THREE.Scene();
+            this.sceneMain = new THREE.Scene();
+
+            this.mouseFBO = new THREE.WebGLRenderTarget(this.width / 2, this.height / 2);
+            this.noiseFBO = new THREE.WebGLRenderTarget(256, 256);
+
+            this.time = 0;
+            this.mouse = new THREE.Vector2(-1000, -1000);
+            this.mouseObjects = [];
+
+            this.setupGUI();
+            this.init();
+        }
+
+        setupGUI() {
+            this.gui = new dat.GUI();
+
+            this.gui.add(CONFIG, 'preset', Object.keys(PRESETS)).name('PRESET').onChange(val => {
+                const preset = PRESETS[val];
+                // Update CONFIG values
+                for (let k in preset) {
+                    if (k !== 'preset') {
+                        CONFIG[k] = preset[k];
+                    }
+                }
+
+                // Refresh GUI controllers
+                for (let i in this.gui.__controllers) {
+                    this.gui.__controllers[i].updateDisplay();
+                }
+                for (let f in this.gui.__folders) {
+                    for (let c in this.gui.__folders[f].__controllers) {
+                        this.gui.__folders[f].__controllers[c].updateDisplay();
+                    }
+                }
+
+                // Apply visual changes
+                document.body.style.backgroundColor = CONFIG.colorBg;
+                this.reloadTexture();
+            });
+
+            const fSim = this.gui.addFolder('Simulation');
+            fSim.add(CONFIG, 'flowSpeed', 0.0, 0.05).name('Speed');
+            fSim.add(CONFIG, 'distA', 0.0, 5.0).name('Wave Amp');
+            fSim.add(CONFIG, 'distB', 0.0, 10.0).name('Wave Freq');
+            fSim.add(CONFIG, 'wscale', 0.0, 5.0).name('Wave Scale');
+            fSim.add(CONFIG, 'ease', 0.0, 1.0).name('Ease (0=Topo, 1=Img)');
+            fSim.open();
+
+            const fMask = this.gui.addFolder('Texture / Masking');
+            fMask.add(CONFIG, 'voidLikelihood', 0.0, 1.0).name('Gap Frequency').onChange(this.reloadTexture.bind(this));
+            fMask.add(CONFIG, 'voidWidthMin', 10, 200).name('Min Gap Width').onChange(this.reloadTexture.bind(this));
+            fMask.add(CONFIG, 'voidWidthMax', 50, 600).name('Max Gap Width').onChange(this.reloadTexture.bind(this));
+            fMask.add(CONFIG, 'bandDensity', 0.1, 3.0).name('Band Density').onChange(this.reloadTexture.bind(this));
+            fMask.add(CONFIG, 'colorBlending', 0.0, 1.0).name('Mix Colors').onChange(this.reloadTexture.bind(this));
+            fMask.open();
+
+            const fVis = this.gui.addFolder('Visuals');
+            fVis.add(CONFIG, 'uvScale', 0.1, 3.0).name('Zoom');
+            fVis.add(CONFIG, 'alpha', 0.0, 1.0).name('Global Alpha');
+            fVis.open();
+
+            const fInt = this.gui.addFolder('Interaction');
+            fInt.add(CONFIG, 'meEase', 0.0, 0.5).name('Mouse Distort');
+            fInt.add(CONFIG, 'mfBlack', 0.0, 1.0).name('Darken Trail');
+            fInt.open();
+
+            const fColors = this.gui.addFolder('Colors');
+            fColors.addColor(CONFIG, 'colorBg').name('Tex Background').onChange(() => {
+                document.body.style.backgroundColor = CONFIG.colorBg;
+                this.reloadTexture();
+            });
+            fColors.addColor(CONFIG, 'color1').name('Color 1').onChange(this.reloadTexture.bind(this));
+            fColors.addColor(CONFIG, 'color2').name('Color 2').onChange(this.reloadTexture.bind(this));
+            fColors.addColor(CONFIG, 'color3').name('Color 3').onChange(this.reloadTexture.bind(this));
+            fColors.addColor(CONFIG, 'color4').name('Color 4').onChange(this.reloadTexture.bind(this));
+            fColors.addColor(CONFIG, 'color5').name('Color 5').onChange(this.reloadTexture.bind(this));
+            fColors.addColor(CONFIG, 'color6').name('Color 6').onChange(this.reloadTexture.bind(this));
+            fColors.add(CONFIG, 'seed', 0, 1000).step(1).name('Seed').onChange(this.reloadTexture.bind(this));
+            fColors.open();
+
+            this.gui.add({export: () => console.log(JSON.stringify(CONFIG))}, 'export').name('Export Config');
+        }
+
+        reloadTexture() {
+            if (this.displayUniforms && this.displayUniforms.tDiffuse) {
+                this.displayUniforms.tDiffuse.value = this.createProceduralTexture();
+            }
+        }
+
+        init() {
+            // 1. SETUP MOUSE
+            const brushCanvas = document.createElement('canvas');
+            brushCanvas.width = 128;
+            brushCanvas.height = 128;
+            const bCtx = brushCanvas.getContext('2d');
+            const grd = bCtx.createRadialGradient(64, 64, 0, 64, 64, 64);
+            grd.addColorStop(0, 'rgba(255,255,255,0.25)');
+            grd.addColorStop(1, 'rgba(255,255,255,0)');
+            bCtx.fillStyle = grd;
+            bCtx.fillRect(0, 0, 128, 128);
+            const brushTex = new THREE.CanvasTexture(brushCanvas);
+            const brushMat = new THREE.MeshBasicMaterial({
+                map: brushTex,
+                transparent: true,
+                opacity: 0.8,
+                depthTest: false
+            });
+            const brushGeo = new THREE.PlaneGeometry(300, 300);
+
+            this.brushPoolSize = 50;
+            for (let i = 0; i < this.brushPoolSize; i++) {
+                const m = new THREE.Mesh(brushGeo, brushMat.clone());
+                m.visible = false;
+                this.sceneMouse.add(m);
+                this.mouseObjects.push({mesh: m, life: 0, active: false});
+            }
+            this.currentBrush = 0;
+
+            // 2. SETUP NOISE
+            this.noiseMaterial = new THREE.ShaderMaterial({
+                vertexShader: vertexShader,
+                fragmentShader: noiseFragment,
+                uniforms: {cr: {value: 7.0}, cg: {value: 5.0}, cb: {value: 0.0}}
+            });
+            this.sceneNoise.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), this.noiseMaterial));
+
+            // 3. SETUP MAIN
+            this.displayUniforms = {
+                tDiffuse: {value: null},
+                tMouse: {value: null},
+                tNoise: {value: null},
+                time: {value: 0},
+                ease: {value: CONFIG.ease},
+                alpha: {value: CONFIG.alpha},
+                meEase: {value: CONFIG.meEase},
+                mfBlack: {value: CONFIG.mfBlack},
+                distA: {value: CONFIG.distA},
+                distB: {value: CONFIG.distB},
+                wscale: {value: CONFIG.wscale},
+                uvScale: {value: CONFIG.uvScale},
+                noiseScale: {value: 0.3}, // fixed noise scale for grain
+            };
+
+            const displayMat = new THREE.ShaderMaterial({
+                vertexShader: vertexShader,
+                fragmentShader: displayFragment,
+                uniforms: this.displayUniforms,
+                transparent: true,
+            });
+            this.sceneMain.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), displayMat));
+
+            this.displayUniforms.tDiffuse.value = this.createProceduralTexture();
+
+            window.addEventListener('resize', this.resize.bind(this));
+            window.addEventListener('mousemove', this.onMouseMove.bind(this));
+
+            this.resize();
+            document.getElementById('loader').style.display = 'none';
+            this.animate();
+        }
+
+        onMouseMove(e) {
+            this.mouse.x = e.clientX - this.width / 2;
+            this.mouse.y = -(e.clientY - this.height / 2);
+            const brush = this.mouseObjects[this.currentBrush];
+
+            brush.mesh.scale.set(1.0, 1.0, 1.0); // Reset scale
+
+            brush.active = true;
+            brush.mesh.visible = true;
+            brush.mesh.position.set(this.mouse.x, this.mouse.y, 0);
+            brush.mesh.rotation.z = Math.random() * Math.PI * 2;
+            brush.mesh.material.opacity = 0.8;
+            this.currentBrush = (this.currentBrush + 1) % this.brushPoolSize;
+        }
+
+        createProceduralTexture() {
+            // STEP 1: Generate Source Texture (Rich, Complex like Exp 9)
+            // But drawing to an offscreen buffer first.
+            const texSize = 1024;
+            const sourceCanvas = document.createElement('canvas');
+            sourceCanvas.width = texSize;
+            sourceCanvas.height = texSize;
+            const sCtx = sourceCanvas.getContext('2d');
+
+            let seed = CONFIG.seed;
+
+            function random() {
+                const x = Math.sin(seed++) * 10000;
+                return x - Math.floor(x);
+            }
+
+            const colors = [CONFIG.color1, CONFIG.color2, CONFIG.color3, CONFIG.color4, CONFIG.color5, CONFIG.color6];
+
+            // Helper: Get Interpolated Color
+            function hexToRgb(hex) {
+                const bigint = parseInt(hex.replace('#', ''), 16);
+                return {
+                    r: (bigint >> 16) & 255,
+                    g: (bigint >> 8) & 255,
+                    b: bigint & 255
+                };
+            }
+
+            function rgbToHex(r, g, b) {
+                return "#" + ((1 << 24) + (Math.round(r) << 16) + (Math.round(g) << 8) + Math.round(b)).toString(16).slice(1);
+            }
+
+            function getInterColor() {
+                // Pick 2 colors
+                const c1 = colors[Math.floor(random() * colors.length)];
+                const c2 = colors[Math.floor(random() * colors.length)];
+
+                // Mix factor based on random and CONFIG.colorBlending
+                const mix = random() * CONFIG.colorBlending; // 0..1
+
+                const rgb1 = hexToRgb(c1);
+                const rgb2 = hexToRgb(c2);
+
+                const r = rgb1.r + (rgb2.r - rgb1.r) * mix;
+                const g = rgb1.g + (rgb2.g - rgb1.g) * mix;
+                const b = rgb1.b + (rgb2.b - rgb1.b) * mix;
+
+                return rgbToHex(r, g, b);
+            }
+
+            // Fill Background with complex gradient (not just solid)
+            const bgGrad = sCtx.createLinearGradient(0, 0, 0, texSize);
+            bgGrad.addColorStop(0, getInterColor());
+            bgGrad.addColorStop(1, getInterColor());
+            sCtx.fillStyle = bgGrad;
+            sCtx.fillRect(0, 0, texSize, texSize);
+
+            // --- RECOVERED GEOMETRIC SHAPES (EXP 9) ---
+
+            // A. Triangles
+            for (let i = 0; i < 20; i++) {
+                sCtx.fillStyle = getInterColor();
+                sCtx.beginPath();
+                const x = random() * texSize;
+                const y = random() * texSize;
+                const s = 100 + random() * 300;
+                sCtx.moveTo(x, y);
+                sCtx.lineTo(x + (random() - 0.5) * s, y + (random() - 0.5) * s);
+                sCtx.lineTo(x + (random() - 0.5) * s, y + (random() - 0.5) * s);
+                sCtx.fill();
+            }
+
+            // B. Circles / Donuts
+            for (let i = 0; i < 15; i++) {
+                sCtx.strokeStyle = getInterColor();
+                sCtx.lineWidth = 10 + random() * 50;
+                sCtx.beginPath();
+                const x = random() * texSize;
+                const y = random() * texSize;
+                const r = 50 + random() * 150;
+                sCtx.arc(x, y, r, 0, Math.PI * 2);
+                sCtx.stroke();
+            }
+
+            // C. Bars (Rectangles)
+            for (let i = 0; i < 15; i++) {
+                sCtx.fillStyle = getInterColor();
+                sCtx.save();
+                sCtx.translate(random() * texSize, random() * texSize);
+                sCtx.rotate(random() * Math.PI);
+                sCtx.fillRect(-150, -25, 300, 50);
+                sCtx.restore();
+            }
+
+            // D. Squiggles
+            sCtx.lineWidth = 15;
+            sCtx.lineCap = 'round';
+            for (let i = 0; i < 10; i++) {
+                sCtx.strokeStyle = getInterColor();
+                sCtx.beginPath();
+                let x = random() * texSize;
+                let y = random() * texSize;
+                sCtx.moveTo(x, y);
+                for (let j = 0; j < 4; j++) {
+                    sCtx.bezierCurveTo(
+                        x + (random() - 0.5) * 300, y + (random() - 0.5) * 300,
+                        x + (random() - 0.5) * 300, y + (random() - 0.5) * 300,
+                        x + (random() - 0.5) * 300, y + (random() - 0.5) * 300
+                    );
+                    x += (random() - 0.5) * 300;
+                    y += (random() - 0.5) * 300;
+                }
+                sCtx.stroke();
+            }
+
+            // STEP 2: Apply MASKING Logic to Final Canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+
+            // Clear with transparency (Voids start empty)
+            ctx.clearRect(0, 0, 1024, 1024);
+
+            // Phase 1: Determine Layout (Segments)
+            // We do this FIRST to ensure the random sequence for structure
+            // is not affected by the density of the bands drawn later.
+            let layoutHead = 0;
+            const segments = []; // { type: 'void'|'matter', x: start, width: w }
+
+            while (layoutHead < 1024) {
+                const isVoid = random() < CONFIG.voidLikelihood;
+                if (isVoid) {
+                    const w = CONFIG.voidWidthMin + random() * (CONFIG.voidWidthMax - CONFIG.voidWidthMin);
+                    segments.push({type: 'void', x: layoutHead, width: w});
+                    layoutHead += w;
+                } else {
+                    const w = 50 + random() * 200;
+                    segments.push({type: 'matter', x: layoutHead, width: w});
+                    layoutHead += w;
+                }
+            }
+
+            // Phase 2: Render Segments
+            for (const seg of segments) {
+                if (seg.type === 'matter') {
+                    // Draw bands within this segment
+                    const startX = seg.x;
+                    const endX = Math.min(seg.x + seg.width, 1024);
+                    let currentX = startX;
+
+                    while (currentX < endX) {
+                        // Band width depends on density
+                        const stripeWidth = (2 + random() * 20) / CONFIG.bandDensity;
+
+                        // Pick random slice from source
+                        const sourceX = Math.floor(random() * 1024);
+
+                        ctx.drawImage(sourceCanvas,
+                            sourceX, 0, stripeWidth, 1024,
+                            currentX, 0, stripeWidth, 1024
+                        );
+                        currentX += stripeWidth;
+                    }
+                }
+                // If void, do nothing (leave transparent)
+            }
+
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.minFilter = THREE.LinearFilter;
+            tex.magFilter = THREE.LinearFilter;
+            tex.wrapS = THREE.RepeatWrapping;
+            tex.wrapT = THREE.RepeatWrapping;
+            return tex;
+        }
+
+        resize() {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+            this.renderer.setSize(this.width, this.height);
+            // Mouse FBO
+            this.mouseFBO.setSize(this.width / 2, this.height / 2);
+
+            const fSize = this.height / 2;
+            const aspect = this.width / this.height;
+            this.cameraMouse.left = -fSize * aspect;
+            this.cameraMouse.right = fSize * aspect;
+            this.cameraMouse.top = fSize;
+            this.cameraMouse.bottom = -fSize;
+            this.cameraMouse.updateProjectionMatrix();
+        }
+
+        animate() {
+            requestAnimationFrame(this.animate.bind(this));
+            this.time += CONFIG.flowSpeed;
+
+            // Mouse
+            this.mouseObjects.forEach(obj => {
+                if (obj.mesh.visible) {
+                    obj.mesh.rotation.z += 0.02;
+                    obj.mesh.material.opacity *= 0.96;
+                    obj.mesh.scale.multiplyScalar(1.02);
+                    if (obj.mesh.material.opacity < 0.01) obj.mesh.visible = false;
+                }
+            });
+            this.renderer.setRenderTarget(this.mouseFBO);
+            this.renderer.clear();
+            this.renderer.render(this.sceneMouse, this.cameraMouse);
+
+            // Noise
+            this.noiseMaterial.uniforms.cb.value += 0.002;
+            this.renderer.setRenderTarget(this.noiseFBO);
+            this.renderer.render(this.sceneNoise, this.camera);
+
+            // Main
+            this.renderer.setRenderTarget(null);
+
+            this.displayUniforms.time.value = this.time;
+            this.displayUniforms.tMouse.value = this.mouseFBO.texture;
+            this.displayUniforms.tNoise.value = this.noiseFBO.texture;
+
+            this.displayUniforms.ease.value = CONFIG.ease;
+            this.displayUniforms.alpha.value = CONFIG.alpha;
+            this.displayUniforms.meEase.value = CONFIG.meEase;
+            this.displayUniforms.mfBlack.value = CONFIG.mfBlack;
+            this.displayUniforms.distA.value = CONFIG.distA;
+            this.displayUniforms.distB.value = CONFIG.distB;
+            this.displayUniforms.wscale.value = CONFIG.wscale;
+            this.displayUniforms.uvScale.value = CONFIG.uvScale;
+            this.displayUniforms.noiseScale.value = CONFIG.noiseScale;
+
+            this.renderer.render(this.sceneMain, this.camera);
+        }
+    }
+
+    new Experiment10();
+</script>
+</body>
+
+</html>
