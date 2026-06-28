@@ -1,0 +1,162 @@
+@import '@fontsource-variable/rubik';
+
+:root {
+  /* ── Brand accent (kept minimal) ──────────────────────────── */
+  --blue: #0040ff;
+  --blue-press: #0033cc;
+
+  /* gradient palette — used only inside the neat canvas */
+  --coral: #fb5066;
+  --cyan: #36ccd6;
+  --yellow: #ffc600;
+  --purple: #8b6ae6;
+
+  /* ── Neutrals (Apple-ish) ─────────────────────────────────── */
+  --text: #1d1d1f;
+  --text-2: #515154;
+  --text-3: #86868b;
+
+  --bg: #ffffff;
+  --bg-alt: #f5f5f7;
+
+  --hairline: rgba(0, 0, 0, 0.10);
+  --hairline-soft: rgba(0, 0, 0, 0.06);
+
+  /* ── Glass ────────────────────────────────────────────────── */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-blur: saturate(180%) blur(20px);
+
+  /* SF Pro on the user's Mac; graceful fallbacks elsewhere */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
+    'Inter', 'Rubik Variable', 'Helvetica Neue', Arial, sans-serif;
+
+  --maxw: 72rem;
+  --r: 1.25rem;
+  --r-lg: 1.75rem;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  letter-spacing: -0.011em;
+}
+
+::selection { background: var(--blue); color: #fff; }
+img, svg, video, canvas { display: block; max-width: 100%; }
+ul, ol { list-style: none; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-sans);
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.07;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(2.75rem, 6vw, 4.5rem); letter-spacing: -0.035em; }
+h2 { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.03em; }
+h3 { font-size: 1.375rem; letter-spacing: -0.02em; }
+h4 { font-size: 1.0625rem; letter-spacing: -0.015em; }
+
+/* ── Layout ──────────────────────────────────────────────────── */
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 1.5rem; width: 100%; }
+@media (min-width: 1024px) { .container { padding: 0 2rem; } }
+
+.section { padding: 7.5rem 0; position: relative; }
+@media (max-width: 768px) { .section { padding: 5rem 0; } }
+.section-alt { background: var(--bg-alt); }
+
+/* ── Section header ──────────────────────────────────────────── */
+.eyebrow {
+  display: block;
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 1rem;
+}
+.section-head { max-width: 40rem; margin: 0 auto 4rem; text-align: center; }
+.section-head .lead { margin-top: 1.1rem; }
+
+.lead {
+  font-size: 1.35rem; line-height: 1.45; font-weight: 400;
+  color: var(--text-2); letter-spacing: -0.016em;
+}
+@media (max-width: 768px) { .lead { font-size: 1.2rem; } }
+
+.accent { color: var(--text); }
+.muted { color: var(--text-3); }
+
+/* ── Glass (refined, Apple frosted) ──────────────────────────── */
+.glass {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 16px 40px -24px rgba(0, 0, 0, 0.18);
+}
+
+/* ── Buttons (pill) ──────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  border-radius: 980px;
+  padding: 0.7rem 1.35rem;
+  font-size: 1rem; font-weight: 500; letter-spacing: -0.01em;
+  cursor: pointer; border: 1px solid transparent;
+  transition: background 0.25s var(--ease), color 0.25s var(--ease), border-color 0.25s var(--ease), transform 0.25s var(--ease);
+  white-space: nowrap;
+}
+.btn-lg { padding: 0.85rem 1.7rem; font-size: 1.0625rem; }
+.btn:active { transform: scale(0.97); }
+
+.btn-primary { background: var(--text); color: #fff; }
+.btn-primary:hover { background: #000; }
+
+.btn-secondary { background: transparent; color: var(--text); border-color: var(--hairline); }
+.btn-secondary:hover { border-color: var(--text); }
+
+/* on the gradient hero */
+.btn-on-color { background: #fff; color: var(--text); }
+.btn-on-color:hover { background: rgba(255, 255, 255, 0.88); }
+.btn-glass-light {
+  background: rgba(255, 255, 255, 0.14); color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.btn-glass-light:hover { background: rgba(255, 255, 255, 0.24); }
+
+/* Text link with chevron */
+.tlink {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  color: var(--text); font-weight: 500; font-size: 1.0625rem;
+}
+.tlink svg { transition: transform 0.25s var(--ease); }
+.tlink:hover { text-decoration: underline; text-underline-offset: 3px; }
+.tlink:hover svg { transform: translateX(2px); }
+
+/* ── Scroll reveal ───────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+.reveal.in-view { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: 0.07s; }
+.reveal.d2 { transition-delay: 0.14s; }
+.reveal.d3 { transition-delay: 0.21s; }
+.reveal.d4 { transition-delay: 0.28s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
+
+a[href="https://neat.firecms.co"] { display: none !important; }
