@@ -8,6 +8,8 @@ import { Process } from './components/Process';
 import { WhyUs } from './components/WhyUs';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
+import { SectionDivider } from './components/SectionDivider';
+import { DIVIDER_A_CONFIG, DIVIDER_B_CONFIG } from './components/neatConfigs';
 import './App.css';
 
 function App() {
@@ -19,8 +21,10 @@ function App() {
       <main>
         <Hero />
         <LogoBar />
+        <SectionDivider config={DIVIDER_A_CONFIG} />
         <Services />
         <Portfolio />
+        <SectionDivider config={DIVIDER_B_CONFIG} />
         <Process />
         <WhyUs />
         <Contact />

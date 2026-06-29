@@ -1,15 +1,8 @@
-import { NeatCanvas } from './NeatCanvas';
-import { CTA_CONFIG } from './neatConfigs';
-
 export function Contact() {
   return (
-    <section id="contact" className="contact">
-      <div className="contact__bg">
-        <NeatCanvas config={CTA_CONFIG} />
-      </div>
-
-      <div className="container contact__inner">
-        <div className="contact__card glass reveal">
+    <section id="contact" className="section section-dark contact">
+      <div className="container">
+        <div className="contact__inner reveal">
           <span className="eyebrow">Let&apos;s talk</span>
           <h2 className="contact__title">Have something worth building?</h2>
           <p className="contact__lead">

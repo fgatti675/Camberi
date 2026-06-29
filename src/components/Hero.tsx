@@ -15,8 +15,9 @@ export function Hero() {
         </h1>
 
         <p className="hero__subtitle reveal d1">
-          A product engineering studio in Madrid, building the web and mobile
-          products real businesses run on.
+          A product engineering studio in Madrid. For over a decade we&apos;ve
+          built and shipped our own products — like FireCMS and Rebase — and we
+          bring that same depth to yours.
         </p>
 
         <div className="hero__actions reveal d2">

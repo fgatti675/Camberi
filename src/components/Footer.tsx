@@ -29,7 +29,7 @@ const columns = [
 
 export function Footer() {
   return (
-    <footer className="footer">
+    <footer className="footer footer-dark">
       <div className="container">
         <div className="footer__top">
           <div className="footer__brand">

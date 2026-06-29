@@ -9,7 +9,7 @@ const steps: Step[] = [
 
 export function Process() {
   return (
-    <section id="process" className="section">
+    <section id="process" className="section section-dark">
       <div className="container">
         <div className="section-head reveal">
           <span className="eyebrow">How we work</span>

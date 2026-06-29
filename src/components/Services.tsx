@@ -35,7 +35,7 @@ const services: ServiceData[] = [
 
 export function Services() {
   return (
-    <section id="services" className="section">
+    <section id="services" className="section section-dark">
       <div className="container">
         <div className="section-head reveal">
           <span className="eyebrow">What we do</span>

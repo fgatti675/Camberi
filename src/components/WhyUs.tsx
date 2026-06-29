@@ -9,15 +9,17 @@ const values: ValueData[] = [
 
 export function WhyUs() {
   return (
-    <section id="about" className="section section-alt">
+    <section id="about" className="section">
       <div className="container whyus">
         <div className="whyus__intro reveal">
           <span className="eyebrow">Why Camberi</span>
           <h2>The team behind the products you already trust.</h2>
           <p className="lead">
-            We&apos;re the studio behind FireCMS, Rebase and MedicalMotion. A decade of building,
-            launching and maintaining our own products means we bring the instincts of people
-            who&apos;ve had to live with their code in production.
+            We&apos;re the studio behind FireCMS — one of the most popular CMSs for Firebase,
+            powering tens of thousands of projects — as well as Rebase and MedicalMotion. More
+            than a decade of building, launching and maintaining our own products in the open
+            means we bring the instincts of people who&apos;ve had to live with their code in
+            production, not just hand it off.
           </p>
           <a href="#contact" className="btn btn-primary btn-lg whyus__cta">Work with us</a>
         </div>

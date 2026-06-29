@@ -103,14 +103,14 @@ const projects: ProjectData[] = [
   {
     id: 'firecms',
     domain: 'firecms.co',
-    kicker: 'Our product · since 2019',
+    kicker: 'Our flagship · since 2019',
     title: 'FireCMS',
     description:
-      'A headless CMS built on Firebase & MongoDB. What began as an internal tool now powers teams worldwide, with a cloud platform and an enterprise tier on top.',
+      'One of the most popular content management systems for Firebase. What began as an internal tool has been built and maintained in the open for years, and now powers tens of thousands of projects worldwide — with a cloud platform and enterprise tier on top.',
     metrics: [
-      { value: 'Open', label: 'source' },
+      { value: '10k+', label: 'projects powered' },
       { value: 'Firebase', label: '+ MongoDB' },
-      { value: 'Cloud', label: '& self-hosted' },
+      { value: 'Open', label: 'source' },
     ],
     link: 'https://firecms.co',
     mock: <CmsMock />,
@@ -154,7 +154,7 @@ export function Portfolio() {
         <div className="section-head reveal">
           <span className="eyebrow">Selected work</span>
           <h2>Products that speak for themselves.</h2>
-          <p className="lead">We don&apos;t just advise — we ship and run real products. A few we&apos;re proud of.</p>
+          <p className="lead">These aren&apos;t mockups. They&apos;re real products we&apos;ve designed, built and run for years — powering tens of thousands of projects around the world.</p>
         </div>
 
         <div className="work">

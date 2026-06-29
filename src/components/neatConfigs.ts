@@ -96,16 +96,34 @@ export const HERO_CONFIG: NeatConfig = {
     cameraZoom: 2.05,
 };
 
-/* A calmer, bent-plane variant behind the closing call-to-action. */
-export const CTA_CONFIG: NeatConfig = {
+/* Dividers: transparent bg, hero colour palette, but Rebase-style
+   camera angles and planeBend/Twist for smaller, contained shapes. */
+export const DIVIDER_A_CONFIG: NeatConfig = {
     ...HERO_CONFIG,
-    speed: 0.7,
-    shapeType: "plane",
-    planeBend: -0.45,
-    planeTwist: 0.6,
-    waveAmplitude: 8,
-    cameraY: -6,
-    cameraRotationX: 0.55,
-    cameraRotationY: 0.3,
-    cameraZoom: 1.9,
+    speed: 0.2,
+    backgroundAlpha: 0,
+    yOffset: 0,
+    textureSeed: 217,
+    planeBend: 0.2,
+    planeTwist: 0.8,
+    cameraX: 25.5,
+    cameraY: 10.5,
+    cameraRotationX: 0.61,
+    cameraRotationY: 0.483,
+    cameraZoom: 1.45,
+};
+
+export const DIVIDER_B_CONFIG: NeatConfig = {
+    ...HERO_CONFIG,
+    speed: 0.2,
+    backgroundAlpha: 0,
+    yOffset: 0,
+    textureSeed: 891,
+    planeBend: 0.2,
+    planeTwist: 0.8,
+    cameraX: -29.5,
+    cameraY: 1.5,
+    cameraRotationX: 0.61,
+    cameraRotationY: 0.483,
+    cameraZoom: 1.45,
 };
