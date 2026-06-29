@@ -4,6 +4,7 @@ import type { NeatConfig } from "./neatConfigs";
 
 interface NeatGradientConfig {
     ref: HTMLCanvasElement;
+
     [key: string]: unknown;
 }
 
@@ -42,15 +43,15 @@ interface NeatCanvasProps {
 }
 
 export function NeatCanvas({
-    config,
-    parallax = false,
-    parallaxStrength = 0.25,
-    scrollLinked = false,
-    scrollLinkedStrength = 0.3,
-    className,
-    style,
-    opacity = 1,
-}: NeatCanvasProps) {
+                               config,
+                               parallax = false,
+                               parallaxStrength = 0.25,
+                               scrollLinked = false,
+                               scrollLinkedStrength = 0.3,
+                               className,
+                               style,
+                               opacity = 1,
+                           }: NeatCanvasProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {

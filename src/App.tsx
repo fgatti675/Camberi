@@ -9,8 +9,11 @@ import { WhyUs } from './components/WhyUs';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { SectionDivider } from './components/SectionDivider';
-import { DIVIDER_A_CONFIG, DIVIDER_B_CONFIG } from './components/neatConfigs';
-import './App.css';
+import { Stats } from './components/Stats';
+import { OpenSource } from './components/OpenSource';
+import { Testimonials } from './components/Testimonials';
+import { Team } from './components/Team';
+import { DIVIDER_A_CONFIG, DIVIDER_B_CONFIG, DIVIDER_C_CONFIG } from './components/neatConfigs';
 
 function App() {
   useScrollAnimation();
@@ -18,15 +21,20 @@ function App() {
   return (
     <>
       <Header />
-      <main>
+      <main className="bg-bg-main">
         <Hero />
         <LogoBar />
+        <Stats />
         <SectionDivider config={DIVIDER_A_CONFIG} />
         <Services />
         <Portfolio />
+        <OpenSource />
         <SectionDivider config={DIVIDER_B_CONFIG} />
         <Process />
+        <Testimonials />
         <WhyUs />
+        <Team />
+        <SectionDivider config={DIVIDER_C_CONFIG} />
         <Contact />
       </main>
       <Footer />

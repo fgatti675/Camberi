@@ -19,25 +19,41 @@ export function Header() {
   }, []);
 
   return (
-    <header className={`header ${scrolled ? 'header--scrolled' : ''} ${isOpen ? 'header--open' : ''}`}>
-      <nav className="header__inner container">
-        <a href="#top" className="header__logo">
-          <span className="header__logo-dot" />
+    <header
+      className="fixed left-1/2 -translate-x-1/2 z-50 h-14 flex items-center w-full transition-all duration-300 ease-apple"
+      style={{
+        maxWidth: 'min(64rem, calc(100% - 1rem))',
+        top: scrolled ? '0.375rem' : '0',
+        borderRadius: scrolled ? '9999px' : '0',
+        backgroundColor: scrolled ? 'rgba(255,255,255,0.68)' : 'transparent',
+        backdropFilter: scrolled ? 'saturate(1.8) blur(40px)' : 'none',
+        WebkitBackdropFilter: scrolled ? 'saturate(1.8) blur(40px)' : 'none',
+        border: scrolled ? '1px solid rgba(0,0,0,0.06)' : '1px solid transparent',
+        boxShadow: scrolled
+          ? '0 2px 16px -4px rgba(0,0,0,0.1), 0 0 0 0.5px rgba(0,0,0,0.03)'
+          : 'none',
+      }}>
+      <nav className="flex items-center justify-between gap-4 w-full max-w-[72rem] mx-auto px-6 lg:px-8">
+        <a href="#top" className={`text-[1.2rem] font-600 tracking-[-0.03em] transition-colors duration-400 ease-apple ${scrolled ? 'text-text-main' : 'text-white'}`}>
           camberi
         </a>
 
-        <ul className="header__links">
+        <ul className="hidden md:flex gap-0.5">
           {navLinks.map((link) => (
-            <li key={link.href}><a href={link.href}>{link.label}</a></li>
+            <li key={link.href}>
+              <a href={link.href} className={`px-3 py-1.5 rounded-[0.6rem] text-[0.9rem] font-400 transition-colors duration-200 ${scrolled ? 'text-text-muted hover:text-text-main hover:bg-black/5' : 'text-white/85 hover:text-white hover:bg-white/12'}`}>
+                {link.label}
+              </a>
+            </li>
           ))}
         </ul>
 
-        <a href="#contact" className="header__cta btn btn-primary">
+        <a href="#contact" className={`hidden md:inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-[0.9rem] font-500 tracking-[-0.01em] cursor-pointer whitespace-nowrap transition-all duration-250 ease-apple active:scale-[0.97] border ${scrolled ? 'bg-text-main text-white hover:bg-black border-transparent' : 'bg-white/16 text-white border-white/40 hover:bg-white/28'}`}>
           Start a project
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
         </a>
 
-        <button type="button" className="header__toggle" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu" aria-expanded={isOpen}>
+        <button type="button" className={`flex md:hidden w-9.5 h-9.5 items-center justify-center bg-transparent border-none cursor-pointer rounded-[0.6rem] ${scrolled ? 'text-text-main' : 'text-white'}`} onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu" aria-expanded={isOpen}>
           {isOpen ? (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
           ) : (
@@ -46,12 +62,14 @@ export function Header() {
         </button>
       </nav>
 
-      <div className="header__mobile">
-        {navLinks.map((link) => (
-          <a key={link.href} href={link.href} onClick={() => setIsOpen(false)}>{link.label}</a>
-        ))}
-        <a href="#contact" className="btn btn-primary btn-lg" onClick={() => setIsOpen(false)}>Start a project</a>
-      </div>
+      {isOpen && (
+        <div className="fixed inset-x-0 top-18 bottom-0 flex flex-col items-center justify-center gap-6 z-[99] p-8 bg-white/96 backdrop-blur-[24px] rounded-b-[1.5rem] md:hidden">
+          {navLinks.map((link) => (
+            <a key={link.href} href={link.href} className="text-2xl font-500 text-text-main hover:opacity-80 transition-opacity" onClick={() => setIsOpen(false)}>{link.label}</a>
+          ))}
+          <a href="#contact" className="inline-flex items-center gap-1.5 rounded-full px-[1.7rem] py-[0.85rem] text-[1.0625rem] font-500 tracking-[-0.01em] cursor-pointer border border-transparent whitespace-nowrap transition-all duration-250 ease-apple active:scale-[0.97] bg-text-main text-white hover:bg-black" onClick={() => setIsOpen(false)}>Start a project</a>
+        </div>
+      )}
     </header>
   );
 }

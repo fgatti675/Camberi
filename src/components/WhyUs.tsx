@@ -1,3 +1,5 @@
+import { CONTAINER, SECTION, Eyebrow, Button } from './ui';
+
 interface ValueData { title: string; description: string; }
 
 const values: ValueData[] = [
@@ -9,26 +11,26 @@ const values: ValueData[] = [
 
 export function WhyUs() {
   return (
-    <section id="about" className="section">
-      <div className="container whyus">
-        <div className="whyus__intro reveal">
-          <span className="eyebrow">Why Camberi</span>
-          <h2>The team behind the products you already trust.</h2>
-          <p className="lead">
+    <section id="about" className={`relative ${SECTION} bg-bg-main border-t border-hairline-soft`}>
+      <div className={`${CONTAINER} grid grid-cols-1 min-[940px]:grid-cols-2 gap-10 min-[940px]:gap-20 items-start`}>
+        <div className="sticky top-24 max-[940px]:static reveal">
+          <Eyebrow>Why Camberi</Eyebrow>
+          <h2 className="mt-0 text-text-main">The team behind the products you already trust.</h2>
+          <p className="mt-5 text-[1.2rem] md:text-[1.35rem] leading-[1.45] font-400 tracking-[-0.016em] text-text-muted">
             We&apos;re the studio behind FireCMS — one of the most popular CMSs for Firebase,
             powering tens of thousands of projects — as well as Rebase and MedicalMotion. More
             than a decade of building, launching and maintaining our own products in the open
             means we bring the instincts of people who&apos;ve had to live with their code in
             production, not just hand it off.
           </p>
-          <a href="#contact" className="btn btn-primary btn-lg whyus__cta">Work with us</a>
+          <Button href="#contact" className="mt-8">Work with us</Button>
         </div>
 
-        <div className="whyus__list">
+        <div className="flex flex-col">
           {values.map((v, i) => (
-            <div key={v.title} className={`whyus__item reveal d${i + 1}`}>
-              <h3 className="whyus__title">{v.title}</h3>
-              <p className="whyus__desc">{v.description}</p>
+            <div key={v.title} className={`py-7 border-t border-hairline first:pt-0 first:border-t-0 reveal d${i + 1}`}>
+              <h3 className="text-text-main font-600">{v.title}</h3>
+              <p className="mt-2 text-text-muted text-base leading-[1.55]">{v.description}</p>
             </div>
           ))}
         </div>

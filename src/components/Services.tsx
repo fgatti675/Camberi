@@ -1,3 +1,5 @@
+import { CONTAINER, SECTION_AFTER_DIVIDER, SectionHeading, CARD_DARK, CARD_DARK_HOVER, DarkGlow } from './ui';
+
 interface ServiceData { icon: React.ReactNode; title: string; description: string; }
 
 const services: ServiceData[] = [
@@ -35,20 +37,23 @@ const services: ServiceData[] = [
 
 export function Services() {
   return (
-    <section id="services" className="section section-dark">
-      <div className="container">
-        <div className="section-head reveal">
-          <span className="eyebrow">What we do</span>
-          <h2>One team for the whole product.</h2>
-          <p className="lead">From the first sketch to a product running in production — design, engineering and AI under one roof.</p>
-        </div>
+    <section id="services" className={`relative ${SECTION_AFTER_DIVIDER} text-white bg-bg-dark isolate overflow-hidden`}>
+      <DarkGlow />
+      <div className={`relative z-10 ${CONTAINER}`}>
+        <SectionHeading
+          dark
+          className="mb-16 reveal"
+          eyebrow="What we do"
+          title="One team for the whole product."
+          intro="From the first sketch to a product running in production — design, engineering and AI under one roof."
+        />
 
-        <div className="svc-grid">
+        <div className="grid grid-cols-1 min-[600px]:grid-cols-2 min-[940px]:grid-cols-3 gap-5">
           {services.map((s, i) => (
-            <article key={s.title} className={`svc reveal d${(i % 3) + 1}`}>
-              <span className="svc__icon">{s.icon}</span>
-              <h3 className="svc__title">{s.title}</h3>
-              <p className="svc__desc">{s.description}</p>
+            <article key={s.title} className={`${CARD_DARK} ${CARD_DARK_HOVER} p-9 reveal d${(i % 3) + 1}`}>
+              <span className="inline-flex w-12 h-12 items-center justify-center rounded-[0.85rem] text-accent-light bg-accent/15 ring-1 ring-inset ring-accent/20">{s.icon}</span>
+              <h3 className="mt-[1.4rem] text-white font-600 text-lg">{s.title}</h3>
+              <p className="mt-2.5 text-white/55 text-[0.98rem] leading-[1.55]">{s.description}</p>
             </article>
           ))}
         </div>

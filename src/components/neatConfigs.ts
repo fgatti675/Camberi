@@ -96,34 +96,39 @@ export const HERO_CONFIG: NeatConfig = {
     cameraZoom: 2.05,
 };
 
-/* Dividers: transparent bg, hero colour palette, but Rebase-style
-   camera angles and planeBend/Twist for smaller, contained shapes. */
-export const DIVIDER_A_CONFIG: NeatConfig = {
+/* Dividers: the hero's exact look — same palette, same procedural ribbon
+   texture, same camera — but on a transparent background so the streams
+   weave through the page between sections. Kept crisp: no masks, no fades. */
+const DIVIDER_BASE: NeatConfig = {
     ...HERO_CONFIG,
-    speed: 0.2,
+    speed: 0.35,
     backgroundAlpha: 0,
-    yOffset: 0,
+    transparentTextureVoid: true,
+    antialias: true,
+    /* Tamer than the hero's ~7× multipliers so the scroll drift animates
+       the stream without shredding it or pushing it out of the band. */
+    yOffsetWaveMultiplier: 0.8,
+    yOffsetColorMultiplier: 0.7,
+    yOffsetFlowMultiplier: 0.9,
+    /* Zoom out and recentre so the whole ribbon silhouette fits inside the
+       band — the shape must never be cut off at the top or bottom edge. */
+    cameraZoom: 0.92,
+    cameraY: -4,
+};
+
+export const DIVIDER_A_CONFIG: NeatConfig = {
+    ...DIVIDER_BASE,
     textureSeed: 217,
-    planeBend: 0.2,
-    planeTwist: 0.8,
-    cameraX: 25.5,
-    cameraY: 10.5,
-    cameraRotationX: 0.61,
-    cameraRotationY: 0.483,
-    cameraZoom: 1.45,
 };
 
 export const DIVIDER_B_CONFIG: NeatConfig = {
-    ...HERO_CONFIG,
-    speed: 0.2,
-    backgroundAlpha: 0,
-    yOffset: 0,
+    ...DIVIDER_BASE,
     textureSeed: 891,
-    planeBend: 0.2,
-    planeTwist: 0.8,
-    cameraX: -29.5,
-    cameraY: 1.5,
-    cameraRotationX: 0.61,
-    cameraRotationY: 0.483,
-    cameraZoom: 1.45,
+    cameraY: -10,
+    cameraZoom: 0.78,
+};
+
+export const DIVIDER_C_CONFIG: NeatConfig = {
+    ...DIVIDER_BASE,
+    textureSeed: 542,
 };
