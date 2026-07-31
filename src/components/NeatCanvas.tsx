@@ -31,16 +31,24 @@ const NeatGradient =
 
 interface NeatCanvasProps {
     config: NeatConfig;
-    /** Tie yOffset to window.scrollY for a parallax drift (hero / full-bleed). */
+    /** Tie yOffset to window.scrollY for a parallax drift (hero / bands). */
     parallax?: boolean;
     parallaxStrength?: number;
-    /** Tie yOffset to the element's viewport position (for dividers). */
+    /** Tie yOffset to the element's own position in the viewport. */
     scrollLinked?: boolean;
     scrollLinkedStrength?: number;
     className?: string;
     style?: React.CSSProperties;
     opacity?: number;
 }
+
+/* The page carries four of these. NeatGradient has no pause API and its
+   render loop runs regardless of visibility, so a gradient two screens
+   away would otherwise keep a WebGL context spinning for nothing. We
+   create it as it approaches the viewport and tear it down once it is
+   comfortably off-screen — far enough out that nobody sees it restart. */
+const NEAR_VIEWPORT = "400px 0px";
+const TEARDOWN_DELAY = 600;
 
 export function NeatCanvas({
                                config,
@@ -55,43 +63,70 @@ export function NeatCanvas({
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
-        if (!canvasRef.current || !NeatGradient) return;
-
-        const neat = new NeatGradient({
-            ref: canvasRef.current,
-            ...config,
-        });
+        const canvas = canvasRef.current;
+        if (!canvas || !NeatGradient) return;
 
         const baseOffset = (config.yOffset as number) ?? 0;
-        const canvas = canvasRef.current;
+        const tracksScroll = parallax || scrollLinked;
 
+        let neat: NeatGradientInstance | null = null;
         let raf = 0;
+        let teardown: ReturnType<typeof setTimeout> | undefined;
+
         const onScroll = () => {
-            if (raf) return;
+            if (raf || !neat) return;
             raf = requestAnimationFrame(() => {
-                if (parallax) {
-                    // Hero-style: offset by total scroll distance
-                    neat.yOffset = baseOffset + window.scrollY * parallaxStrength;
-                } else if (scrollLinked) {
-                    // Rebase-style: offset by element position relative to viewport center
-                    const rect = canvas.getBoundingClientRect();
-                    const viewportCenter = window.innerHeight / 2;
-                    const offset = (rect.top - viewportCenter) * scrollLinkedStrength;
-                    neat.yOffset = baseOffset + offset;
+                if (neat) {
+                    if (parallax) {
+                        // Offset by total scroll distance.
+                        neat.yOffset = baseOffset + window.scrollY * parallaxStrength;
+                    } else if (scrollLinked) {
+                        // Offset by element position relative to viewport centre.
+                        const rect = canvas.getBoundingClientRect();
+                        const offset = (rect.top - window.innerHeight / 2) * scrollLinkedStrength;
+                        neat.yOffset = baseOffset + offset;
+                    }
                 }
                 raf = 0;
             });
         };
 
-        if (parallax || scrollLinked) {
-            window.addEventListener("scroll", onScroll, { passive: true });
-            onScroll();
-        }
+        const start = () => {
+            clearTimeout(teardown);
+            if (neat) return;
+            neat = new NeatGradient({ ref: canvas, ...config });
+            if (tracksScroll) {
+                window.addEventListener("scroll", onScroll, { passive: true });
+                onScroll();
+            }
+        };
+
+        const stop = () => {
+            if (!neat) return;
+            if (tracksScroll) window.removeEventListener("scroll", onScroll);
+            if (raf) {
+                cancelAnimationFrame(raf);
+                raf = 0;
+            }
+            neat.destroy();
+            neat = null;
+        };
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) start();
+                // Delay teardown so scrubbing back and forth across the
+                // boundary does not thrash WebGL context creation.
+                else teardown = setTimeout(stop, TEARDOWN_DELAY);
+            },
+            { rootMargin: NEAR_VIEWPORT }
+        );
+        observer.observe(canvas);
 
         return () => {
-            if (parallax || scrollLinked) window.removeEventListener("scroll", onScroll);
-            if (raf) cancelAnimationFrame(raf);
-            neat.destroy();
+            observer.disconnect();
+            clearTimeout(teardown);
+            stop();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

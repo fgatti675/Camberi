@@ -89,11 +89,29 @@
 .reveal.d3 { transition-delay: 0.21s; }
 .reveal.d4 { transition-delay: 0.28s; }
 
+/* ── Logo marquee ────────────────────────────────────────────
+   The track holds the logo list twice, so translating by exactly
+   -50% lands on an identical frame and the loop is seamless. */
+@keyframes marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+.animate-marquee {
+  animation: marquee 62s linear infinite;
+}
+.animate-marquee-reverse {
+  animation: marquee 74s linear infinite reverse;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+  .animate-marquee,
+  .animate-marquee-reverse {
+    animation: none;
   }
   html {
     scroll-behavior: auto;

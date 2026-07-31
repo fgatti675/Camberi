@@ -1,20 +1,19 @@
 import { useScrollAnimation } from './hooks/useScrollAnimation';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { LogoBar } from './components/LogoBar';
-import { Services } from './components/Services';
-import { Portfolio } from './components/Portfolio';
+import { LogoWall } from './components/LogoWall';
+import { Thesis } from './components/Thesis';
+import { Work } from './components/Work';
+import { Engagements } from './components/Engagements';
 import { Process } from './components/Process';
-import { WhyUs } from './components/WhyUs';
+import { OpenSource } from './components/OpenSource';
+import { Team } from './components/Team';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
-import { SectionDivider } from './components/SectionDivider';
-import { Stats } from './components/Stats';
-import { OpenSource } from './components/OpenSource';
-import { Testimonials } from './components/Testimonials';
-import { Team } from './components/Team';
-import { DIVIDER_A_CONFIG, DIVIDER_B_CONFIG, DIVIDER_C_CONFIG } from './components/neatConfigs';
 
+/* The gradient lives inside the dark sections now (Work, Process, Contact)
+   rather than in bands between them, so the page reads as one flow with the
+   hero as its single saturated moment. */
 function App() {
   useScrollAnimation();
 
@@ -23,18 +22,13 @@ function App() {
       <Header />
       <main className="bg-bg-main">
         <Hero />
-        <LogoBar />
-        <Stats />
-        <SectionDivider config={DIVIDER_A_CONFIG} />
-        <Services />
-        <Portfolio />
-        <OpenSource />
-        <SectionDivider config={DIVIDER_B_CONFIG} />
+        <LogoWall />
+        <Thesis />
+        <Work />
+        <Engagements />
         <Process />
-        <Testimonials />
-        <WhyUs />
+        <OpenSource />
         <Team />
-        <SectionDivider config={DIVIDER_C_CONFIG} />
         <Contact />
       </main>
       <Footer />

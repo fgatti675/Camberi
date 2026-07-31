@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "camberi-website"
+  },
+  "targets": {
+    "camberi-website": {
+      "hosting": {
+        "production": [
+          "camberi-website"
+        ],
+        "canary": [
+          "camberi-canary"
+        ]
+      }
+    }
   }
 }

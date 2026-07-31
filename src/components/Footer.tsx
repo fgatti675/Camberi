@@ -1,28 +1,33 @@
+import { t } from '../i18n';
+
 const columns = [
   {
-    title: 'Studio',
+    title: t.footer.studio,
     links: [
-      { label: 'Services', href: '#services' },
-      { label: 'Work', href: '#work' },
-      { label: 'Process', href: '#process' },
-      { label: 'About', href: '#about' },
+      { label: t.nav.work, href: '#work' },
+      { label: t.nav.services, href: '#services' },
+      { label: t.footer.howWeWork, href: '#process' },
+      { label: t.nav.team, href: '#team' },
     ],
   },
   {
-    title: 'Products',
+    title: t.footer.built,
     links: [
       { label: 'FireCMS', href: 'https://firecms.co' },
       { label: 'Rebase', href: 'https://rebase.pro' },
-      { label: 'MedicalMotion', href: 'https://medicalmotion.com' },
+      { label: 'Neat', href: 'https://neat.firecms.co' },
+      { label: 'Dadaki', href: 'https://dadaki.com' },
+      { label: 'Unbrand.my', href: 'https://unbrand.my' },
+      { label: 'medicalmotion', href: 'https://medicalmotion.com' },
     ],
   },
   {
-    title: 'Connect',
+    title: t.footer.connect,
     links: [
       { label: 'hello@camberi.com', href: 'mailto:hello@camberi.com' },
       { label: 'GitHub', href: 'https://github.com/firecmsco' },
       { label: 'LinkedIn', href: 'https://www.linkedin.com/company/camberi' },
-      { label: 'X / Twitter', href: 'https://x.com/firecms_co' },
+      { label: 'X / Twitter', href: 'https://x.com/firecmsco' },
     ],
   },
 ];
@@ -35,8 +40,7 @@ export function Footer() {
           <div className="flex flex-col">
             <a href="#top" className="text-[1.3rem] font-600 text-white tracking-[-0.03em] hover:opacity-90 transition-opacity">camberi</a>
             <p className="mt-3.5 text-white/45 max-w-[22rem] text-[0.95rem] leading-[1.55]">
-              A product engineering studio in Madrid. We design, build and ship
-              software that earns its keep.
+              {t.footer.tagline}
             </p>
           </div>
 
@@ -47,7 +51,13 @@ export function Footer() {
                 <ul className="flex flex-col gap-2.5">
                   {col.links.map((l) => (
                     <li key={l.label}>
-                      <a href={l.href} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" className="text-white/50 text-[0.92rem] transition-colors duration-200 hover:text-white">{l.label}</a>
+                      <a
+                        href={l.href}
+                        target={l.href.startsWith('http') ? '_blank' : undefined}
+                        rel={l.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                        className="text-white/50 text-[0.92rem] transition-colors duration-200 hover:text-white">
+                        {l.label}
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -57,8 +67,8 @@ export function Footer() {
         </div>
 
         <div className="pt-8 mt-2 border-t border-white/6 flex justify-between flex-wrap gap-2 max-[520px]:justify-center max-[520px]:text-center">
-          <p className="text-white/30 text-[0.85rem]">© {new Date().getFullYear()} Camberi. All rights reserved.</p>
-          <p className="text-white/30 text-[0.85rem]">Made in Madrid</p>
+          <p className="text-white/30 text-[0.85rem]">© {new Date().getFullYear()} Camberi. {t.footer.rights}</p>
+          <p className="text-white/30 text-[0.85rem]">{t.footer.location}</p>
         </div>
       </div>
     </footer>

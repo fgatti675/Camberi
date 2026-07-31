@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
+import { t, otherLocale, switchLocale } from '../i18n';
 
 const navLinks = [
-  { label: 'Services', href: '#services' },
-  { label: 'Work', href: '#work' },
-  { label: 'Process', href: '#process' },
-  { label: 'About', href: '#about' },
+  { label: t.nav.work, href: '#work' },
+  { label: t.nav.services, href: '#services' },
+  { label: t.nav.openSource, href: '#open-source' },
+  { label: t.nav.team, href: '#team' },
 ];
+
+const otherLabel = otherLocale.toUpperCase();
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,18 +51,28 @@ export function Header() {
           ))}
         </ul>
 
-        <a href="#contact" className={`hidden md:inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-[0.9rem] font-500 tracking-[-0.01em] cursor-pointer whitespace-nowrap transition-all duration-250 ease-apple active:scale-[0.97] border ${scrolled ? 'bg-text-main text-white hover:bg-black border-transparent' : 'bg-white/16 text-white border-white/40 hover:bg-white/28'}`}>
-          Start a project
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-        </a>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => switchLocale()}
+            aria-label={t.nav.switchLanguage}
+            className={`inline-flex items-center justify-center rounded-full px-2.5 py-1.5 text-[0.8rem] font-600 tracking-[0.03em] cursor-pointer border transition-colors duration-200 ${scrolled ? 'text-text-muted border-hairline hover:text-text-main hover:border-text-main' : 'text-white/80 border-white/30 hover:text-white hover:border-white/60'}`}>
+            {otherLabel}
+          </button>
 
-        <button type="button" className={`flex md:hidden w-9.5 h-9.5 items-center justify-center bg-transparent border-none cursor-pointer rounded-[0.6rem] ${scrolled ? 'text-text-main' : 'text-white'}`} onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu" aria-expanded={isOpen}>
+          <a href="#contact" className={`hidden md:inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-[0.9rem] font-500 tracking-[-0.01em] cursor-pointer whitespace-nowrap transition-all duration-250 ease-apple active:scale-[0.97] border ${scrolled ? 'bg-text-main text-white hover:bg-black border-transparent' : 'bg-white/16 text-white border-white/40 hover:bg-white/28'}`}>
+            {t.nav.cta}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+          </a>
+
+          <button type="button" className={`flex md:hidden w-9.5 h-9.5 items-center justify-center bg-transparent border-none cursor-pointer rounded-[0.6rem] ${scrolled ? 'text-text-main' : 'text-white'}`} onClick={() => setIsOpen(!isOpen)} aria-label={t.nav.toggleMenu} aria-expanded={isOpen}>
           {isOpen ? (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
           ) : (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12h18M3 6h18M3 18h18" /></svg>
           )}
-        </button>
+          </button>
+        </div>
       </nav>
 
       {isOpen && (
@@ -67,7 +80,7 @@ export function Header() {
           {navLinks.map((link) => (
             <a key={link.href} href={link.href} className="text-2xl font-500 text-text-main hover:opacity-80 transition-opacity" onClick={() => setIsOpen(false)}>{link.label}</a>
           ))}
-          <a href="#contact" className="inline-flex items-center gap-1.5 rounded-full px-[1.7rem] py-[0.85rem] text-[1.0625rem] font-500 tracking-[-0.01em] cursor-pointer border border-transparent whitespace-nowrap transition-all duration-250 ease-apple active:scale-[0.97] bg-text-main text-white hover:bg-black" onClick={() => setIsOpen(false)}>Start a project</a>
+          <a href="#contact" className="inline-flex items-center gap-1.5 rounded-full px-[1.7rem] py-[0.85rem] text-[1.0625rem] font-500 tracking-[-0.01em] cursor-pointer border border-transparent whitespace-nowrap transition-all duration-250 ease-apple active:scale-[0.97] bg-text-main text-white hover:bg-black" onClick={() => setIsOpen(false)}>{t.nav.cta}</a>
         </div>
       )}
     </header>

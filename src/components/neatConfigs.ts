@@ -9,8 +9,17 @@ const COLORS = [
 
 export type NeatConfig = Record<string, unknown>;
 
+/* The NEAT watermark is drawn inside the WebGL canvas, not the DOM, so it
+   cannot be hidden with CSS — the only way to remove it is a licence key,
+   which Francesco can generate for camberi.com from the NEAT dashboard.
+   Drop it in here and every gradient on the page picks it up. */
+const LICENSE_KEY: string | undefined = undefined;
+
+const LICENSED = LICENSE_KEY ? { licenseKey: LICENSE_KEY } : {};
+
 /* The exact configuration provided, used full-bleed behind the hero. */
 export const HERO_CONFIG: NeatConfig = {
+    ...LICENSED,
     colors: COLORS,
     speed: 1,
     horizontalPressure: 3,
@@ -96,39 +105,61 @@ export const HERO_CONFIG: NeatConfig = {
     cameraZoom: 2.05,
 };
 
-/* Dividers: the hero's exact look — same palette, same procedural ribbon
-   texture, same camera — but on a transparent background so the streams
-   weave through the page between sections. Kept crisp: no masks, no fades. */
-const DIVIDER_BASE: NeatConfig = {
+/* ── Ambient gradients ─────────────────────────────────────────────
+   The hero is the page's one saturated moment. Everywhere else the
+   gradient is ambient: a transparent canvas over the dark sections,
+   with `colorBrightness` pulled right down so the ribbon reads as a
+   dark faceted ridge that catches colour only along its edges. It
+   becomes the texture of the dark band rather than a blue block
+   interrupting the page — the same approach as dataki.ai.
+
+   Two settings do all the work:
+   - `backgroundAlpha: 0` + black background: the section's own
+     colour shows through, so there is no rectangle.
+   - `colorBrightness` ~0.25: the difference between "ambient" and
+     "a poster". Above ~0.45 it starts competing with the content. */
+const AMBIENT_BASE: NeatConfig = {
     ...HERO_CONFIG,
-    speed: 0.35,
+    speed: 0.18,
     backgroundAlpha: 0,
-    transparentTextureVoid: true,
-    antialias: true,
-    /* Tamer than the hero's ~7× multipliers so the scroll drift animates
-       the stream without shredding it or pushing it out of the band. */
-    yOffsetWaveMultiplier: 0.8,
-    yOffsetColorMultiplier: 0.7,
-    yOffsetFlowMultiplier: 0.9,
-    /* Zoom out and recentre so the whole ribbon silhouette fits inside the
-       band — the shape must never be cut off at the top or bottom edge. */
-    cameraZoom: 0.92,
-    cameraY: -4,
+    backgroundColor: "#000000",
+    proceduralBackgroundColor: "#000000",
+    colorBrightness: 0.28,
+    /* Framed so the ribbon occupies the upper half of its canvas and
+       fades out into transparency below — which means the canvas can
+       end wherever we like without showing a cut edge. */
+    cameraY: -6,
+    cameraZoom: 1.85,
+    yOffsetWaveMultiplier: 1.2,
+    yOffsetColorMultiplier: 1.1,
+    yOffsetFlowMultiplier: 1.4,
 };
 
-export const DIVIDER_A_CONFIG: NeatConfig = {
-    ...DIVIDER_BASE,
+/* Behind the work section — the largest and most present of the three. */
+export const AMBIENT_WORK: NeatConfig = {
+    ...AMBIENT_BASE,
     textureSeed: 217,
+    colorBrightness: 0.3,
 };
 
-export const DIVIDER_B_CONFIG: NeatConfig = {
-    ...DIVIDER_BASE,
+/* Behind the short process band. Much dimmer than the work section: here
+   the copy sits directly on top of the ribbon rather than below it, so the
+   shape has to stay dark enough for white text to win outright. */
+export const AMBIENT_PROCESS: NeatConfig = {
+    ...AMBIENT_BASE,
     textureSeed: 891,
-    cameraY: -10,
-    cameraZoom: 0.78,
+    colorBrightness: 0.15,
+    cameraZoom: 2.6,
+    cameraY: -3,
+    cameraRotationY: 0.44,
 };
 
-export const DIVIDER_C_CONFIG: NeatConfig = {
-    ...DIVIDER_BASE,
+/* Behind contact. Same constraint as process — centred copy over the
+   shape — so it stays dark and lets the colour show only at the edges. */
+export const AMBIENT_CONTACT: NeatConfig = {
+    ...AMBIENT_BASE,
     textureSeed: 542,
+    colorBrightness: 0.17,
+    cameraZoom: 2.1,
+    cameraRotationY: 0.53,
 };
