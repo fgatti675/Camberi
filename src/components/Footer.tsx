@@ -34,12 +34,16 @@ const columns = [
 
 export function Footer() {
   return (
-    <footer className="bg-bg-dark text-white/60 py-20 pb-10 border-t border-white/6">
+    <footer className="bg-bg-dark text-white/60 pt-14 pb-10 border-t border-white/8">
       <div className="max-w-[72rem] mx-auto px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 min-[820px]:grid-cols-[1.3fr_2fr] gap-12 pb-12">
+        <div className="grid grid-cols-1 min-[820px]:grid-cols-[1.3fr_2fr] gap-12 pb-14">
           <div className="flex flex-col">
-            <a href="#top" className="text-[1.3rem] font-600 text-white tracking-[-0.03em] hover:opacity-90 transition-opacity">camberi</a>
-            <p className="mt-3.5 text-white/45 max-w-[22rem] text-[0.95rem] leading-[1.55]">
+            <a
+              href="#top"
+              className="text-[1.3rem] font-600 tracking-[-0.03em] text-white hover:opacity-80 transition-opacity self-start">
+              camberi
+            </a>
+            <p className="mt-4 text-white/60 max-w-[24rem] text-[0.95rem] leading-[1.6]">
               {t.footer.tagline}
             </p>
           </div>
@@ -47,7 +51,9 @@ export function Footer() {
           <div className="grid grid-cols-1 min-[520px]:grid-cols-2 min-[820px]:grid-cols-3 gap-8">
             {columns.map((col) => (
               <div key={col.title} className="flex flex-col">
-                <h4 className="text-[0.8rem] font-600 text-white/35 uppercase tracking-wider mb-4">{col.title}</h4>
+                <h4 className="font-mono text-[0.7rem] font-500 text-white/55 uppercase tracking-[0.14em] mb-4">
+                  {col.title}
+                </h4>
                 <ul className="flex flex-col gap-2.5">
                   {col.links.map((l) => (
                     <li key={l.label}>
@@ -66,9 +72,16 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 mt-2 border-t border-white/6 flex justify-between flex-wrap gap-2 max-[520px]:justify-center max-[520px]:text-center">
-          <p className="text-white/30 text-[0.85rem]">© {new Date().getFullYear()} Camberi. {t.footer.rights}</p>
-          <p className="text-white/30 text-[0.85rem]">{t.footer.location}</p>
+        {/* A colophon, because a studio that argues for craft should say what
+            the page is made of. */}
+        <div className="pt-7 border-t border-white/8 flex flex-col min-[720px]:flex-row min-[720px]:items-center justify-between gap-3">
+          <p className="font-mono text-[0.72rem] text-white/50 leading-[1.6] max-w-[46ch]">
+            {t.footer.colophon}
+          </p>
+          <div className="flex flex-wrap gap-x-6 gap-y-1.5 font-mono text-[0.72rem] text-white/50">
+            <span>© {new Date().getFullYear()} Camberi. {t.footer.rights}</span>
+            <span>{t.footer.location}</span>
+          </div>
         </div>
       </div>
     </footer>

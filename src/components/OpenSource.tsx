@@ -1,4 +1,4 @@
-import { CONTAINER, SECTION, Eyebrow, CARD, CARD_HOVER, Button, ArrowUpRight, GithubIcon } from './ui';
+import { CONTAINER, SECTION_LG, SectionHead, Button, ArrowUpRight, GithubIcon } from './ui';
 import { t } from '../i18n';
 
 interface Repo {
@@ -36,59 +36,67 @@ const repos: Repo[] = [
   },
 ];
 
+/* Repositories are listed the way a repository host lists them — as rows
+   in a directory, with the path in the mono voice — rather than as three
+   more rounded panels. The page already has enough panels. */
 export function OpenSource() {
   return (
-    <section id="open-source" className={`${SECTION} bg-bg-main border-t border-hairline-soft`}>
+    <section id="open-source" className={`${SECTION_LG} bg-bg-alt`}>
       <div className={CONTAINER}>
-        <div className="grid grid-cols-1 min-[900px]:grid-cols-[0.9fr_1.1fr] gap-12 min-[900px]:gap-16 items-center">
-          <div className="reveal">
-            <Eyebrow>{t.openSource.eyebrow}</Eyebrow>
-            <h2 className="text-text-main text-balance">{t.openSource.title}</h2>
-            <p className="mt-5 text-[1.2rem] md:text-[1.3rem] leading-[1.5] font-400 tracking-[-0.016em] text-text-muted">
-              {t.openSource.p1}
-            </p>
-            <p className="mt-4 text-[1.05rem] leading-[1.6] text-text-muted">
+        <SectionHead
+          title={t.openSource.title}
+          intro={t.openSource.p1}
+          titleClass="max-w-[16ch]"
+          className="mb-14 md:mb-16"
+        />
+
+        <div className="grid grid-cols-1 min-[900px]:grid-cols-[0.8fr_1.2fr] gap-x-16 gap-y-10">
+          <div>
+            <p className="text-[1.02rem] leading-[1.65] text-text-muted max-w-[38ch] reveal">
               {t.openSource.p2}
             </p>
-            <Button href="https://github.com/firecmsco" external className="mt-8">
-              <GithubIcon />
-              {t.openSource.cta}
-            </Button>
+            <div className="reveal d1">
+              <Button href="https://github.com/firecmsco" external className="mt-7">
+                <GithubIcon />
+                {t.openSource.cta}
+              </Button>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-4">
-            {repos.map((r, i) => (
+          <div className="stagger">
+            {repos.map((r) => (
               <a
                 key={r.name}
                 href={r.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`group block ${CARD} ${CARD_HOVER} p-6 reveal d${i + 1}`}>
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="text-text-light shrink-0">
-                      <GithubIcon size={17} />
-                    </span>
-                    <span className="font-600 text-text-main truncate">{r.name}</span>
-                    <span className="text-[0.85rem] text-text-light font-mono truncate hidden sm:inline">
-                      {r.path}
-                    </span>
-                  </div>
-                  <ArrowUpRight className="text-text-light shrink-0 transition-transform duration-250 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                className="group block border-t border-hairline py-6 transition-colors duration-400 ease-expo hover:border-text-main">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span className="text-text-light shrink-0 transition-colors duration-300 group-hover:text-text-main">
+                    <GithubIcon size={17} />
+                  </span>
+                  <h3 className="text-[1.0625rem] font-600 text-text-main truncate">{r.name}</h3>
+                  <span className="font-mono text-[0.78rem] text-text-light truncate hidden sm:inline">
+                    {r.path}
+                  </span>
+                  <ArrowUpRight className="ml-auto text-text-light shrink-0 transition-all duration-300 ease-expo group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </div>
-                <p className="mt-3 text-[0.95rem] leading-[1.55] text-text-muted">{r.description}</p>
-                <div className="mt-4 flex items-center flex-wrap gap-x-4 gap-y-2 text-[0.82rem] text-text-light">
-                  <span className="tabular-nums">{r.meta}</span>
+                <p className="mt-3 text-[0.95rem] leading-[1.6] text-text-muted max-w-[46ch]">
+                  {r.description}
+                </p>
+                <div className="mt-3.5 flex items-center flex-wrap gap-x-3 gap-y-2 font-mono text-[0.72rem] text-text-light">
+                  <span>{r.meta}</span>
                   <span className="flex gap-1.5">
-                    {r.tags.map((t) => (
-                      <span key={t} className="px-2 py-0.5 rounded-full border border-hairline-soft">
-                        {t}
+                    {r.tags.map((tag) => (
+                      <span key={tag} className="px-2 py-0.5 rounded-full border border-hairline-soft">
+                        {tag}
                       </span>
                     ))}
                   </span>
                 </div>
               </a>
             ))}
+            <div className="border-t border-hairline" />
           </div>
         </div>
       </div>

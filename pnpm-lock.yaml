@@ -9,11 +9,8 @@ importers:
   .:
     dependencies:
       '@firecms/neat':
-        specifier: 1.0.2-canary.20260629124312
-        version: 1.0.2-canary.20260629124312
-      '@fontsource-variable/rubik':
-        specifier: ^5.2.8
-        version: 5.2.8
+        specifier: 1.0.3-canary.20260731173236
+        version: 1.0.3-canary.20260731173236
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -193,11 +190,8 @@ packages:
     resolution: {integrity: sha512-+CNAzxglkrpNf/kKywqQfk74QjtceuOE7Qm+AF8miRvPF/wmmK5+OJOgVh3AVTT3RP2mH3+FOaxlE5v72owk0A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@firecms/neat@1.0.2-canary.20260629124312':
-    resolution: {integrity: sha512-FUsFa+J59Hx1hYUrZMoDwrJqYnFUYXkNqgzV3tmxP/3qV9QEL+i0huRJ9F3peODB35Be7QFCS3BftwvBIBa68A==}
-
-  '@fontsource-variable/rubik@5.2.8':
-    resolution: {integrity: sha512-vGDExLzB4a2Fj9mca5LqNoA2ZKcU9o+x5FEBLte/nxYkCB9hOQwZS6ZlItUv+Ssn7YMzKauGuI/Po+YueFuZbg==}
+  '@firecms/neat@1.0.3-canary.20260731173236':
+    resolution: {integrity: sha512-rQPpo/dOx3trBke1c9qC6riTPPxT18HrXZ25vaa50wtMDjqR0i0zEXWt6bIFlwyYvZf0oC+7rj29VCe3hkHZHg==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -1254,9 +1248,7 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@firecms/neat@1.0.2-canary.20260629124312': {}
-
-  '@fontsource-variable/rubik@5.2.8': {}
+  '@firecms/neat@1.0.3-canary.20260731173236': {}
 
   '@humanfs/core@0.19.2':
     dependencies:

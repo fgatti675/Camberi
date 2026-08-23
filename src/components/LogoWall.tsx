@@ -63,7 +63,7 @@ export function LogoWall() {
   return (
     <section className="pt-20 pb-16 md:pt-24 md:pb-20 bg-bg-main">
       <div className={CONTAINER}>
-        <p className="text-center text-[0.85rem] font-500 text-text-light tracking-[-0.005em] reveal">
+        <p className="text-center font-mono text-[0.72rem] tracking-[0.1em] uppercase text-text-light reveal">
           {t.logoWall.caption}
         </p>
       </div>
@@ -71,7 +71,7 @@ export function LogoWall() {
       {/* Full-bleed track, masked to white at both edges so logos enter and
           leave the page instead of hitting a hard crop. */}
       <div
-        className="mt-9 flex flex-col gap-6 overflow-hidden reveal d1"
+        className="marquee-host mt-9 flex flex-col gap-6 overflow-hidden reveal d1"
         style={{
           maskImage: 'linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)',
           WebkitMaskImage: 'linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent)',

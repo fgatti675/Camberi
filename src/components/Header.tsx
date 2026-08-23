@@ -44,7 +44,7 @@ export function Header() {
         <ul className="hidden md:flex gap-0.5">
           {navLinks.map((link) => (
             <li key={link.href}>
-              <a href={link.href} className={`px-3 py-1.5 rounded-[0.6rem] text-[0.9rem] font-400 transition-colors duration-200 ${scrolled ? 'text-text-muted hover:text-text-main hover:bg-black/5' : 'text-white/85 hover:text-white hover:bg-white/12'}`}>
+              <a href={link.href} className={`px-3 py-1.5 rounded-[0.6rem] text-[0.9rem] font-500 tracking-[-0.01em] transition-colors duration-200 ${scrolled ? 'text-text-muted hover:text-text-main hover:bg-black/5' : 'text-white/85 hover:text-white hover:bg-white/12'}`}>
                 {link.label}
               </a>
             </li>
@@ -56,7 +56,7 @@ export function Header() {
             type="button"
             onClick={() => switchLocale()}
             aria-label={t.nav.switchLanguage}
-            className={`inline-flex items-center justify-center rounded-full px-2.5 py-1.5 text-[0.8rem] font-600 tracking-[0.03em] cursor-pointer border transition-colors duration-200 ${scrolled ? 'text-text-muted border-hairline hover:text-text-main hover:border-text-main' : 'text-white/80 border-white/30 hover:text-white hover:border-white/60'}`}>
+            className={`inline-flex items-center justify-center rounded-full px-2.5 py-1.5 font-mono text-[0.74rem] font-500 tracking-[0.06em] cursor-pointer border transition-colors duration-200 ${scrolled ? 'text-text-muted border-hairline hover:text-text-main hover:border-text-main' : 'text-white/80 border-white/30 hover:text-white hover:border-white/60'}`}>
             {otherLabel}
           </button>
 

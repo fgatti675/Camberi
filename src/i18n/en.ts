@@ -16,36 +16,132 @@ export const en = {
     switchLanguage: 'Cambiar a español',
   },
 
+  /* The scroll spine in the left margin. Short enough to sit in a
+     narrow rail without wrapping. */
+  spine: {
+    automations: 'What we build',
+    about: 'Why us',
+    work: 'Work',
+    services: 'Services',
+    process: 'How we work',
+    openSource: 'Open source',
+    team: 'Team',
+    contact: 'Contact',
+  },
+
   hero: {
     titleTop: 'We build software',
     titleBottom: 'that earns its keep.',
     intro:
-      'A product engineering studio in Madrid. For over a decade we’ve built and shipped our own products — like FireCMS and Rebase — and we bring that same depth to yours.',
+      'A product engineering studio. For over a decade we’ve built and shipped our own products — like FireCMS and Rebase — and we bring that same depth to yours.',
     primary: 'Start a project',
     secondary: 'See our work',
+    scrollCue: 'Scroll',
   },
 
   logoWall: {
     caption: 'Teams shipping products on software we wrote',
   },
 
+  /* ── The automations thesis ───────────────────────────────────
+     Every product Camberi has ever shipped takes a job someone was
+     doing by hand and hands it to the machine. Nothing here is a
+     claim about the future — each row describes what the product
+     does today, on a site you can go and open. */
+  automations: {
+    title: 'Everything we build does the work for you.',
+    intro:
+      'Five products, one habit. Take the job somebody is doing by hand, and make the software do it instead — properly, in production, for years. It is the same instinct we bring to client work.',
+    fromLabel: 'You give it',
+    toLabel: 'You get',
+    rows: [
+      {
+        from: 'A Postgres database you already own',
+        to: 'A complete backend, with the access rules enforced by Postgres itself',
+        product: 'Rebase',
+        href: 'https://rebase.pro',
+      },
+      {
+        from: 'A Firebase or MongoDB collection',
+        to: 'An admin panel your non-technical team can actually use',
+        product: 'FireCMS',
+        href: 'https://firecms.co',
+      },
+      {
+        from: 'A question typed in plain English',
+        to: 'A real dashboard, with the SQL it wrote to get there',
+        product: 'Dataki',
+        href: 'https://dataki.ai',
+      },
+      {
+        from: 'Any website address',
+        to: 'A full brand book — colour ramps, contrast-checked pairings, type and spacing tokens',
+        product: 'Unbrand.my',
+        href: 'https://unbrand.my',
+      },
+      {
+        from: 'A few lines of configuration',
+        to: 'The gradient rendering behind this page, at sixty frames a second',
+        product: 'Neat',
+        href: 'https://neat.firecms.co',
+      },
+    ],
+    closing:
+      'None of that is a demo. Every row above is a product running in production right now, and the link takes you straight to it.',
+    cta: 'Automate something of yours',
+  },
+
   thesis: {
-    eyebrow: 'Why us',
     title: 'We don’t hand it over and disappear.',
     p1: 'Most agencies ship a v1 and move on. We have never had that luxury — we build our own products too, and we are still running them.',
     p2: 'FireCMS has been in production since 2020. Every schema we got wrong, every migration we had to ship without breaking thousands of live installs, every issue answered in public at midnight: we paid for those lessons on our own time.',
     p3: 'It changes the questions you ask. Not “can we build this?” — almost anyone can build it — but “who is going to be maintaining this in four years, and will they curse us?”',
     p4: 'That is what you are actually hiring. Not capacity. Judgement about the decisions that get expensive later.',
-    stats: [
-      { value: '6 yrs', label: 'FireCMS in production, still shipping every week' },
-      { value: '22k', label: 'installs a month across our npm packages' },
-      { value: '23+', label: 'health insurers reimburse a product we built' },
-      { value: '6', label: 'products of our own, all of them still running' },
+    /* The ledger. The entire positioning of this site is that the
+       claims are checkable, so the source is part of the number
+       rather than a footnote nobody reads. */
+    ledgerTitle: 'Every number on this page links to where you can check it.',
+    ledger: [
+      {
+        value: '6 yrs',
+        label: 'FireCMS in production, merged into every week since 2020',
+        source: 'github.com/firecmsco/firecms',
+        href: 'https://github.com/firecmsco/firecms',
+      },
+      {
+        value: '22k',
+        label: 'installs a month across our published npm packages',
+        source: 'npmjs.com/org/firecms',
+        href: 'https://www.npmjs.com/package/@firecms/core',
+      },
+      {
+        value: '23+',
+        label: 'German and Swiss health insurers reimburse a product we built',
+        source: 'medicalmotion.com',
+        href: 'https://medicalmotion.com',
+      },
+      {
+        value: '12k',
+        label: 'installs a month of Neat, the gradient engine behind this page',
+        source: 'npmjs.com/package/@firecms/neat',
+        href: 'https://www.npmjs.com/package/@firecms/neat',
+      },
+      {
+        value: '3.7k',
+        label: 'commits in public from one of us, on FireCMS alone',
+        source: 'github.com/fgatti675',
+        href: 'https://github.com/fgatti675',
+      },
+      {
+        value: '6',
+        label: 'products of our own, all of them still running',
+        source: 'see the work below',
+        href: '#work',
+      },
     ],
   },
 
   work: {
-    eyebrow: 'Selected work',
     title: 'Products in production. Not case studies in a deck.',
     intro:
       'You can read about how we work, or you can go and use what we built. Everything below is live right now.',
@@ -55,7 +151,7 @@ export const en = {
       'Plus a decade of consulting for product teams across Europe — from the first architecture call to the rescue mission six months after launch.',
 
     medicalmotion: {
-      kicker: 'Client product · Digital health · Munich',
+      kicker: 'Client product · Digital health',
       lead: 'AI-guided pain therapy that doctors prescribe and insurers pay for.',
       body: 'We’ve built the technology behind medicalmotion since its first web version — the patient app, the therapist tooling, the personalisation engine, and the data platform behind their Pain Lab research. Medical data, German healthcare regulation, published clinical outcomes. The kind of product where a wrong architectural call isn’t a sprint you can redo.',
       metrics: [
@@ -98,13 +194,24 @@ export const en = {
   },
 
   engagements: {
-    eyebrow: 'How to work with us',
-    title: 'Six ways in. All of them scoped.',
+    title: 'Seven ways in. All of them scoped.',
     intro:
       'Every engagement starts with a fixed scope, a milestone plan and a price — not a discovery phase that bills for three months.',
     unsure: 'Not sure which one you need? Neither are most people.',
     unsureCta: 'Tell us what’s stuck',
     items: [
+      {
+        title: 'Automate the work your team does by hand',
+        description:
+          'The spreadsheet that gets re-keyed every Monday, the report somebody assembles from four dashboards, the approval that lives in an inbox. We find the ones worth automating, then build them so they keep running without a babysitter.',
+        scope: 'Typically 3–8 weeks',
+      },
+      {
+        title: 'AI features and agents that survive production',
+        description:
+          'LLM features, agents, retrieval and MCP integrations built to actually run — with evaluation, cost control, and a defined fallback for the day the model is confidently wrong. We ship these in our own products first.',
+        scope: 'Typically 4–10 weeks',
+      },
       {
         title: 'Build the product',
         description:
@@ -112,25 +219,19 @@ export const en = {
         scope: 'Typically 3–6 months',
       },
       {
-        title: 'Regulated & health-tech engineering',
+        title: 'Regulated and health-tech engineering',
         description:
           'Products where the data is medical, the market is European and the architecture has to survive scrutiny. We have been doing exactly this, in German healthcare, since 2019.',
         scope: 'Typically 2–4 months',
       },
       {
-        title: 'Data platform & Postgres',
+        title: 'Data platform and Postgres',
         description:
           'Schema design, painful migrations, row-level security, admin tooling — and getting off a managed backend you have outgrown without a weekend of downtime.',
         scope: 'Typically 3–8 weeks',
       },
       {
-        title: 'AI features that actually ship',
-        description:
-          'LLM features, agents, retrieval and MCP integrations built to run in production — with evaluation, cost control and a fallback for the day the model is wrong.',
-        scope: 'Typically 4–10 weeks',
-      },
-      {
-        title: 'FireCMS & Rebase implementation',
+        title: 'FireCMS and Rebase implementation',
         description:
           'Custom collections, components and integrations from the people who wrote the framework, plus ongoing enterprise support.',
         scope: 'Typically 1–4 weeks',
@@ -145,7 +246,6 @@ export const en = {
   },
 
   process: {
-    eyebrow: 'How we work',
     title: 'Senior, transparent, weekly.',
     intro: 'You always know what is being built, why, and what it costs.',
     steps: [
@@ -169,7 +269,6 @@ export const en = {
   },
 
   openSource: {
-    eyebrow: 'Open source',
     title: 'Everything we know, in public.',
     p1: 'Thousands of developers install our tools every month, and every decision we have made is sitting in a public commit history — along with the ones we had to walk back.',
     p2: 'Six years of answering issues in the open is six years of mistakes we will not repeat inside your codebase.',
@@ -194,10 +293,9 @@ export const en = {
   },
 
   team: {
-    eyebrow: 'The people',
     title: 'Who you will be working with.',
     intro:
-      'Three engineers, between Madrid and Munich, who have been building things together for years.',
+      'Three engineers who have been building things together for years.',
     francesco: {
       role: 'Engineering · FireCMS',
       bio: 'Creator and maintainer of FireCMS, co-author of Rebase. Nearly four thousand commits of it in public, which is a slightly uncomfortable but very honest CV.',
@@ -217,14 +315,15 @@ export const en = {
   },
 
   contact: {
-    eyebrow: 'Let’s talk',
     title: 'Tell us what’s stuck.',
-    body: 'Most of our work comes from people who already use something we made. The rest starts with an email — two paragraphs about your product and where it is blocked is plenty. We read everything and reply within a business day.',
+    body: 'Most of our work comes from people who already use something we made. The rest starts with an email — two paragraphs about your product and where it is blocked is plenty.',
     book: 'Book a 30-minute call',
-    location: 'Madrid · Munich — working across European time zones',
+    location: 'Working across European time zones',
     emailSubject: 'New project enquiry',
     bookSubject: '30-minute call',
     bookBody: 'Hi — I’d like to book a call. Here’s what we’re building and where we’re stuck:\n\n',
+    /* Sits under the two buttons as a plain, checkable promise. */
+    reply: 'We read everything and reply within one business day.',
   },
 
   footer: {
@@ -235,7 +334,9 @@ export const en = {
     connect: 'Connect',
     howWeWork: 'How we work',
     rights: 'All rights reserved.',
-    location: 'Madrid · Munich',
+    location: 'Madrid',
+    colophon:
+      'Set in DM Serif Display and Instrument Sans. Background rendered with Neat, which we also wrote.',
   },
 };
 

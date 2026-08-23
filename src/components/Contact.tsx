@@ -1,4 +1,4 @@
-import { CONTAINER, Eyebrow, Button, ArrowRight, GithubIcon } from './ui';
+import { CONTAINER, SectionHead, Button, ArrowUpRight, GithubIcon, LinkedInIcon } from './ui';
 import { AmbientGradient } from './AmbientGradient';
 import { AMBIENT_CONTACT } from './neatConfigs';
 import { t } from '../i18n';
@@ -10,57 +10,68 @@ import { t } from '../i18n';
 const BOOKING_URL =
   'https://calendar.google.com/appointments/schedules/AcZssZ2FlONeeWMb2BEJcZijwyms1MI1k_G2dSulanQ6cQvVZ7S79V9vLM14mgB6q2X6jDjItlQB0c78';
 
-const EMAIL_URL = `mailto:hello@camberi.com?subject=${encodeURIComponent(t.contact.emailSubject)}`;
+const EMAIL = 'hello@camberi.com';
+const EMAIL_URL = `mailto:${EMAIL}?subject=${encodeURIComponent(t.contact.emailSubject)}`;
 
 const socials = [
-  {
-    label: 'GitHub',
-    href: 'https://github.com/firecmsco',
-    icon: <GithubIcon size={20} />,
-  },
-  {
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com/company/camberi',
-    icon: <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>,
-  },
+  { label: 'GitHub', href: 'https://github.com/firecmsco', icon: <GithubIcon size={18} /> },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/camberi', icon: <LinkedInIcon size={18} /> },
   {
     label: 'X',
     href: 'https://x.com/firecmsco',
-    icon: <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>,
+    icon: <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>,
   },
 ];
 
+/* The close. The email address is the loudest thing in the section, because
+   writing one is the single action this whole page is asking for — a button
+   labelled "get in touch" would be a smaller version of the same idea. */
 export function Contact() {
   return (
     <section
       id="contact"
-      className="relative py-28 md:py-36 text-white bg-bg-dark isolate overflow-hidden">
-      <AmbientGradient config={AMBIENT_CONTACT} className="h-[40rem]" />
+      className="relative pt-28 md:pt-40 pb-20 md:pb-24 text-white bg-bg-dark isolate overflow-hidden">
+      <AmbientGradient config={AMBIENT_CONTACT} className="h-[40rem]" strength={0.24} />
       <div className={`relative z-10 ${CONTAINER}`}>
-        <div className="text-center max-w-[44rem] mx-auto reveal">
-          <Eyebrow dark>{t.contact.eyebrow}</Eyebrow>
-          <h2 className="mt-2 text-white text-balance">{t.contact.title}</h2>
-          <p className="mt-6 mx-auto max-w-[36rem] text-white/60 text-[1.15rem] leading-[1.55]">
-            {t.contact.body}
+        <SectionHead
+          dark
+          title={t.contact.title}
+          intro={t.contact.body}
+          titleClass="max-w-[12ch]"
+        />
+
+        {/* The address, at statement size. */}
+        <a
+          href={EMAIL_URL}
+          className="group mt-16 md:mt-20 flex items-baseline gap-3 md:gap-5 reveal">
+          <span className="display text-[clamp(1.9rem,5.6vw,3.5rem)] leading-[1.05] text-white transition-colors duration-400 ease-expo group-hover:text-accent-light">
+            {EMAIL}
+            <span
+              aria-hidden="true"
+              className="block h-px origin-left scale-x-0 bg-accent-light transition-transform duration-500 ease-expo group-hover:scale-x-100"
+            />
+          </span>
+          <ArrowUpRight
+            size={26}
+            className="shrink-0 text-white/55 transition-all duration-400 ease-expo group-hover:text-accent-light group-hover:translate-x-1 group-hover:-translate-y-1"
+          />
+        </a>
+
+        <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-5 reveal d1">
+          <Button href={BOOKING_URL} external surface="dark" variant="secondary">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
+            {t.contact.book}
+          </Button>
+          <p className="font-mono text-[0.76rem] tracking-[0.01em] text-white/60">
+            {t.contact.reply}
           </p>
+        </div>
 
-          <div className="mt-10 flex flex-wrap gap-3 justify-center">
-            <Button
-              href={EMAIL_URL}
-              surface="dark"
-              variant="primary">
-              hello@camberi.com
-              <ArrowRight />
-            </Button>
-            <Button href={BOOKING_URL} external surface="dark" variant="secondary">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
-              {t.contact.book}
-            </Button>
-          </div>
-
-          <p className="mt-8 text-white/35 text-[0.9rem]">{t.contact.location}</p>
-
-          <div className="mt-10 flex gap-2.5 justify-center">
+        <div className="mt-16 md:mt-20 pt-7 border-t border-white/10 flex flex-wrap items-center justify-between gap-x-8 gap-y-5">
+          <p className="font-mono text-[0.74rem] tracking-[0.02em] text-white/55">
+            {t.contact.location}
+          </p>
+          <div className="flex gap-2.5">
             {socials.map((s) => (
               <a
                 key={s.label}
@@ -68,7 +79,7 @@ export function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={s.label}
-                className="w-11 h-11 rounded-full flex items-center justify-center text-white/50 bg-white/6 border border-white/10 transition-all duration-200 ease-apple hover:bg-white/12 hover:text-white hover:-translate-y-0.5">
+                className="w-10 h-10 rounded-full flex items-center justify-center text-white/50 bg-white/[0.06] border border-white/10 transition-all duration-300 ease-expo hover:bg-white/[0.12] hover:text-white hover:-translate-y-0.5">
                 {s.icon}
               </a>
             ))}

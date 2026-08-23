@@ -1,39 +1,63 @@
-import { CONTAINER, SECTION_LG, Eyebrow, Stat } from './ui';
+import { CONTAINER, SECTION_LG, SectionHead, Evidence } from './ui';
 import { t } from '../i18n';
 
-/* Every number here is checkable against a public source — GitHub, npm,
-   or the client's own site. That is the whole point of the section. */
+/* ──────────────────────────────────────────────────────────────
+   Why us, then the evidence for it.
+
+   This section used to run as two columns with the statement stuck
+   to the left rail and the paragraphs on the right, and it did not
+   work: the sticky heading scrolled away and left the entire left
+   half of the screen empty for the length of the argument, and the
+   conclusion sat to the *left* of the paragraph that sets it up,
+   so the eye read the punchline before the joke.
+
+   It now runs straight down the page in the order the argument is
+   actually made — claim, three paragraphs of why, the conclusion at
+   statement size, then six numbers you can go and check.
+   ────────────────────────────────────────────────────────────── */
 export function Thesis() {
   return (
-    <section id="about" className={`${SECTION_LG} bg-bg-main border-t border-hairline-soft`}>
+    <section id="about" className={`${SECTION_LG} bg-bg-alt`}>
       <div className={CONTAINER}>
-        <div className="reveal">
-          <Eyebrow>{t.thesis.eyebrow}</Eyebrow>
-          <h2 className="text-text-main max-w-[20ch] text-[clamp(2.1rem,4.6vw,3.6rem)] leading-[1.06] tracking-[-0.035em]">
-            {t.thesis.title}
-          </h2>
+        <SectionHead
+          title={t.thesis.title}
+          intro={t.thesis.p1}
+          titleClass="max-w-[13ch]"
+          className="mb-14 md:mb-18"
+        />
+
+        {/* The argument. Two columns, read left to right, both at a
+            proper measure rather than one wide column of nothing. */}
+        <div className="grid grid-cols-1 min-[820px]:grid-cols-2 gap-x-14 gap-y-6 text-[1.06rem] md:text-[1.12rem] leading-[1.65] text-text-muted">
+          <p className="reveal max-w-[46ch]">{t.thesis.p2}</p>
+          <p className="reveal d1 max-w-[46ch]">{t.thesis.p3}</p>
         </div>
 
-        <div className="mt-12 md:mt-16 grid grid-cols-1 min-[860px]:grid-cols-2 gap-x-16 gap-y-6 max-w-[62rem]">
-          <div className="flex flex-col gap-5 text-[1.1rem] md:text-[1.18rem] leading-[1.55] tracking-[-0.012em] text-text-muted reveal d1">
-            <p>{t.thesis.p1}</p>
-            <p>{t.thesis.p2}</p>
-          </div>
+        {/* The conclusion, at statement size, underneath the argument
+            that earns it. */}
+        <p className="mt-16 md:mt-24 display text-[2rem] md:text-[2.7rem] leading-[1.08] text-text-main text-balance max-w-[24ch] wipe">
+          {t.thesis.p4}
+        </p>
 
-          <div className="flex flex-col gap-5 text-[1.1rem] md:text-[1.18rem] leading-[1.55] tracking-[-0.012em] text-text-muted reveal d2">
-            <p>{t.thesis.p3}</p>
-            <p className="text-text-main font-500 text-[1.2rem] md:text-[1.3rem] leading-[1.45]">
-              {t.thesis.p4}
-            </p>
-          </div>
-        </div>
+        {/* ── The ledger ────────────────────────────────────────────
+            Six figures, each one a link to the place it comes from. */}
+        <div className="mt-20 md:mt-28">
+          <p className="display text-[1.6rem] md:text-[1.95rem] leading-[1.15] text-text-main max-w-[26ch] mb-10 md:mb-12 reveal">
+            {t.thesis.ledgerTitle}
+          </p>
 
-        <div className="mt-20 md:mt-28 grid grid-cols-2 min-[940px]:grid-cols-4 gap-y-12 gap-x-8 border-t border-hairline pt-12">
-          {t.thesis.stats.map((p, i) => (
-            <div key={p.label} className={`reveal d${i + 1}`}>
-              <Stat value={p.value} label={p.label} />
-            </div>
-          ))}
+          <div className="reveal">
+            {t.thesis.ledger.map((e) => (
+              <Evidence
+                key={e.source}
+                value={e.value}
+                label={e.label}
+                source={e.source}
+                href={e.href}
+              />
+            ))}
+            <div className="border-t border-hairline-soft" />
+          </div>
         </div>
       </div>
     </section>

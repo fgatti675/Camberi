@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Neat">
+  <defs>
+    <linearGradient id="neat-base" x1="0" y1="0.2" x2="1" y2="0.8">
+      <stop offset="0" stop-color="#F41EA6"/>
+      <stop offset="0.5" stop-color="#B94FB0"/>
+      <stop offset="1" stop-color="#12ADD4"/>
+    </linearGradient>
+    <radialGradient id="neat-warm" cx="0.04" cy="0" r="0.58">
+      <stop offset="0" stop-color="#FF6410"/>
+      <stop offset="0.42" stop-color="#FF3A55" stop-opacity="0.82"/>
+      <stop offset="1" stop-color="#FF3B6A" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="neat-blue" cx="1" cy="0.04" r="0.52">
+      <stop offset="0" stop-color="#3C74F5"/>
+      <stop offset="1" stop-color="#3C74F5" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="neat-violet" cx="0.02" cy="1" r="0.68">
+      <stop offset="0" stop-color="#BF16CC"/>
+      <stop offset="1" stop-color="#BF16CC" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="neat-cyan" cx="1.02" cy="0.86" r="0.6">
+      <stop offset="0" stop-color="#06B4D2"/>
+      <stop offset="1" stop-color="#06B4D2" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="neat-tile">
+      <rect width="512" height="512" rx="118"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#neat-tile)">
+    <rect width="512" height="512" fill="url(#neat-base)"/>
+    <rect width="512" height="512" fill="url(#neat-violet)"/>
+    <rect width="512" height="512" fill="url(#neat-cyan)"/>
+    <rect width="512" height="512" fill="url(#neat-blue)"/>
+    <rect width="512" height="512" fill="url(#neat-warm)"/>
+  </g>
+</svg>

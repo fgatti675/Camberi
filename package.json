@@ -10,8 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@firecms/neat": "1.0.2-canary.20260629124312",
-    "@fontsource-variable/rubik": "^5.2.8",
+    "@firecms/neat": "1.0.3-canary.20260731173236",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

@@ -1,6 +1,6 @@
 import {
   CONTAINER_WIDE,
-  SectionHeading,
+  SectionHead,
   ArrowUpRight,
   Tag,
   CARD_DARK,
@@ -81,7 +81,7 @@ const alsoBuilt = [
     title: 'Neat',
     domain: 'neat.firecms.co',
     href: 'https://neat.firecms.co',
-    logo: '/brand/firecms.svg',
+    logo: '/brand/neat.svg',
     image: '/work/neat.webp',
     description: t.work.neat,
   },
@@ -115,14 +115,14 @@ function Frame({
       rel="noopener noreferrer"
       tabIndex={-1}
       aria-hidden="true"
-      className="block rounded-[1.15rem] overflow-hidden bg-white/[0.05] border border-white/12 shadow-[0_40px_90px_-40px_rgba(0,0,0,0.9)] transition-all duration-500 ease-apple group-hover/row:-translate-y-1.5 group-hover/row:border-white/20">
+      className="block rounded-[1.15rem] overflow-hidden bg-white/[0.05] border border-white/12 shadow-[0_40px_90px_-40px_rgba(0,0,0,0.9)] transition-all duration-700 ease-expo group-hover/row:-translate-y-2 group-hover/row:border-white/25 group-hover/row:shadow-[0_60px_120px_-50px_rgba(0,0,0,1)]">
       <div className="h-10 flex items-center gap-3 px-[0.9rem] border-b border-white/8 bg-white/[0.03]">
         <span className="inline-flex gap-1.5">
           <i className="w-2.5 h-2.5 rounded-full bg-white/14" />
           <i className="w-2.5 h-2.5 rounded-full bg-white/14" />
           <i className="w-2.5 h-2.5 rounded-full bg-white/14" />
         </span>
-        <span className="flex-1 max-w-[62%] mx-auto flex items-center justify-center gap-1.5 bg-white/[0.05] border border-white/8 rounded-full text-[0.74rem] text-white/45 px-[0.8rem] py-[0.22rem]">
+        <span className="flex-1 max-w-[62%] mx-auto flex items-center justify-center gap-1.5 bg-white/[0.05] border border-white/8 rounded-full font-mono text-[0.7rem] text-white/60 px-[0.8rem] py-[0.22rem]">
           <i className="w-1.5 h-1.5 rounded-full bg-emerald-400/80 shrink-0" />
           <span className="truncate">{domain}</span>
         </span>
@@ -137,15 +137,15 @@ export function Work() {
     <section
       id="work"
       className="relative py-28 md:py-40 text-white bg-bg-dark isolate overflow-hidden">
-      <AmbientGradient config={AMBIENT_WORK} className="h-[52rem]" />
+      <AmbientGradient config={AMBIENT_WORK} className="h-[52rem]" strength={0.3} />
 
       <div className={`relative z-10 ${CONTAINER_WIDE}`}>
-        <SectionHeading
+        <SectionHead
           dark
-          className="mb-20 md:mb-28 reveal"
-          eyebrow={t.work.eyebrow}
           title={t.work.title}
           intro={t.work.intro}
+          titleClass="max-w-[17ch]"
+          className="mb-20 md:mb-28"
         />
 
         <div className="flex flex-col gap-28 md:gap-40">
@@ -156,24 +156,16 @@ export function Work() {
               <div className={`relative w-full ${i % 2 ? 'min-[900px]:order-2' : ''}`}>
                 <div
                   aria-hidden="true"
-                  className="pointer-events-none absolute -inset-10 -z-10 blur-3xl transition-opacity duration-500 opacity-70 group-hover/row:opacity-100"
+                  className="pointer-events-none absolute -inset-10 -z-10 blur-3xl transition-opacity duration-700 opacity-70 group-hover/row:opacity-100"
                   style={{ background: `radial-gradient(60% 60% at 50% 50%, ${p.glow} 0%, transparent 72%)` }}
                 />
                 <Frame domain={p.domain} image={p.image} alt={`${p.title} interface`} href={p.href} />
               </div>
 
               <div className="flex flex-col">
-                <div className="flex items-baseline gap-3">
-                  <span className="text-[0.76rem] font-700 text-white/25 tabular-nums">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <span className="text-[0.76rem] font-600 tracking-[0.08em] uppercase text-accent-light">
-                    {p.kicker}
-                  </span>
-                </div>
                 {/* The product's real mark, lifted from its own site, locked up
                     with the name so it reads as a logo rather than a stray dot. */}
-                <div className="mt-3.5 flex items-center gap-3.5">
+                <div className="flex items-center gap-3.5">
                   <img
                     src={p.logo}
                     alt=""
@@ -184,18 +176,27 @@ export function Work() {
                     {p.title}
                   </h3>
                 </div>
-                <p className="mt-4 text-white/85 text-[1.2rem] md:text-[1.3rem] leading-[1.4] tracking-[-0.016em] font-500 text-balance">
+
+                {/* Metadata sits under the name, where a caption belongs,
+                    rather than floating above it as a label. */}
+                <span className="mt-3 font-mono text-[0.72rem] tracking-[0.02em] text-white/55">
+                  {p.kicker}
+                </span>
+
+                {/* The claim, in the display voice. */}
+                <p className="mt-5 display text-[1.7rem] md:text-[2rem] leading-[1.14] text-white text-balance">
                   {p.lead}
                 </p>
-                <p className="mt-4 text-white/55 text-[1rem] leading-[1.6] max-w-[32rem]">{p.body}</p>
+
+                <p className="mt-4 text-white/55 text-[1rem] leading-[1.65] max-w-[34rem]">{p.body}</p>
 
                 <div className="mt-8 flex gap-9 flex-wrap border-t border-white/10 pt-7">
                   {p.metrics.map((m) => (
                     <div key={m.label} className="flex flex-col">
-                      <span className="text-[1.45rem] font-600 text-white tracking-[-0.03em] leading-none tabular-nums">
+                      <span className="figure text-[1.5rem] text-white leading-none">
                         {m.value}
                       </span>
-                      <span className="mt-1.5 text-[0.8rem] text-white/45">{m.label}</span>
+                      <span className="mt-2 text-[0.8rem] text-white/60">{m.label}</span>
                     </div>
                   ))}
                 </div>
@@ -212,9 +213,9 @@ export function Work() {
                   href={p.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-8 inline-flex items-center gap-1.5 self-start text-accent-light font-500 text-[1.0625rem] group/link hover:text-white transition-colors duration-200">
+                  className="mt-8 inline-flex items-center gap-1.5 self-start text-accent-light font-500 text-[1.0625rem] group/link hover:text-white transition-colors duration-300">
                   {t.work.visit(p.title)}
-                  <ArrowUpRight className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-250 ease-apple" />
+                  <ArrowUpRight className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-300 ease-expo" />
                 </a>
               </div>
             </article>
@@ -223,38 +224,40 @@ export function Work() {
 
         {/* Smaller things, still real. */}
         <div className="mt-28 md:mt-40 pt-14 border-t border-white/10">
-          <p className="text-[0.78rem] font-600 tracking-[0.09em] uppercase text-white/40 reveal">
+          <h3 className="display text-[1.6rem] md:text-[1.9rem] leading-[1.15] font-400 tracking-[-0.028em] text-white/85 reveal">
             {t.work.alsoTitle}
-          </p>
+          </h3>
 
-          <div className="mt-8 grid grid-cols-1 min-[700px]:grid-cols-2 gap-6">
-            {alsoBuilt.map((a, i) => (
+          <div className="mt-9 grid grid-cols-1 min-[700px]:grid-cols-2 gap-6 stagger">
+            {alsoBuilt.map((a) => (
               <a
                 key={a.title}
                 href={a.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`group overflow-hidden ${CARD_DARK} ${CARD_DARK_HOVER} reveal d${(i % 2) + 1}`}>
-                <img
-                  src={a.image}
-                  alt={`${a.title} interface`}
-                  loading="lazy"
-                  className="block w-full h-[14rem] object-cover object-top border-b border-white/8"
-                />
+                className={`group overflow-hidden ${CARD_DARK} ${CARD_DARK_HOVER}`}>
+                <div className="h-[14rem] overflow-hidden border-b border-white/8">
+                  <img
+                    src={a.image}
+                    alt={`${a.title} interface`}
+                    loading="lazy"
+                    className="block w-full h-full object-cover object-top transition-transform duration-700 ease-expo group-hover:scale-[1.03]"
+                  />
+                </div>
                 <div className="p-7">
                   <div className="flex items-center gap-2.5">
                     <img src={a.logo} alt="" aria-hidden="true" className="w-6 h-6 rounded-[0.35rem] object-contain shrink-0" />
                     <h4 className="text-white font-600 text-[1.15rem]">{a.title}</h4>
-                    <span className="text-[0.82rem] text-white/35 font-mono truncate">{a.domain}</span>
-                    <ArrowUpRight className="ml-auto shrink-0 text-white/35 transition-transform duration-250 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <span className="font-mono text-[0.75rem] text-white/55 truncate">{a.domain}</span>
+                    <ArrowUpRight className="ml-auto shrink-0 text-white/55 transition-transform duration-300 ease-expo group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </div>
-                  <p className="mt-2.5 text-white/50 text-[0.95rem] leading-[1.55]">{a.description}</p>
+                  <p className="mt-2.5 text-white/50 text-[0.95rem] leading-[1.6]">{a.description}</p>
                 </div>
               </a>
             ))}
           </div>
 
-          <p className="mt-10 text-white/40 text-[0.98rem] leading-[1.6] max-w-[38rem] reveal">
+          <p className="mt-10 text-white/55 text-[0.98rem] leading-[1.65] max-w-[42rem] reveal">
             {t.work.alsoNote}
           </p>
         </div>
