@@ -51,7 +51,7 @@ export const en = {
   automations: {
     title: 'Everything we build does the work for you.',
     intro:
-      'Five products, one habit. Take the job somebody is doing by hand, and make the software do it instead — properly, in production, for years. It is the same instinct we bring to client work.',
+      'One habit, in our own products and in client work alike: take the job somebody is doing by hand and make the software do it instead — properly, in production, for years.',
     fromLabel: 'You give it',
     toLabel: 'You get',
     rows: [
@@ -80,10 +80,10 @@ export const en = {
         href: 'https://unbrand.my',
       },
       {
-        from: 'A few lines of configuration',
-        to: 'The gradient rendering behind this page, at sixty frames a second',
-        product: 'Neat',
-        href: 'https://neat.firecms.co',
+        from: 'A weekday scrape of public job postings',
+        to: 'A live list of the employers hiring right now, enriched and queued, with the next step already worked out',
+        product: 'SustenTalent',
+        href: 'https://sustentalent.com',
       },
     ],
     closing:
@@ -182,6 +182,18 @@ export const en = {
         { value: 'RLS', label: 'enforced by Postgres' },
       ],
       stack: ['Postgres', 'TypeScript', 'REST + GraphQL', 'Realtime'],
+    },
+
+    sustentalent: {
+      kicker: 'Client product · Job board · Spain and Latin America',
+      lead: 'A job board that fills its own pipeline.',
+      body: 'A marketplace for sustainability and ESG roles, with the recruiting operation that works it built into the same product. A weekday scrape reads real vacancies down the employer axis rather than the posting axis, so the review queue doubles as a live list of companies hiring right now. An enrichment pipeline fills in the company behind each posting, the shared mailbox syncs itself, and the admin derives the next step for every prospect instead of asking anyone to keep a status column up to date.',
+      metrics: [
+        { value: 'Daily', label: 'vacancy scrape feeding the prospect list' },
+        { value: 'RLS', label: 'access enforced by Postgres, not app code' },
+        { value: '1 repo', label: 'public site, backend and admin panel' },
+      ],
+      stack: ['Astro', 'React', 'Rebase', 'Postgres', 'Cloud Run'],
     },
 
     dataki:

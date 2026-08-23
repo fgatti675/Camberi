@@ -58,6 +58,18 @@ const projects: Project[] = [
     image: '/work/rebase.webp',
     glow: 'rgba(0,90,255,0.34)',
   },
+  {
+    id: 'sustentalent',
+    ...t.work.sustentalent,
+    title: 'SustenTalent',
+    /* The isotype, not the full lockup — a wordmark shrinks to a sliver
+       inside the 44px square this renders into. */
+    logo: '/brand/sustentalent.svg',
+    href: 'https://sustentalent.com',
+    domain: 'sustentalent.com',
+    image: '/work/sustentalent.webp',
+    glow: 'rgba(21,209,127,0.28)',
+  },
 ];
 
 const alsoBuilt = [

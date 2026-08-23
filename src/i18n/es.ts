@@ -52,7 +52,7 @@ export const es: Dict = {
   automations: {
     title: 'Todo lo que hacemos trabaja por ti.',
     intro:
-      'Cinco productos y la misma manía en todos: coger el trabajo que alguien está haciendo a mano y dejar que lo haga el software. Bien hecho, en producción y durante años. Con los proyectos de cliente hacemos exactamente lo mismo.',
+      'Una misma manía, en nuestros productos y en los proyectos de cliente: coger el trabajo que alguien está haciendo a mano y dejar que lo haga el software. Bien hecho, en producción y durante años.',
     fromLabel: 'Le das',
     toLabel: 'Te devuelve',
     rows: [
@@ -81,10 +81,10 @@ export const es: Dict = {
         href: 'https://unbrand.my',
       },
       {
-        from: 'Unas líneas de configuración',
-        to: 'El degradado que se está dibujando detrás de esta página, a sesenta frames por segundo',
-        product: 'Neat',
-        href: 'https://neat.firecms.co',
+        from: 'Un scraping entre semana de ofertas públicas',
+        to: 'Una lista viva de las empresas que están contratando ahora mismo, enriquecida y en cola, con el siguiente paso ya decidido',
+        product: 'SustenTalent',
+        href: 'https://sustentalent.com',
       },
     ],
     closing:
@@ -180,6 +180,18 @@ export const es: Dict = {
         { value: 'RLS', label: 'aplicado por Postgres' },
       ],
       stack: ['Postgres', 'TypeScript', 'REST + GraphQL', 'Tiempo real'],
+    },
+
+    sustentalent: {
+      kicker: 'Producto de cliente · Bolsa de empleo · España y Latinoamérica',
+      lead: 'Una bolsa de empleo que se llena sola.',
+      body: 'Un marketplace de talento para perfiles de sostenibilidad y ESG, con la operativa de reclutamiento metida dentro del propio producto. Un scraping entre semana lee las vacantes reales por empresa y no por anuncio, así que la cola de revisión es a la vez una lista viva de compañías que están contratando ahora mismo. Un pipeline de enriquecimiento completa la empresa que hay detrás de cada oferta, el buzón compartido se sincroniza solo y el panel deduce el siguiente paso de cada prospecto en vez de pedirle a nadie que mantenga al día una columna de estado.',
+      metrics: [
+        { value: 'Diario', label: 'scraping de vacantes que alimenta la lista' },
+        { value: 'RLS', label: 'permisos aplicados por Postgres, no por código' },
+        { value: '1 repo', label: 'web pública, backend y panel de administración' },
+      ],
+      stack: ['Astro', 'React', 'Rebase', 'Postgres', 'Cloud Run'],
     },
 
     dataki:
