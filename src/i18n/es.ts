@@ -332,7 +332,5 @@ export const es: Dict = {
     howWeWork: 'Cómo trabajamos',
     rights: 'Todos los derechos reservados.',
     location: 'Madrid',
-    colophon:
-      'Compuesta en DM Serif Display e Instrument Sans. El fondo lo dibuja Neat, que también es nuestro.',
   },
 };

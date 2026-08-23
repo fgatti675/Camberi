@@ -335,8 +335,6 @@ export const en = {
     howWeWork: 'How we work',
     rights: 'All rights reserved.',
     location: 'Madrid',
-    colophon:
-      'Set in DM Serif Display and Instrument Sans. Background rendered with Neat, which we also wrote.',
   },
 };
 

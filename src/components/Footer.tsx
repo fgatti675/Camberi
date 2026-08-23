@@ -72,16 +72,9 @@ export function Footer() {
           </div>
         </div>
 
-        {/* A colophon, because a studio that argues for craft should say what
-            the page is made of. */}
-        <div className="pt-7 border-t border-white/8 flex flex-col min-[720px]:flex-row min-[720px]:items-center justify-between gap-3">
-          <p className="font-mono text-[0.72rem] text-white/50 leading-[1.6] max-w-[46ch]">
-            {t.footer.colophon}
-          </p>
-          <div className="flex flex-wrap gap-x-6 gap-y-1.5 font-mono text-[0.72rem] text-white/50">
-            <span>© {new Date().getFullYear()} Camberi. {t.footer.rights}</span>
-            <span>{t.footer.location}</span>
-          </div>
+        <div className="pt-7 border-t border-white/8 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 font-mono text-[0.72rem] text-white/50">
+          <span>© {new Date().getFullYear()} Camberi. {t.footer.rights}</span>
+          <span>{t.footer.location}</span>
         </div>
       </div>
     </footer>
