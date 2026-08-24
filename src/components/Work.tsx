@@ -173,7 +173,16 @@ export function Work() {
                  wider than its column by design, and a bare `fr` track refuses to
                  shrink below its content's min-content width — so the strip pushed
                  the column out and squeezed the copy into a third of the row. */
-              className="group/row grid grid-cols-1 min-[900px]:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] gap-10 min-[900px]:gap-16 items-center reveal">
+              /* The media always takes the wider track, whichever side it is on.
+                 With one fixed split the image sat in 1.08fr on even rows and
+                 0.92fr on odd ones, so FireCMS and SustenTalent rendered 90px
+                 narrower than medicalmotion and Rebase for no reason other than
+                 which way round they alternate. */
+              className={`group/row grid grid-cols-1 gap-10 min-[900px]:gap-16 items-center reveal ${
+                i % 2
+                  ? 'min-[900px]:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]'
+                  : 'min-[900px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]'
+              }`}>
               <div
                 /* No `w-full` here on purpose: an explicit width pins the box
                    to its grid column, so the negative margin slides the shot
