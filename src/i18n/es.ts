@@ -152,6 +152,12 @@ export const es: Dict = {
       kicker: 'Producto de cliente · Salud digital',
       lead: 'Terapia del dolor guiada por IA que los médicos recetan y las aseguradoras pagan.',
       body: 'Llevamos haciendo la tecnología de medicalmotion desde su primera versión web: la app del paciente, las herramientas del fisioterapeuta, el motor de personalización y la plataforma de datos sobre la que corre su investigación Pain Lab. Datos médicos, regulación sanitaria alemana y resultados clínicos publicados. Un producto de esos en los que equivocarte de arquitectura no es un sprint que puedas repetir.',
+      cards: [
+        'A partir de tu perfil de dolor',
+        'Fisioterapia asistida por IA',
+        'Meditación y ejercicios de respiración',
+        'Tu Health Cockpit',
+      ],
       metrics: [
         { value: '23+', label: 'aseguradoras lo cubren' },
         { value: '5+', label: 'estudios de eficacia publicados' },

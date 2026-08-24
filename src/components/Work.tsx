@@ -8,6 +8,7 @@ import {
   CARD_DARK_HOVER,
 } from './ui';
 import { AmbientGradient } from './AmbientGradient';
+import { MedicalMotionCards } from './MedicalMotionCards';
 import { AMBIENT_WORK } from './neatConfigs';
 import { t } from '../i18n';
 
@@ -23,7 +24,8 @@ interface Project {
   stack: string[];
   href: string;
   domain: string;
-  image: string;
+  /** Absent for medicalmotion, which renders its feature cards as markup. */
+  image?: string;
   /** Bloom colour behind the screenshot — taken from the product's own brand. */
   glow: string;
 }
@@ -36,7 +38,6 @@ const projects: Project[] = [
     logo: brand('medicalmotion-icon.png'),
     href: 'https://medicalmotion.com',
     domain: 'medicalmotion.com',
-    image: '/work/medicalmotion.webp',
     glow: 'rgba(16,185,129,0.30)',
   },
   {
@@ -168,7 +169,11 @@ export function Work() {
           {projects.map((p, i) => (
             <article
               key={p.id}
-              className="group/row grid grid-cols-1 min-[900px]:grid-cols-[1.08fr_0.92fr] gap-10 min-[900px]:gap-16 items-center reveal">
+              /* minmax(0,…) rather than a bare fr: the medicalmotion card strip is
+                 wider than its column by design, and a bare `fr` track refuses to
+                 shrink below its content's min-content width — so the strip pushed
+                 the column out and squeezed the copy into a third of the row. */
+              className="group/row grid grid-cols-1 min-[900px]:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] gap-10 min-[900px]:gap-16 items-center reveal">
               <div
                 /* No `w-full` here on purpose: an explicit width pins the box
                    to its grid column, so the negative margin slides the shot
@@ -182,12 +187,18 @@ export function Work() {
                   className="pointer-events-none absolute -inset-10 -z-10 blur-3xl transition-opacity duration-700 opacity-70 group-hover/row:opacity-100"
                   style={{ background: `radial-gradient(60% 60% at 50% 50%, ${p.glow} 0%, transparent 72%)` }}
                 />
-                <Frame
-                  image={p.image}
-                  alt={`${p.title} interface`}
-                  href={p.href}
-                  bleed={i % 2 ? 'right' : 'left'}
-                />
+                {/* medicalmotion's feature cards are real markup rather than a
+                    picture of them — see MedicalMotionCards. */}
+                {p.image ? (
+                  <Frame
+                    image={p.image}
+                    alt={`${p.title} interface`}
+                    href={p.href}
+                    bleed={i % 2 ? 'right' : 'left'}
+                  />
+                ) : (
+                  <MedicalMotionCards />
+                )}
               </div>
 
               <div className="flex flex-col">

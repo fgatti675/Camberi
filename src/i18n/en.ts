@@ -154,6 +154,12 @@ export const en = {
       kicker: 'Client product · Digital health',
       lead: 'AI-guided pain therapy that doctors prescribe and insurers pay for.',
       body: 'We’ve built the technology behind medicalmotion since its first web version — the patient app, the therapist tooling, the personalisation engine, and the data platform behind their Pain Lab research. Medical data, German healthcare regulation, published clinical outcomes. The kind of product where a wrong architectural call isn’t a sprint you can redo.',
+      cards: [
+        'Based on your unique pain profile',
+        'AI-supported physiotherapy',
+        'Meditation and breathing exercises',
+        'Your Health Cockpit',
+      ],
       metrics: [
         { value: '23+', label: 'insurers reimburse it' },
         { value: '5+', label: 'published efficacy studies' },
