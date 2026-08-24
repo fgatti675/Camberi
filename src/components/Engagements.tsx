@@ -2,18 +2,58 @@ import { CONTAINER, SECTION_LG, SectionHead, Button, ArrowRight } from './ui';
 import { t } from '../i18n';
 
 /* ──────────────────────────────────────────────────────────────
-   A services index, not a deck of cards.
+   A scale of engagements, not a list of them.
 
-   This used to be six identical panels of icon-plus-heading-plus-
-   paragraph, which is the least informative shape a list of
-   services can take: every option looks equally weighted and the
-   icons carry no meaning. It is now set like the index of a
-   catalogue — the one engagement we most want to sell runs the
-   full measure, the rest sit in two dense columns separated by
-   hairlines. Scannable, and honest about what leads.
+   This section already carried the one number a buyer actually
+   wants — how long each engagement runs — and was spending it on a
+   grey line of small print under each item. Drawn to a shared axis
+   instead, the same seven items answer "how much am I committing
+   to?" at a glance: the architecture review is a tick, building a
+   product runs off to six months, and the distance between them is
+   the argument the heading is making.
+
+   It also gives the section something to look at. Every other
+   section has an image, a figure or a gradient; this one had
+   nothing but paragraphs.
    ────────────────────────────────────────────────────────────── */
 
-const [featured, ...rest] = t.engagements.items;
+/* The longest engagement sets the scale, so the axis never has dead
+   space at the end and never clips a bar. */
+const SCALE_WEEKS = Math.max(...t.engagements.items.map((e) => e.weeks[1]));
+const TICKS = [4, 8, 12, 16, 20, 24].filter((w) => w < SCALE_WEEKS);
+
+const pct = (weeks: number) => (weeks / SCALE_WEEKS) * 100;
+
+/* Where a bar starts and how wide it runs, as percentages of the track. */
+function geometry(weeks: number[]) {
+  const left = pct(weeks[0]);
+  return { left, width: Math.max(pct(weeks[1]) - left, MIN_BAR_PCT) };
+}
+
+/* A fixed-duration engagement is a point, not a span. Give it enough
+   width to read as a mark rather than collapsing to nothing. */
+const MIN_BAR_PCT = 2.2;
+
+const GRID =
+  'min-[820px]:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] min-[1100px]:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)]';
+
+function Bar({ weeks, lead }: { weeks: number[]; lead: boolean }) {
+  const { left, width } = geometry(weeks);
+  return (
+    <div
+      aria-hidden="true"
+      className="relative h-[0.42rem] w-full rounded-full bg-black/[0.07] overflow-hidden">
+      <div
+        className="bar-fill absolute inset-y-0 rounded-full"
+        style={{
+          left: `${left}%`,
+          width: `${width}%`,
+          background: lead ? 'var(--color-accent)' : 'var(--color-text-main)',
+        }}
+      />
+    </div>
+  );
+}
 
 export function Engagements() {
   return (
@@ -23,52 +63,58 @@ export function Engagements() {
           title={t.engagements.title}
           intro={t.engagements.intro}
           titleClass="max-w-[16ch]"
-          className="mb-16 md:mb-20"
+          className="mb-14 md:mb-16"
         />
 
-        {/* The lead engagement, at full measure. */}
-        <a
-          href="#contact"
-          className="group block border-t-2 border-text-main pt-8 pb-10 reveal">
-          <div className="grid grid-cols-1 min-[820px]:grid-cols-[1fr_1.25fr] gap-x-14 gap-y-4 items-start">
-            <div className="flex flex-col gap-3">
-              <h3 className="text-[1.5rem] min-[820px]:text-[1.75rem] font-600 leading-[1.15] tracking-[-0.024em] text-text-main text-balance max-w-[18ch]">
-                {featured.title}
-              </h3>
-              <span className="font-mono text-[0.74rem] tracking-[0.02em] text-text-light">
-                {featured.scope}
+        {/* The axis, aligned to the bar column so every row reads against
+            the same ruler. */}
+        <div className={`hidden min-[820px]:grid ${GRID} gap-x-12 pb-3`}>
+          <span className="label text-text-light self-end">{t.engagements.axisLabel}</span>
+          <div className="relative h-4">
+            {TICKS.map((w) => (
+              <span
+                key={w}
+                className="absolute bottom-0 font-mono text-[0.68rem] text-text-light -translate-x-1/2"
+                style={{ left: `${pct(w)}%` }}>
+                {w}
               </span>
-            </div>
-            <div>
-              <p className="text-[1.08rem] leading-[1.62] text-text-muted max-w-[52ch]">
-                {featured.description}
-              </p>
-              <span className="mt-5 inline-flex items-center gap-1.5 text-[0.95rem] font-500 text-accent">
-                {t.engagements.unsureCta}
-                <ArrowRight className="h-4 w-4 transition-transform duration-400 ease-expo group-hover:translate-x-1" />
-              </span>
-            </div>
+            ))}
           </div>
-        </a>
-
-        {/* Everything else, two dense columns. */}
-        <div className="grid grid-cols-1 min-[820px]:grid-cols-2 gap-x-14 stagger">
-          {rest.map((e) => (
-            <article key={e.title} className="flex flex-col border-t border-hairline pt-7 pb-9">
-              <h3 className="text-[1.1rem] font-600 leading-[1.25] tracking-[-0.02em] text-text-main text-balance">
-                {e.title}
-              </h3>
-              <p className="mt-2.5 text-[0.97rem] leading-[1.6] text-text-muted flex-1 max-w-[46ch]">
-                {e.description}
-              </p>
-              <span className="mt-5 font-mono text-[0.72rem] tracking-[0.02em] text-text-light">
-                {e.scope}
-              </span>
-            </article>
-          ))}
         </div>
 
-        <div className="mt-8 pt-10 border-t border-hairline flex flex-wrap items-center gap-x-6 gap-y-4 reveal">
+        <div className="stagger">
+          {t.engagements.items.map((e, i) => (
+            <article
+              key={e.title}
+              className={`grid grid-cols-1 ${GRID} gap-x-12 gap-y-4 items-start border-t border-hairline pt-6 pb-7`}>
+              <div>
+                <h3
+                  className={`leading-[1.25] tracking-[-0.02em] text-text-main text-balance ${
+                    i === 0 ? 'text-[1.3rem] font-600' : 'text-[1.08rem] font-600'
+                  }`}>
+                  {e.title}
+                </h3>
+                <p className="mt-2.5 text-[0.97rem] leading-[1.6] text-text-muted max-w-[44ch]">
+                  {e.description}
+                </p>
+              </div>
+
+              <div className="min-[820px]:pt-2">
+                <Bar weeks={e.weeks} lead={i === 0} />
+                {/* Indented to its own bar, and only once the chart exists —
+                    stacked on a phone there is no track to align to. */}
+                <span
+                  className="mt-3 block font-mono text-[0.72rem] tracking-[0.02em] text-text-light min-[820px]:[padding-left:var(--bar-left)]"
+                  style={{ '--bar-left': `${geometry(e.weeks).left}%` } as React.CSSProperties}>
+                  {e.scope}
+                </span>
+              </div>
+            </article>
+          ))}
+          <div className="border-t border-hairline" />
+        </div>
+
+        <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4 reveal">
           <p className="text-text-muted text-[1.05rem]">{t.engagements.unsure}</p>
           <Button href="#contact" size="sm">
             {t.engagements.unsureCta}

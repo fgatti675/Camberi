@@ -329,6 +329,19 @@
   transition-delay: calc(var(--i, 0) * 0.055s + 0.14s);
 }
 
+/* ── Engagement bars ──────────────────────────────────────────
+   Each bar grows from its own start position as its row arrives, so
+   the section resolves into a chart rather than appearing as one. */
+.bar-fill {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.9s var(--ease-out-expo);
+}
+.stagger.in-view .bar-fill {
+  transform: scaleX(1);
+  transition-delay: calc(var(--i, 0) * 0.055s + 0.12s);
+}
+
 /* ── Logo marquee ────────────────────────────────────────────
    The track holds the logo list twice, so translating by exactly
    -50% lands on an identical frame and the loop is seamless. */
@@ -359,7 +372,8 @@
   .wipe,
   .rule,
   .tf-arrow,
-  .tf-out {
+  .tf-out,
+  .bar-fill {
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;

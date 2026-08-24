@@ -153,9 +153,14 @@ const AMBIENT_BASE: NeatConfig = {
        extra edge detail would not survive `colorBrightness: 0.28` anyway; the
        hero is where the sharpness is worth paying for. */
     textureBakeResolution: 1024,
-    yOffsetWaveMultiplier: 1.2,
-    yOffsetColorMultiplier: 1.1,
-    yOffsetFlowMultiplier: 1.4,
+    /* These scale `yOffset`, which is driven by scroll — not the idle
+       animation, which `speed` owns. Damped to ~1.2 they made the bands
+       calm and also made them look completely inert as you scrolled past.
+       Roughly half the hero's 7.2/6.8/7.7 gives a response you can see
+       without the band becoming the busiest thing on the page. */
+    yOffsetWaveMultiplier: 3.6,
+    yOffsetColorMultiplier: 3.2,
+    yOffsetFlowMultiplier: 4.0,
 };
 
 /* Behind the work section — the largest and most present of the three. */

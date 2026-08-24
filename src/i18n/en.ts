@@ -209,47 +209,55 @@ export const en = {
     title: 'Seven ways in. All of them scoped.',
     intro:
       'Every engagement starts with a fixed scope, a milestone plan and a price — not a discovery phase that bills for three months.',
+    axisLabel: 'Weeks',
     unsure: 'Not sure which one you need? Neither are most people.',
     unsureCta: 'Tell us what’s stuck',
     items: [
       {
         title: 'Automate the work your team does by hand',
+        weeks: [3, 8],
         description:
           'The spreadsheet that gets re-keyed every Monday, the report somebody assembles from four dashboards, the approval that lives in an inbox. We find the ones worth automating, then build them so they keep running without a babysitter.',
         scope: 'Typically 3–8 weeks',
       },
       {
         title: 'AI features and agents that survive production',
+        weeks: [4, 10],
         description:
           'LLM features, agents, retrieval and MCP integrations built to actually run — with evaluation, cost control, and a defined fallback for the day the model is confidently wrong. We ship these in our own products first.',
         scope: 'Typically 4–10 weeks',
       },
       {
         title: 'Build the product',
+        weeks: [13, 26],
         description:
           'Zero to production, or the rewrite that finally scales. Design, frontend, backend and infrastructure owned by one team, so nothing falls between vendors.',
         scope: 'Typically 3–6 months',
       },
       {
         title: 'Regulated and health-tech engineering',
+        weeks: [9, 17],
         description:
           'Products where the data is medical, the market is European and the architecture has to survive scrutiny. We have been doing exactly this, in German healthcare, since 2019.',
         scope: 'Typically 2–4 months',
       },
       {
         title: 'Data platform and Postgres',
+        weeks: [3, 8],
         description:
           'Schema design, painful migrations, row-level security, admin tooling — and getting off a managed backend you have outgrown without a weekend of downtime.',
         scope: 'Typically 3–8 weeks',
       },
       {
         title: 'FireCMS and Rebase implementation',
+        weeks: [1, 4],
         description:
           'Custom collections, components and integrations from the people who wrote the framework, plus ongoing enterprise support.',
         scope: 'Typically 1–4 weeks',
       },
       {
         title: 'Architecture review',
+        weeks: [2, 2],
         description:
           'Two weeks, a senior read on your stack, and a written plan your own team can act on. The cheapest way to find out whether you need us at all.',
         scope: 'Fixed price, 2 weeks',

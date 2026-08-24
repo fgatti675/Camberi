@@ -29,6 +29,17 @@ export const CARD_DARK =
 export const CARD_DARK_HOVER =
   'hover:-translate-y-1 hover:bg-white/[0.06] hover:border-white/[0.14] hover:shadow-[0_24px_50px_-30px_rgba(0,0,0,0.5)]';
 
+/* ── Brand marks ──────────────────────────────────────────────
+   Firebase serves images with `max-age=604800`, and these live at stable
+   filenames — so replacing one keeps the old file on every returning
+   visitor's machine for a week. That is exactly what happened when
+   Rebase's mark changed: the origin was correct and browsers went on
+   drawing the previous logo. Bump this whenever a file under /brand
+   changes content without changing its name. */
+const BRAND_VERSION = 2;
+
+export const brand = (file: string) => `/brand/${file}?v=${BRAND_VERSION}`;
+
 /* ── Rules ────────────────────────────────────────────────────
    The page's main structural device. A rule draws itself in from
    the left when its section arrives, which is why sections can
