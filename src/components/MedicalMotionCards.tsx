@@ -128,7 +128,7 @@ export function MedicalMotionCards() {
               sat on two, so the labels never lined up and the odd one out left
               a reserved line empty above the phone. Capped at 17ch they all
               break to two lines, at every width. */}
-          <div className="flex items-center justify-center px-5 pt-4 pb-3 min-[1100px]:pt-5">
+          <div className="flex items-center justify-center px-5 pt-8 pb-2 min-[1100px]:pt-9 min-[1100px]:pb-2">
             <h4
               style={{ color: c.fg }}
               className="flex min-h-[2.5em] items-center justify-center max-w-[17ch] text-center text-[1rem] min-[1100px]:text-[1.12rem] font-600 leading-[1.25] tracking-[-0.015em] text-balance">
