@@ -369,6 +369,20 @@
   }
 }
 
+/* ── The medicalmotion strip's leading edge ───────────────────
+   The card row runs off the left of the page, which is right for the
+   phones and wrong for the labels: a screenshot reads as continuing past
+   the edge, but a heading sliced mid-word just reads as broken text.
+   Fading the leading edge lets the clipped card dissolve into the dark
+   band instead of being cut, the same device the logo wall already uses
+   at both of its ends. */
+@media (min-width: 900px) {
+  .mm-fade {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 13%);
+    mask-image: linear-gradient(to right, transparent 0, #000 13%);
+  }
+}
+
 /* ── Logo marquee ────────────────────────────────────────────
    The track holds the logo list twice, so translating by exactly
    -50% lands on an identical frame and the loop is seamless. */

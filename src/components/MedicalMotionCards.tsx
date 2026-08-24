@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { t } from '../i18n';
 
 /* ──────────────────────────────────────────────────────────────
@@ -39,6 +40,28 @@ const CARDS: Card[] = [
 
 export function MedicalMotionCards() {
   const labels = t.work.medicalmotion.cards;
+  const rowRef = useRef<HTMLDivElement>(null);
+
+  /* The leading-edge fade is only right when something is actually being cut
+     off. Above roughly 1700px the cards grow to fill the row exactly, nothing
+     overflows, and fading then just dims the first card's label for no reason.
+     The cards hold their basis when space runs out and grow when it does not,
+     so their combined width exceeding the row is precisely the clipped case. */
+  const [clipped, setClipped] = useState(false);
+  useEffect(() => {
+    const row = rowRef.current;
+    if (!row) return;
+    const measure = () => {
+      const kids = Array.from(row.children) as HTMLElement[];
+      const gaps = (kids.length - 1) * parseFloat(getComputedStyle(row).columnGap || '0');
+      const strip = kids.reduce((sum, k) => sum + k.offsetWidth, 0) + gaps;
+      setClipped(window.innerWidth >= 900 && strip > row.clientWidth + 1);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(row);
+    return () => observer.disconnect();
+  }, []);
   return (
     /* Above 900px `justify-end` anchors the last card against the copy and
        lets the row overflow off the left of the page, which is the side this
@@ -58,12 +81,13 @@ export function MedicalMotionCards() {
        landing card one flush against the screen instead of on the text
        margin. */
     <div
-      className="flex gap-3 justify-start min-[900px]:justify-end
+      ref={rowRef}
+      className={`${clipped ? 'mm-fade' : ''} flex gap-3 justify-start min-[900px]:justify-end
                  overflow-x-auto min-[900px]:overflow-visible
                  -mx-6 px-6 min-[900px]:mx-0 min-[900px]:px-0
                  snap-x snap-mandatory min-[900px]:snap-none
                  scroll-pl-6 min-[900px]:scroll-pl-0
-                 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
       role="img"
       aria-label={`medicalmotion: ${labels.join(', ')}`}>
       {CARDS.map((c, i) => (
