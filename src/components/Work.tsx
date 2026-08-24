@@ -115,12 +115,22 @@ function Frame({
   image,
   alt,
   href,
+  bleed,
 }: {
   domain: string;
   image: string;
   alt: string;
   href: string;
+  bleed: 'left' | 'right';
 }) {
+  /* Written out literally — Tailwind scans for whole class names, and the
+     side that runs off the page loses its corner and its border so the
+     window reads as continuing past the edge rather than as a card that
+     happens to be clipped. */
+  const edge =
+    bleed === 'left'
+      ? 'min-[900px]:rounded-l-none min-[900px]:border-l-0'
+      : 'min-[900px]:rounded-r-none min-[900px]:border-r-0';
   return (
     <a
       href={href}
@@ -128,7 +138,7 @@ function Frame({
       rel="noopener noreferrer"
       tabIndex={-1}
       aria-hidden="true"
-      className="block rounded-[1.15rem] overflow-hidden bg-white/[0.05] border border-white/12 shadow-[0_40px_90px_-40px_rgba(0,0,0,0.9)] transition-all duration-700 ease-expo group-hover/row:-translate-y-2 group-hover/row:border-white/25 group-hover/row:shadow-[0_60px_120px_-50px_rgba(0,0,0,1)]">
+      className={`block rounded-[1.15rem] ${edge} overflow-hidden bg-white/[0.05] border border-white/12 shadow-[0_40px_90px_-40px_rgba(0,0,0,0.9)] transition-all duration-700 ease-expo group-hover/row:-translate-y-2 group-hover/row:border-white/25 group-hover/row:shadow-[0_60px_120px_-50px_rgba(0,0,0,1)]`}>
       <div className="h-10 flex items-center gap-3 px-[0.9rem] border-b border-white/8 bg-white/[0.03]">
         <span className="inline-flex gap-1.5">
           <i className="w-2.5 h-2.5 rounded-full bg-white/14" />
@@ -166,13 +176,26 @@ export function Work() {
             <article
               key={p.id}
               className="group/row grid grid-cols-1 min-[900px]:grid-cols-[1.08fr_0.92fr] gap-10 min-[900px]:gap-16 items-center reveal">
-              <div className={`relative w-full ${i % 2 ? 'min-[900px]:order-2' : ''}`}>
+              <div
+                /* No `w-full` here on purpose: an explicit width pins the box
+                   to its grid column, so the negative margin slides the shot
+                   sideways instead of widening it. Left auto, the same margin
+                   grows it into the bleed. */
+                className={`relative ${
+                  i % 2 ? 'min-[900px]:order-2 bleed-r' : 'bleed-l'
+                }`}>
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute -inset-10 -z-10 blur-3xl transition-opacity duration-700 opacity-70 group-hover/row:opacity-100"
                   style={{ background: `radial-gradient(60% 60% at 50% 50%, ${p.glow} 0%, transparent 72%)` }}
                 />
-                <Frame domain={p.domain} image={p.image} alt={`${p.title} interface`} href={p.href} />
+                <Frame
+                  domain={p.domain}
+                  image={p.image}
+                  alt={`${p.title} interface`}
+                  href={p.href}
+                  bleed={i % 2 ? 'right' : 'left'}
+                />
               </div>
 
               <div className="flex flex-col">

@@ -342,6 +342,33 @@
   transition-delay: calc(var(--i, 0) * 0.055s + 0.12s);
 }
 
+/* ── Full-bleed work shots ────────────────────────────────────
+   The project screenshots run off the side of the page instead of
+   sitting politely inside the measure. The work is the argument, so
+   it gets more room than the prose does.
+
+   The offset is the exact distance from the container's content edge
+   back to the viewport edge: half of whatever gutter is left over
+   once the container has taken its 78rem, plus the container's own
+   padding. `max(0px, …)` keeps it from reversing on viewports
+   narrower than the container, and a negative margin on an auto-width
+   block widens the element by the same amount — so the shot grows
+   into the bleed rather than sliding out of frame.
+
+   Only above 900px, which is where the section stops stacking. */
+:root { --container-pad: 1.5rem; }
+@media (min-width: 1024px) {
+  :root { --container-pad: 2rem; }
+}
+@media (min-width: 900px) {
+  .bleed-l {
+    margin-left: calc(-1 * (max(0px, (100vw - 78rem) / 2) + var(--container-pad)));
+  }
+  .bleed-r {
+    margin-right: calc(-1 * (max(0px, (100vw - 78rem) / 2) + var(--container-pad)));
+  }
+}
+
 /* ── Logo marquee ────────────────────────────────────────────
    The track holds the logo list twice, so translating by exactly
    -50% lands on an identical frame and the loop is seamless. */
