@@ -122,10 +122,16 @@ export function MedicalMotionCards() {
               does not — reserving the height without centring left it hanging at
               the top of its card with a hole underneath, which is worse than not
               reserving it at all. */}
-          <div className="flex items-center justify-center px-5 pt-6 pb-5 min-[1100px]:pt-7 min-[1100px]:pb-6">
+          {/* A measure, not just a centre. Left to the full card width these
+              wrapped differently from each other — "AI-supported physiotherapy"
+              ran edge to edge on one line at 1280 and up while its neighbours
+              sat on two, so the labels never lined up and the odd one out left
+              a reserved line empty above the phone. Capped at 17ch they all
+              break to two lines, at every width. */}
+          <div className="flex items-center justify-center px-5 pt-4 pb-3 min-[1100px]:pt-5">
             <h4
               style={{ color: c.fg }}
-              className="flex min-h-[2.5em] items-center text-center text-[1rem] min-[1100px]:text-[1.12rem] font-600 leading-[1.25] tracking-[-0.015em] text-balance">
+              className="flex min-h-[2.5em] items-center justify-center max-w-[17ch] text-center text-[1rem] min-[1100px]:text-[1.12rem] font-600 leading-[1.25] tracking-[-0.015em] text-balance">
               {c.label}
             </h4>
           </div>
