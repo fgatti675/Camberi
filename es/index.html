@@ -42,6 +42,15 @@
     <!-- No detection script here on purpose: a deliberate /es/ URL always wins,
          and skipping it makes a redirect loop structurally impossible. -->
 
+    <!-- Google Analytics 4. /es/ never redirects, so this can load with the rest of the head. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z5J6BDF0QT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-Z5J6BDF0QT');
+    </script>
+
     <script type="application/ld+json">
 {
       "@context": "https://schema.org",
