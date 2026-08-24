@@ -8,16 +8,6 @@
         "**/.*",
         "**/node_modules/**"
       ],
-      "rewrites": [
-        {
-          "source": "/es/**",
-          "destination": "/es/index.html"
-        },
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ],
       "headers": [
         {
           "source": "**/*.@(js|css|woff2)",
@@ -55,7 +45,8 @@
             }
           ]
         }
-      ]
+      ],
+      "cleanUrls": true
     },
     {
       "target": "canary",
@@ -65,16 +56,6 @@
         "**/.*",
         "**/node_modules/**"
       ],
-      "rewrites": [
-        {
-          "source": "/es/**",
-          "destination": "/es/index.html"
-        },
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ],
       "headers": [
         {
           "source": "**/*.@(js|css|woff2)",
@@ -112,7 +93,8 @@
             }
           ]
         }
-      ]
+      ],
+      "cleanUrls": true
     }
   ]
 }

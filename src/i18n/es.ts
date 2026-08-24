@@ -204,7 +204,7 @@ export const es: Dict = {
   },
 
   engagements: {
-    title: 'Siete formas de empezar. Todas con alcance cerrado.',
+    title: 'Cuatro formas de empezar. Todas con alcance cerrado.',
     intro:
       'Cada proyecto arranca con un alcance cerrado, un plan de hitos y un precio. No con una fase de descubrimiento que factura tres meses.',
     axisLabel: 'Semanas',
@@ -212,46 +212,25 @@ export const es: Dict = {
     unsureCta: 'Cuéntanos qué te falla',
     items: [
       {
-        title: 'Automatizar lo que tu equipo hace a mano',
-        weeks: [3, 8],
+        title: 'Automatización e IA que aguanta en producción',
+        weeks: [3, 10],
         description:
-          'El Excel que alguien vuelve a rellenar cada lunes, el informe que sale de juntar cuatro dashboards, la aprobación que vive en una bandeja de entrada. Buscamos cuáles compensa automatizar y las dejamos funcionando sin que nadie tenga que estar encima.',
-        scope: 'Normalmente 3–8 semanas',
-      },
-      {
-        title: 'IA y agentes que aguantan en producción',
-        weeks: [4, 10],
-        description:
-          'Funciones con LLM, agentes, RAG e integraciones MCP hechas para funcionar de verdad: con evaluación, control de coste y un plan B para el día en que el modelo se equivoque con toda la seguridad del mundo. Los estrenamos siempre en nuestros propios productos.',
-        scope: 'Normalmente 4–10 semanas',
+          'El Excel que alguien vuelve a rellenar cada lunes, el informe que sale de juntar cuatro dashboards, la aprobación que vive en una bandeja de entrada. Buscamos cuáles compensa automatizar y las dejamos funcionando sin que nadie tenga que estar encima. También funciones con LLM y agentes, con evaluación, control de coste y un plan B para el día en que el modelo se equivoque con toda la seguridad del mundo.',
+        scope: 'Normalmente 3–10 semanas',
       },
       {
         title: 'Hacer el producto',
         weeks: [13, 26],
         description:
-          'De cero a producción, o la reescritura que por fin escala. Diseño, frontend, backend e infraestructura en un solo equipo, para que nada se caiga entre proveedores.',
+          'De cero a producción, o la reescritura que por fin escala. Diseño, frontend, backend e infraestructura en un solo equipo, para que nada se caiga entre proveedores. También del tipo regulado, con datos médicos y una arquitectura que tiene que aguantar una auditoría: llevamos haciéndolo en la sanidad alemana desde 2019.',
         scope: 'Normalmente 3–6 meses',
       },
       {
-        title: 'Ingeniería regulada y health tech',
-        weeks: [9, 17],
+        title: 'Plataforma de datos, Postgres y herramientas internas',
+        weeks: [1, 8],
         description:
-          'Productos con datos médicos, mercado europeo y una arquitectura que tiene que aguantar una auditoría. Llevamos haciendo exactamente esto en la sanidad alemana desde 2019.',
-        scope: 'Normalmente 2–4 meses',
-      },
-      {
-        title: 'Plataforma de datos y Postgres',
-        weeks: [3, 8],
-        description:
-          'Diseño de esquemas, migraciones dolorosas, row-level security, herramientas de administración. Y salir de un backend gestionado que se te ha quedado pequeño sin pasar un fin de semana caído.',
-        scope: 'Normalmente 3–8 semanas',
-      },
-      {
-        title: 'Implantación de FireCMS y Rebase',
-        weeks: [1, 4],
-        description:
-          'Colecciones, componentes e integraciones a medida, hechas por quienes escribieron el framework, más soporte enterprise continuado.',
-        scope: 'Normalmente 1–4 semanas',
+          'Diseño de esquemas, migraciones dolorosas, row-level security y salir de un backend gestionado que se te ha quedado pequeño sin pasar un fin de semana caído. Y la implantación de FireCMS y Rebase, hecha por quienes escribieron los frameworks.',
+        scope: 'Normalmente 1–8 semanas',
       },
       {
         title: 'Revisión de arquitectura',

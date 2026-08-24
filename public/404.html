@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page not found — Camberi</title>
+    <!-- A 404 must never be indexed, and must never be mistaken for content. -->
+    <meta name="robots" content="noindex, follow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" sizes="48x48" />
+    <style>
+      @font-face {
+        font-family: 'DM Serif Display';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url('/fonts/dm-serif-display-latin-400-normal.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Instrument Sans Variable';
+        font-style: normal;
+        font-weight: 400 700;
+        font-display: swap;
+        src: url('/fonts/instrument-sans-latin-wght-normal.woff2') format('woff2-variations');
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        background: #ffffff;
+        color: #14141a;
+        font-family: 'Instrument Sans Variable', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-size: 1.0625rem;
+        line-height: 1.55;
+        letter-spacing: -0.005em;
+        -webkit-font-smoothing: antialiased;
+      }
+      main { max-width: 72rem; margin: 0 auto; padding: 0 1.5rem; width: 100%; }
+      .code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #6d6d7a;
+      }
+      hr { border: 0; border-top: 1px solid rgba(0, 0, 0, 0.12); margin: 0 0 2.5rem; }
+      h1 {
+        font-family: 'DM Serif Display', Georgia, serif;
+        font-weight: 400;
+        font-size: clamp(2.6rem, 6vw, 4.4rem);
+        line-height: 0.98;
+        letter-spacing: -0.03em;
+        margin: 0.75rem 0 0;
+        max-width: 16ch;
+      }
+      p { color: #4c4c58; max-width: 46ch; margin: 1.25rem 0 0; }
+      .links { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.25rem; }
+      a.btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-radius: 999px;
+        padding: 0.8rem 1.6rem;
+        font-weight: 500;
+        text-decoration: none;
+        border: 1px solid transparent;
+        transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      a.primary { background: #14141a; color: #fff; }
+      a.primary:hover { background: #000; }
+      a.secondary { border-color: rgba(0, 0, 0, 0.12); color: #14141a; }
+      a.secondary:hover { border-color: #14141a; }
+      a:focus-visible { outline: 2px solid #0040ff; outline-offset: 3px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <hr />
+      <span class="code">Error 404</span>
+      <h1>That page isn’t here.</h1>
+      <p>
+        The link may be out of date, or the address slightly off. Everything we have
+        is on the one page.
+      </p>
+      <div class="links">
+        <a class="btn primary" href="/">Back to camberi.com</a>
+        <a class="btn secondary" href="mailto:hello@camberi.com">hello@camberi.com</a>
+      </div>
+    </main>
+  </body>
+</html>
