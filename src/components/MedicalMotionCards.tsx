@@ -101,7 +101,7 @@ export function MedicalMotionCards() {
              wider than the strip the cards expand to fill it, so they always run
              from the edge of the screen to the copy; where it is narrower they
              hold their size and overflow off the page instead of squashing. */
-          className="shrink-0 grow snap-start basis-[12rem] min-[900px]:basis-[13.5rem] min-[1100px]:basis-[15rem] rounded-[1.15rem] overflow-hidden
+          className="shrink-0 grow snap-start basis-[11.5rem] min-[900px]:basis-[12.5rem] min-[1100px]:basis-[13.5rem] rounded-[1.15rem] overflow-hidden
                      flex flex-col transition-transform duration-700 ease-expo
                      group-hover/row:-translate-y-1"
           /* A gentle stagger on hover so the strip reads as a set of objects
@@ -117,7 +117,7 @@ export function MedicalMotionCards() {
               does not — reserving the height without centring left it hanging at
               the top of its card with a hole underneath, which is worse than not
               reserving it at all. */}
-          <div className="px-5 pt-6 pb-5 min-[1100px]:pt-7 min-[1100px]:pb-6">
+          <div className="flex items-center px-5 pt-6 pb-5 min-[900px]:min-h-[11rem] min-[1100px]:min-h-[13rem] min-[1100px]:pt-7 min-[1100px]:pb-6">
             <h4
               style={{ color: c.fg }}
               className="flex min-h-[2.5em] items-center text-[0.95rem] min-[1100px]:text-[1.02rem] font-600 leading-[1.25] tracking-[-0.015em] text-balance">
