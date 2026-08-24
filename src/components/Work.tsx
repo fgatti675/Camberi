@@ -173,7 +173,14 @@ export function Work() {
                  wider than its column by design, and a bare `fr` track refuses to
                  shrink below its content's min-content width — so the strip pushed
                  the column out and squeezed the copy into a third of the row. */
-              className="group/row grid grid-cols-1 min-[900px]:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] gap-10 min-[900px]:gap-16 items-center reveal">
+              className={`group/row grid grid-cols-1 gap-10 min-[900px]:gap-16 items-center reveal ${
+                p.image
+                  ? 'min-[900px]:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)]'
+                  /* The card strip needs more room than a single screenshot:
+                     four cards share this column, so at the standard split they
+                     could only ever be small. */
+                  : 'min-[900px]:grid-cols-[minmax(0,1.24fr)_minmax(0,0.76fr)]'
+              }`}>
               <div
                 /* No `w-full` here on purpose: an explicit width pins the box
                    to its grid column, so the negative margin slides the shot

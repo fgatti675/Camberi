@@ -55,7 +55,10 @@ export function MedicalMotionCards() {
       const kids = Array.from(row.children) as HTMLElement[];
       const gaps = (kids.length - 1) * parseFloat(getComputedStyle(row).columnGap || '0');
       const strip = kids.reduce((sum, k) => sum + k.offsetWidth, 0) + gaps;
-      setClipped(window.innerWidth >= 900 && strip > row.clientWidth + 1);
+      /* A few pixels of slack: when the cards grow to fill the row, flex
+         distributes fractional widths and the total lands a pixel or two over,
+         which is not a clip and should not trigger the fade. */
+      setClipped(window.innerWidth >= 900 && strip > row.clientWidth + 6);
     };
     measure();
     const observer = new ResizeObserver(measure);
@@ -98,7 +101,7 @@ export function MedicalMotionCards() {
              wider than the strip the cards expand to fill it, so they always run
              from the edge of the screen to the copy; where it is narrower they
              hold their size and overflow off the page instead of squashing. */
-          className="shrink-0 grow snap-start basis-[11rem] min-[900px]:basis-[11.75rem] min-[1100px]:basis-[12.5rem] rounded-[1.15rem] overflow-hidden
+          className="shrink-0 grow snap-start basis-[12rem] min-[900px]:basis-[13.5rem] min-[1100px]:basis-[15rem] rounded-[1.15rem] overflow-hidden
                      flex flex-col transition-transform duration-700 ease-expo
                      group-hover/row:-translate-y-1"
           /* A gentle stagger on hover so the strip reads as a set of objects
@@ -109,10 +112,15 @@ export function MedicalMotionCards() {
               its card carried a different amount of text and the phone below it
               sat at a different height from its neighbours. The min-height is in
               `em`, so it stays exactly two lines at both type sizes. */}
-          <div className="px-4 pt-5 pb-4 min-[1100px]:pt-7 min-[1100px]:pb-6">
+          {/* The label reserves two lines whether or not it needs them, and sits
+              centred in that space. Three of these wrap and "Your Health Cockpit"
+              does not — reserving the height without centring left it hanging at
+              the top of its card with a hole underneath, which is worse than not
+              reserving it at all. */}
+          <div className="px-5 pt-6 pb-5 min-[1100px]:pt-7 min-[1100px]:pb-6">
             <h4
               style={{ color: c.fg }}
-              className="min-h-[2.5em] text-[0.82rem] min-[1100px]:text-[0.88rem] font-600 leading-[1.25] tracking-[-0.012em] text-balance">
+              className="flex min-h-[2.5em] items-center text-[0.95rem] min-[1100px]:text-[1.02rem] font-600 leading-[1.25] tracking-[-0.015em] text-balance">
               {labels[i]}
             </h4>
           </div>
