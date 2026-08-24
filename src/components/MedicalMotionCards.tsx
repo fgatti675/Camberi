@@ -50,6 +50,13 @@ export function MedicalMotionCards() {
        that fades. `justify-start` packs to main-start, which in that direction
        is the right edge.
 
+       The vertical `py-2 -my-2` is not spacing — it is headroom for the
+       mask. `mask-clip` defaults to `border-box`, so the mask throws away
+       anything outside this element's box, and the cards lift 4px on hover:
+       their rounded top corners were being sliced flat as they rose, over
+       the 700ms of the transition. The padding grows the masked box, the
+       negative margin takes the space back out of the layout.
+
        Below that there is no bleed and the row becomes a scroller, which
        needs two things. It has to start at the first card, or a phone opens
        it already scrolled past cards one and two. And it has to run to both
@@ -67,6 +74,7 @@ export function MedicalMotionCards() {
       className={`mm-fade flex gap-3 justify-start min-[900px]:flex-row-reverse
                  overflow-x-auto min-[900px]:overflow-visible
                  -mx-6 px-6 min-[900px]:mx-0 min-[900px]:px-0
+                 py-2 -my-2
                  snap-x snap-mandatory min-[900px]:snap-none
                  scroll-pl-6 min-[900px]:scroll-pl-0
                  [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
