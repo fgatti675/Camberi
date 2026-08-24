@@ -374,9 +374,16 @@
    phones and wrong for the labels: a screenshot reads as continuing past
    the edge, but a heading sliced mid-word just reads as broken text.
    Fading the leading edge lets the clipped card dissolve into the dark
-   band instead of being cut, the same device the logo wall already uses
-   at both of its ends. */
-@media (min-width: 900px) {
+   band, the same device the logo wall already uses at both of its ends.
+
+   The bounds are fixed, so this belongs in CSS rather than in a
+   ResizeObserver. Driving it from JS meant the class landed a frame or
+   two after mount, and the strip visibly faded *after* it had already
+   painted — which reads as the card being cut by something rather than
+   as an edge treatment. Below 900px the row is a scroller and must not
+   fade at all; past ~2200px the cards grow to fill the row and nothing
+   is clipped to fade. */
+@media (min-width: 900px) and (max-width: 2200px) {
   .mm-fade {
     -webkit-mask-image: linear-gradient(to right, transparent 0, #000 13%);
     mask-image: linear-gradient(to right, transparent 0, #000 13%);

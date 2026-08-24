@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
 import { t } from '../i18n';
 
 /* ──────────────────────────────────────────────────────────────
@@ -43,31 +42,7 @@ export function MedicalMotionCards() {
     ...card,
     label: t.work.medicalmotion.cards[i],
   }));
-  const rowRef = useRef<HTMLDivElement>(null);
 
-  /* The leading-edge fade is only right when something is actually being cut
-     off. Above roughly 1700px the cards grow to fill the row exactly, nothing
-     overflows, and fading then just dims the first card's label for no reason.
-     The cards hold their basis when space runs out and grow when it does not,
-     so their combined width exceeding the row is precisely the clipped case. */
-  const [clipped, setClipped] = useState(false);
-  useEffect(() => {
-    const row = rowRef.current;
-    if (!row) return;
-    const measure = () => {
-      const kids = Array.from(row.children) as HTMLElement[];
-      const gaps = (kids.length - 1) * parseFloat(getComputedStyle(row).columnGap || '0');
-      const strip = kids.reduce((sum, k) => sum + k.offsetWidth, 0) + gaps;
-      /* A few pixels of slack: when the cards grow to fill the row, flex
-         distributes fractional widths and the total lands a pixel or two over,
-         which is not a clip and should not trigger the fade. */
-      setClipped(window.innerWidth >= 900 && strip > row.clientWidth + 6);
-    };
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(row);
-    return () => observer.disconnect();
-  }, []);
   return (
     /* Above 900px the row runs in reverse, which puts the first feature
        against the copy where it is always fully visible and pushes the last
@@ -89,8 +64,7 @@ export function MedicalMotionCards() {
        landing card one flush against the screen instead of on the text
        margin. */
     <div
-      ref={rowRef}
-      className={`${clipped ? 'mm-fade' : ''} flex gap-3 justify-start min-[900px]:flex-row-reverse
+      className={`mm-fade flex gap-3 justify-start min-[900px]:flex-row-reverse
                  overflow-x-auto min-[900px]:overflow-visible
                  -mx-6 px-6 min-[900px]:mx-0 min-[900px]:px-0
                  snap-x snap-mandatory min-[900px]:snap-none
