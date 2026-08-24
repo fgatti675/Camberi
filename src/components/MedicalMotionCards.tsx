@@ -70,17 +70,28 @@ export function MedicalMotionCards() {
         <div
           key={c.image}
           style={{ backgroundColor: c.bg }}
-          className="shrink-0 snap-start w-[11rem] min-[1100px]:w-[12rem] rounded-[1.15rem] overflow-hidden
+          /* grow + shrink-0 + a basis, rather than a fixed width: where the row is
+             wider than the strip the cards expand to fill it, so they always run
+             from the edge of the screen to the copy; where it is narrower they
+             hold their size and overflow off the page instead of squashing. */
+          className="shrink-0 grow snap-start basis-[11rem] min-[900px]:basis-[11.75rem] min-[1100px]:basis-[12.5rem] rounded-[1.15rem] overflow-hidden
                      flex flex-col transition-transform duration-700 ease-expo
                      group-hover/row:-translate-y-1"
           /* A gentle stagger on hover so the strip reads as a set of objects
              rather than one picture. */
           >
-          <h4
-            style={{ color: c.fg }}
-            className="px-4 pt-4 pb-3 text-[0.82rem] min-[1100px]:text-[0.88rem] font-600 leading-[1.25] tracking-[-0.012em] text-balance">
-            {labels[i]}
-          </h4>
+          {/* The label reserves two lines whether or not it needs them. Three of
+              these wrap and "Your Health Cockpit" does not, so without a floor
+              its card carried a different amount of text and the phone below it
+              sat at a different height from its neighbours. The min-height is in
+              `em`, so it stays exactly two lines at both type sizes. */}
+          <div className="px-4 pt-5 pb-4 min-[1100px]:pt-7 min-[1100px]:pb-6">
+            <h4
+              style={{ color: c.fg }}
+              className="min-h-[2.5em] text-[0.82rem] min-[1100px]:text-[0.88rem] font-600 leading-[1.25] tracking-[-0.012em] text-balance">
+              {labels[i]}
+            </h4>
+          </div>
           {/* The renders are cropped at the bottom by design, so the phone
               runs off the bottom edge of its card exactly as it does on
               their own site. */}
