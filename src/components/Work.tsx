@@ -108,25 +108,29 @@ const alsoBuilt = [
   },
 ];
 
-/** Browser chrome around a real screenshot, on the dark surface. The whole
-    frame is a link — the section's claim is that you can go and use these. */
+/** The screenshot itself, as an object on the dark surface rather than a
+    picture of a browser. The chrome — dots, a URL bar, a green dot — was
+    costume: it dressed a real product shot up as a mockup, and the domain it
+    carried now sits on the metadata line where the rest of the metadata is.
+
+    The whole frame is a link: the section's claim is that you can go and use
+    these. It stays out of the tab order and the accessibility tree because
+    the named link below the copy is the one that should be announced. */
 function Frame({
-  domain,
   image,
   alt,
   href,
   bleed,
 }: {
-  domain: string;
   image: string;
   alt: string;
   href: string;
   bleed: 'left' | 'right';
 }) {
-  /* Written out literally — Tailwind scans for whole class names, and the
-     side that runs off the page loses its corner and its border so the
-     window reads as continuing past the edge rather than as a card that
-     happens to be clipped. */
+  /* Written out literally — Tailwind scans for whole class names. The side
+     that runs off the page loses its corner and its border, so the shot reads
+     as continuing past the edge rather than as a card that happens to be
+     clipped. */
   const edge =
     bleed === 'left'
       ? 'min-[900px]:rounded-l-none min-[900px]:border-l-0'
@@ -138,18 +142,7 @@ function Frame({
       rel="noopener noreferrer"
       tabIndex={-1}
       aria-hidden="true"
-      className={`block rounded-[1.15rem] ${edge} overflow-hidden bg-white/[0.05] border border-white/12 shadow-[0_40px_90px_-40px_rgba(0,0,0,0.9)] transition-all duration-700 ease-expo group-hover/row:-translate-y-2 group-hover/row:border-white/25 group-hover/row:shadow-[0_60px_120px_-50px_rgba(0,0,0,1)]`}>
-      <div className="h-10 flex items-center gap-3 px-[0.9rem] border-b border-white/8 bg-white/[0.03]">
-        <span className="inline-flex gap-1.5">
-          <i className="w-2.5 h-2.5 rounded-full bg-white/14" />
-          <i className="w-2.5 h-2.5 rounded-full bg-white/14" />
-          <i className="w-2.5 h-2.5 rounded-full bg-white/14" />
-        </span>
-        <span className="flex-1 max-w-[62%] mx-auto flex items-center justify-center gap-1.5 bg-white/[0.05] border border-white/8 rounded-full font-mono text-[0.7rem] text-white/60 px-[0.8rem] py-[0.22rem]">
-          <i className="w-1.5 h-1.5 rounded-full bg-emerald-400/80 shrink-0" />
-          <span className="truncate">{domain}</span>
-        </span>
-      </div>
+      className={`block rounded-[1.15rem] ${edge} overflow-hidden border border-white/12 shadow-[0_40px_90px_-40px_rgba(0,0,0,0.9)] transition-all duration-700 ease-expo group-hover/row:-translate-y-2 group-hover/row:border-white/25 group-hover/row:shadow-[0_60px_120px_-50px_rgba(0,0,0,1)]`}>
       <img src={image} alt={alt} loading="lazy" className="block w-full h-auto" />
     </a>
   );
@@ -190,7 +183,6 @@ export function Work() {
                   style={{ background: `radial-gradient(60% 60% at 50% 50%, ${p.glow} 0%, transparent 72%)` }}
                 />
                 <Frame
-                  domain={p.domain}
                   image={p.image}
                   alt={`${p.title} interface`}
                   href={p.href}
@@ -216,7 +208,7 @@ export function Work() {
                 {/* Metadata sits under the name, where a caption belongs,
                     rather than floating above it as a label. */}
                 <span className="mt-3 font-mono text-[0.72rem] tracking-[0.02em] text-white/55">
-                  {p.kicker}
+                  {p.kicker} · {p.domain}
                 </span>
 
                 {/* The claim, in the display voice. */}
