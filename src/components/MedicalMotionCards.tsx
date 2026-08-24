@@ -39,7 +39,10 @@ const CARDS: Card[] = [
 ];
 
 export function MedicalMotionCards() {
-  const labels = t.work.medicalmotion.cards;
+  const ordered = CARDS.map((card, i) => ({
+    ...card,
+    label: t.work.medicalmotion.cards[i],
+  }));
   const rowRef = useRef<HTMLDivElement>(null);
 
   /* The leading-edge fade is only right when something is actually being cut
@@ -66,9 +69,11 @@ export function MedicalMotionCards() {
     return () => observer.disconnect();
   }, []);
   return (
-    /* Above 900px `justify-end` anchors the last card against the copy and
-       lets the row overflow off the left of the page, which is the side this
-       row bleeds to.
+    /* Above 900px the row runs in reverse, which puts the first feature
+       against the copy where it is always fully visible and pushes the last
+       one off the left of the page — the side this row bleeds to and the side
+       that fades. `justify-start` packs to main-start, which in that direction
+       is the right edge.
 
        Below that there is no bleed and the row becomes a scroller, which
        needs two things. It has to start at the first card, or a phone opens
@@ -85,15 +90,15 @@ export function MedicalMotionCards() {
        margin. */
     <div
       ref={rowRef}
-      className={`${clipped ? 'mm-fade' : ''} flex gap-3 justify-start min-[900px]:justify-end
+      className={`${clipped ? 'mm-fade' : ''} flex gap-3 justify-start min-[900px]:flex-row-reverse
                  overflow-x-auto min-[900px]:overflow-visible
                  -mx-6 px-6 min-[900px]:mx-0 min-[900px]:px-0
                  snap-x snap-mandatory min-[900px]:snap-none
                  scroll-pl-6 min-[900px]:scroll-pl-0
                  [scrollbar-width:none] [&::-webkit-scrollbar]:hidden`}
       role="img"
-      aria-label={`medicalmotion: ${labels.join(', ')}`}>
-      {CARDS.map((c, i) => (
+      aria-label={`medicalmotion: ${t.work.medicalmotion.cards.join(', ')}`}>
+      {ordered.map((c) => (
         <div
           key={c.image}
           style={{ backgroundColor: c.bg }}
@@ -102,7 +107,7 @@ export function MedicalMotionCards() {
              from the edge of the screen to the copy; where it is narrower they
              hold their size and overflow off the page instead of squashing. */
           className="shrink-0 grow snap-start basis-[13rem] min-[900px]:basis-[15rem] min-[1100px]:basis-[17rem] rounded-[1.15rem] overflow-hidden
-                     flex flex-col transition-transform duration-700 ease-expo
+                     min-[900px]:aspect-[1/1.55] flex flex-col transition-transform duration-700 ease-expo
                      group-hover/row:-translate-y-1"
           /* A gentle stagger on hover so the strip reads as a set of objects
              rather than one picture. */
@@ -117,16 +122,21 @@ export function MedicalMotionCards() {
               does not — reserving the height without centring left it hanging at
               the top of its card with a hole underneath, which is worse than not
               reserving it at all. */}
-          <div className="flex items-center px-5 pt-6 pb-5 min-[900px]:min-h-[8rem] min-[1100px]:min-h-[9rem] min-[1100px]:pt-7 min-[1100px]:pb-6">
+          <div className="flex items-center justify-center px-5 pt-6 pb-5 min-[1100px]:pt-7 min-[1100px]:pb-6">
             <h4
               style={{ color: c.fg }}
-              className="flex min-h-[2.5em] items-center text-[1rem] min-[1100px]:text-[1.12rem] font-600 leading-[1.25] tracking-[-0.015em] text-balance">
-              {labels[i]}
+              className="flex min-h-[2.5em] items-center text-center text-[1rem] min-[1100px]:text-[1.12rem] font-600 leading-[1.25] tracking-[-0.015em] text-balance">
+              {c.label}
             </h4>
           </div>
           {/* The renders are cropped at the bottom by design, so the phone
               runs off the bottom edge of its card exactly as it does on
               their own site. */}
+          {/* The phone fills everything the label leaves rather than sitting at
+              its natural size with a field of colour above it. `object-cover`
+              scales it to cover that box, which crops the sides — the renders
+              carry about 4% of transparent margin there, so it takes the empty
+              space before it touches the phone. */}
           <img
             src={c.image}
             alt=""
@@ -134,7 +144,7 @@ export function MedicalMotionCards() {
             loading="lazy"
             width={520}
             height={573}
-            className="mt-auto block w-full h-auto"
+            className="mt-auto block w-full h-auto min-[900px]:flex-1 min-[900px]:min-h-0 min-[900px]:h-full min-[900px]:object-cover min-[900px]:object-top"
           />
         </div>
       ))}
