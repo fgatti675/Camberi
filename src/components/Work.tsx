@@ -153,8 +153,15 @@ export function Work() {
   return (
     <section
       id="work"
-      className="relative py-28 md:py-40 text-white bg-bg-dark isolate overflow-hidden">
-      <AmbientGradient config={AMBIENT_WORK} className="h-[52rem]" strength={0.3} />
+      className="relative pt-[15rem] pb-28 md:pt-[25rem] md:pb-40 text-white bg-bg-dark isolate overflow-hidden">
+      {/* The ribbon is a banner across the top; the mask has it fully gone a
+          rem above the rule, so nothing in the section head ever sits on it. */}
+      <AmbientGradient
+        config={AMBIENT_WORK}
+        className="h-[52rem]"
+        strength={0.3}
+        mask="[mask-image:linear-gradient(to_bottom,#000_8rem,transparent_14rem)] md:[mask-image:linear-gradient(to_bottom,#000_16rem,transparent_24rem)]"
+      />
 
       <div className={`relative z-10 ${CONTAINER_WIDE}`}>
         <SectionHead

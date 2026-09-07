@@ -30,8 +30,16 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="relative pt-28 md:pt-40 pb-20 md:pb-24 text-white bg-bg-dark isolate overflow-hidden">
-      <AmbientGradient config={AMBIENT_CONTACT} className="h-[40rem]" strength={0.24} />
+      className="relative pt-[15rem] md:pt-[23rem] pb-20 md:pb-24 text-white bg-bg-dark isolate overflow-hidden">
+      {/* Same banner treatment as the work section: the shape hangs above the
+          heading and dissolves before the rule, so the address and the copy sit
+          on plain dark whatever the scroll position. */}
+      <AmbientGradient
+        config={AMBIENT_CONTACT}
+        className="h-[40rem]"
+        strength={0.24}
+        mask="[mask-image:linear-gradient(to_bottom,#000_8rem,transparent_14rem)] md:[mask-image:linear-gradient(to_bottom,#000_14rem,transparent_22rem)]"
+      />
       <div className={`relative z-10 ${CONTAINER}`}>
         <SectionHead
           dark

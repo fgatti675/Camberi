@@ -1,11 +1,16 @@
-const COLORS = [
-    { color: "#FB5066", enabled: true },
-    { color: "#36CCD6", enabled: true },
-    { color: "#FFC600", enabled: true },
-    { color: "#8B6AE6", enabled: true },
-    { color: "#2E0EC7", enabled: true },
-    { color: "#FF9A9E", enabled: true },
-];
+const PALETTE = {
+    coral: "#FB5066",
+    cyan: "#36CCD6",
+    yellow: "#FFC600",
+    purple: "#8B6AE6",
+    blue: "#2E0EC7",
+    pink: "#FF9A9E",
+} as const;
+
+/* The order the hero was composed with. Do not reorder: see the note on
+   `palette()` below for why the order is part of the picture. */
+const HUES = ["coral", "cyan", "yellow", "purple", "blue", "pink"] as const;
+const COLORS = HUES.map((hue) => ({ color: PALETTE[hue], enabled: true }));
 
 export type NeatConfig = Record<string, unknown>;
 
@@ -123,35 +128,57 @@ export const HERO_CONFIG: NeatConfig = {
 };
 
 /* ── Ambient gradients ─────────────────────────────────────────────
-   The hero is the page's one saturated moment. Everywhere else the
-   gradient is ambient: a transparent canvas over the dark sections,
-   with `colorBrightness` pulled right down so the ribbon reads as a
-   dark faceted ridge that catches colour only along its edges. It
-   becomes the texture of the dark band rather than a blue block
-   interrupting the page — the same approach as dataki.ai.
+   The hero owns the page's saturated blue. The three dark bands carry
+   the same ribbon on black instead — a transparent canvas over the
+   section, so the shape is the texture of the band rather than a
+   rectangle interrupting the page — and each one gets its own dominant
+   colour so the page reads as three distinct moments rather than one
+   gradient repeated.
 
-   Two settings do all the work:
-   - `backgroundAlpha: 0` + black background: the section's own
-     colour shows through, so there is no rectangle.
-   - `colorBrightness` ~0.25: the difference between "ambient" and
-     "a poster". Above ~0.45 it starts competing with the content. */
+   How the colour is chosen: the procedural texture picks palette entries
+   by *index* from a seeded generator. Two of those picks paint the big
+   background fields that end up as the ribbon's body colour; the shapes
+   scattered on top take the rest. So with the seed held fixed, which
+   colour dominates is decided purely by which slot it sits in — the
+   composition does not change at all. For the seeds below the field
+   picks are:  217 → slots 1 and 5,  891 → slot 4 twice,  542 → slots 4
+   and 5.  `palette()` pins colours to those slots and fills the others
+   in the usual order.
+
+   Brightness is the one knob that sets the mood, and it comes with a rule:
+   **copy never sits on a ribbon brighter than ~0.3.** Small white text on a
+   coloured facet is unreadable, and because the ribbon travels with scroll
+   no framing can promise where it will be. So the two bands that run at
+   0.5 (work, contact) are laid out as banners — the section adds top
+   padding and `AmbientGradient` masks the canvas to transparent before the
+   heading — and the one band whose copy sits directly on the shape
+   (process) stays at 0.25, where the ribbon is a dark faceted ridge with
+   colour only along its edges. The launch values were 0.15–0.3
+   everywhere, which read as mud; 0.7 turns a band into a poster. */
+type Hue = keyof typeof PALETTE;
+
+function palette(slots: Partial<Record<number, Hue>>) {
+    const pinned = new Set(Object.values(slots));
+    const rest = HUES.filter((h) => !pinned.has(h));
+    return HUES.map((_, i) => ({ color: PALETTE[slots[i] ?? rest.shift()!], enabled: true }));
+}
+
 const AMBIENT_BASE: NeatConfig = {
     ...HERO_CONFIG,
     speed: 0.11,
     backgroundAlpha: 0,
     backgroundColor: "#000000",
     proceduralBackgroundColor: "#000000",
-    colorBrightness: 0.28,
-    /* Framed so the ribbon occupies the upper half of its canvas and
+    colorBrightness: 0.5,
+    /* Framed so the ribbon occupies the upper part of its canvas and
        fades out into transparency below — which means the canvas can
        end wherever we like without showing a cut edge. */
     cameraY: -6,
     cameraZoom: 1.85,
     /* Baked here too, but pinned to 1024 rather than derived. A baked texture
        is per-instance — WebGL textures cannot cross contexts — and 2048 costs
-       ~22MB against ~5.5MB. These ribbons are dark and dim by design, so the
-       extra edge detail would not survive `colorBrightness: 0.28` anyway; the
-       hero is where the sharpness is worth paying for. */
+       ~22MB against ~5.5MB. The hero is where the extra sharpness is worth
+       paying for. */
     textureBakeResolution: 1024,
     /* These scale `yOffset`, which is driven by scroll — not the idle
        animation, which `speed` owns. Damped to ~1.2 they made the bands
@@ -163,31 +190,42 @@ const AMBIENT_BASE: NeatConfig = {
     yOffsetFlowMultiplier: 4.0,
 };
 
-/* Behind the work section — the largest and most present of the three. */
+/* Behind the work section — the largest and most present of the three.
+   Cyan field with blue and yellow facets, a shift away from the hero's
+   royal blue directly above it. The camera is pushed in so the facets are
+   big, and lifted so the ribbon sits above the heading. */
 export const AMBIENT_WORK: NeatConfig = {
     ...AMBIENT_BASE,
     textureSeed: 217,
-    colorBrightness: 0.3,
+    colors: palette({ 1: "cyan", 5: "blue" }),
+    colorBrightness: 0.5,
+    cameraZoom: 2.8,
+    cameraY: -9,
 };
 
-/* Behind the short process band. Much dimmer than the work section: here
-   the copy sits directly on top of the ribbon rather than below it, so the
-   shape has to stay dark enough for white text to win outright. */
+/* Behind the short process band. The copy sits directly on the ribbon
+   here — no banner, no mask — so this one stays dark: the deep blue field
+   with coral and pink along the edges, at a brightness where white text
+   wins outright wherever the shape happens to be. */
 export const AMBIENT_PROCESS: NeatConfig = {
     ...AMBIENT_BASE,
     textureSeed: 891,
-    colorBrightness: 0.15,
+    colors: palette({ 4: "blue" }),
+    colorBrightness: 0.25,
     cameraZoom: 2.6,
-    cameraY: -3,
+    cameraY: -6,
     cameraRotationY: 0.44,
 };
 
-/* Behind contact. Same constraint as process — centred copy over the
-   shape — so it stays dark and lets the colour show only at the edges. */
+/* Behind contact — the close, and the one warm moment on the page:
+   yellow into coral. Framed high so the shape hangs above the heading
+   and the address underneath sits on plain dark. */
 export const AMBIENT_CONTACT: NeatConfig = {
     ...AMBIENT_BASE,
     textureSeed: 542,
-    colorBrightness: 0.17,
-    cameraZoom: 2.1,
+    colors: palette({ 4: "yellow", 5: "coral" }),
+    colorBrightness: 0.5,
+    cameraZoom: 2.6,
+    cameraY: -9,
     cameraRotationY: 0.53,
 };
