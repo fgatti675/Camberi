@@ -346,6 +346,7 @@ export const es: Dict = {
     built: 'Lo que hemos hecho',
     connect: 'Contacto',
     howWeWork: 'Cómo trabajamos',
+    log: 'Registro',
     legal: 'Aviso legal',
     privacy: 'Privacidad',
     security: 'Seguridad',
