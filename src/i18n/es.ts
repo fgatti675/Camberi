@@ -63,7 +63,7 @@ export const es: Dict = {
         href: 'https://rebase.pro',
       },
       {
-        from: 'Una colección de Firebase o MongoDB',
+        from: 'Una colección de Firebase',
         to: 'Un panel de administración que tu equipo no técnico sabe usar',
         product: 'FireCMS',
         href: 'https://firecms.co',
@@ -140,7 +140,7 @@ export const es: Dict = {
   },
 
   work: {
-    title: 'Productos en producción. No casos de éxito en una presentación.',
+    title: 'Productos en producción. No promesas en un PowerPoint.',
     intro:
       'Puedes leer cómo trabajamos o puedes ir a usar lo que hemos hecho. Todo lo de aquí abajo está funcionando ahora mismo.',
     visit: (name: string) => `Visitar ${name}`,
@@ -176,7 +176,7 @@ export const es: Dict = {
         { value: '9k', label: 'instalaciones al mes en npm' },
         { value: '220+', label: 'forks' },
       ],
-      stack: ['TypeScript', 'React', 'Firebase', 'MongoDB'],
+      stack: ['TypeScript', 'React', 'Firebase'],
     },
     rebase: {
       kicker: 'Producto propio · Saliendo ahora',
@@ -282,7 +282,7 @@ export const es: Dict = {
     repos: {
       firecms: {
         description:
-          'El CMS headless y panel de administración para Firebase y MongoDB. Arrancó en 2020 y le seguimos metiendo cambios cada semana.',
+          'El CMS headless y panel de administración para Firebase. Arrancó en 2020 y le seguimos metiendo cambios cada semana.',
         meta: '1,3k estrellas · 220 forks · TypeScript',
       },
       rebase: {
@@ -333,7 +333,7 @@ export const es: Dict = {
       title: 'Cómo seguimos',
       steps: [
         'Nos escribes dos párrafos: qué estás montando y por dónde se ha atascado.',
-        'Te volvemos con las primeras preguntas, o con un no claro si no es trabajo para nosotros.',
+        'Te contestamos con las primeras preguntas, o con un no claro si no es trabajo para nosotros.',
         'Una llamada de 30 minutos sobre el producto, sus límites y los plazos.',
         'El alcance por escrito: los hitos, y un precio que no se mueve.',
       ],

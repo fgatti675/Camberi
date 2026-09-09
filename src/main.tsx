@@ -25,11 +25,17 @@ if (container && route) {
   /* The consent bar is a sibling of the page rather than part of any layout:
      it belongs to the document, not to a route, and it renders nothing at all
      until an effect has read storage — which is what keeps it out of the
-     prerendered HTML and out of the way of hydration. */
+     prerendered HTML and out of the way of hydration.
+
+     It goes *before* the page, not after. The bar is `position: fixed`, so
+     the order changes nothing on screen; what it changes is the tab order.
+     Last in the DOM meant a keyboard visitor had to pass every link on the
+     home page before reaching Accept — the two controls the page is asking
+     them to use are now the first stops. */
   const tree = (
     <StrictMode>
-      <Page />
       <ConsentBar />
+      <Page />
     </StrictMode>
   );
 

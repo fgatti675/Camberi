@@ -107,7 +107,17 @@ function htmlToText(html) {
   for (const [entity, char] of Object.entries(ENTITIES)) s = s.split(entity).join(char);
   s = s
     .split('\n')
-    .map((line) => line.replace(/[ \t ]+/g, ' ').trim())
+    .map((line) =>
+      line
+        .replace(/[ \t ]+/g, ' ')
+        /* An inline element sitting between a word and the punctuation that
+           follows it left a space where there was none: `…in 2017</a>, and…`
+           came out as "in 2017 , and", because every tag became a separator.
+           Put the punctuation back against the word it belongs to. */
+        .replace(/ +([,.;:!?%)\]}»›…])/g, '$1')
+        .replace(/([(\[{«‹¿¡]) +/g, '$1')
+        .trim()
+    )
     .join('\n');
   return s.replace(/\n{3,}/g, '\n\n').trim();
 }

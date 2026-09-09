@@ -163,11 +163,11 @@ export const architectureReviewEs: ServiceCopy = {
 
   faq: {
     title: 'Lo que nos preguntáis.',
-    intro: 'Incluida la de si vamos a acabar vendiéndoos una reescritura.',
+    intro: 'Incluida la de si vamos a acabar vendiéndote una reescritura.',
     items: [
       {
         q: '¿Qué necesitáis de nosotros?',
-        a: 'Acceso de lectura al repositorio, una hora con dos o tres ingenieros que trabajen en él y acceso a la monitorización y a la facturación que tengáis. La documentación se agradece y casi nunca es determinante.',
+        a: 'Acceso de lectura al repositorio, una hora con dos o tres ingenieros que trabajen en él y acceso a la monitorización y a la facturación que tengas. La documentación se agradece y casi nunca es determinante.',
       },
       {
         q: '¿Hay que contrataros después?',
@@ -183,11 +183,11 @@ export const architectureReviewEs: ServiceCopy = {
       },
       {
         q: '¿Firmáis un acuerdo de confidencialidad?',
-        a: 'Sí, antes de que nos deis acceso a nada. Mándanos el vuestro o pídenos uno.',
+        a: 'Sí, antes de que nos des acceso a nada. Mándanos el tuyo o pídenos uno.',
       },
       {
         q: '¿Y si no estamos de acuerdo con algo?',
-        a: 'La sesión de devolución es justo para eso, y alguna conclusión cambia ahí: vuestros ingenieros saben cosas que el código no cuenta. Lo que no vamos a hacer es quitar un hallazgo porque resulte incómodo.',
+        a: 'La sesión de devolución es justo para eso, y alguna conclusión cambia ahí: tus ingenieros saben cosas que el código no cuenta. Lo que no vamos a hacer es quitar un hallazgo porque resulte incómodo.',
       },
     ],
   },

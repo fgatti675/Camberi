@@ -158,11 +158,15 @@ export function MedicalMotionCards({ variant = 'row' }: { variant?: 'row' | 'gri
               a reserved line empty above the phone. Capped at 17ch they all
               break to two lines, at every width. */}
           <div className="flex items-center justify-center px-5 pt-8 pb-2 min-[1100px]:pt-9 min-[1100px]:pb-2">
-            <h4
+            {/* Not a heading. The strip is exposed as a single `role="img"`
+                whose label already lists these four, so a heading here is
+                invisible to a screen reader and only breaks the page's
+                heading order — h2 (the section) straight to h4. */}
+            <p
               style={{ color: c.fg }}
               className="flex min-h-[2.5em] items-center justify-center max-w-[17ch] text-center text-[1rem] min-[1100px]:text-[1.12rem] font-600 leading-[1.25] tracking-[-0.015em] text-balance">
               {c.label}
-            </h4>
+            </p>
           </div>
           {/* The renders are cropped at the bottom by design, so the phone
               runs off the bottom edge of its card exactly as it does on

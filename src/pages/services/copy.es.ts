@@ -10,7 +10,7 @@ export const servicesEs: ServicesCopy = {
 
   lead: [
     'Estas son las formas que toma nuestro trabajo de verdad. Cambian en duración y en lo que hay que decidir, no en cómo se trabaja: un alcance por escrito al salir de la primera semana, un plan de hitos, una URL de staging desde el primer día y una demo todos los viernes, elijas la que elijas.',
-    'Si te reconoces en más de una, es lo normal. Casi todos los encargos empiezan por el más corto y crecen hacia el siguiente, y una revisión de dos semanas es una forma mucho más barata de averiguar cuál que una fase de descubrimiento de tres meses.',
+    'Si te reconoces en más de una, es lo normal. Casi todos los encargos empiezan por el más corto y crecen hacia el siguiente, y salir de dudas con una revisión de dos semanas cuesta mucho menos que hacerlo con una fase de descubrimiento de tres meses.',
   ],
 
   blurbs: [

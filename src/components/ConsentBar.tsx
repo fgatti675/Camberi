@@ -157,15 +157,62 @@ function dropAnalyticsCookies() {
   }
 }
 
+/* ── When to ask on a short screen ────────────────────────────
+   At 375×667 the home page's hero is taller than the viewport, so
+   its two buttons sit hard against the bottom edge — and a bar
+   pinned there covers them. The hero is not up for restyling and
+   shrinking the bar would not recover enough height, so on a short
+   viewport the bar simply waits until the reader has scrolled: by
+   then the hero's buttons have moved up the page and nothing is
+   underneath it. Nothing is measured while it waits, because
+   nothing is measured before an acceptance in any case.
+
+   The threshold is a comfortable clearance rather than a single
+   pixel, so one flick of a thumb passes it and a rubber-band
+   overscroll does not. If the page is restored part-way down the
+   test is already true and the bar appears at once. */
+const SHORT_VIEWPORT = 700;
+const SCROLL_GATE_PX = 120;
+
+function gated(): boolean {
+  return window.innerHeight < SHORT_VIEWPORT && window.scrollY < SCROLL_GATE_PX;
+}
+
+/** Calls `then` the first time the page is scrolled past the gate. */
+function waitForScroll(then: () => void): () => void {
+  const onScroll = () => {
+    if (window.scrollY < SCROLL_GATE_PX) return;
+    detach();
+    then();
+  };
+  /* A phone that is rotated, or a desktop window dragged taller, stops being
+     a short viewport — the bar should not stay hidden waiting for a scroll
+     that is no longer the reason it is waiting. */
+  const onResize = () => {
+    if (window.innerHeight < SHORT_VIEWPORT) return;
+    detach();
+    then();
+  };
+  const detach = () => {
+    window.removeEventListener('scroll', onScroll);
+    window.removeEventListener('resize', onResize);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onResize, { passive: true });
+  return detach;
+}
+
 /* ── The bar ──────────────────────────────────────────────────
    Renders nothing on the server and nothing on the client's first
    render, so the prerendered HTML and the hydrated tree agree. It
    appears only once an effect has confirmed there is no valid
    stored choice. `fixed` throughout: the document below it never
    moves, so there is no layout shift to measure. On a phone it is
-   a full-width strip at the bottom of the viewport, which on the
-   home page sits clear of the hero's buttons; from 640px up it is
-   a small panel in the bottom-left corner.
+   a full-width strip at the bottom of the viewport; from 640px up
+   it is a small panel in the bottom-left corner.
+
+   On a short viewport it waits for the first scroll — see
+   `SHORT_VIEWPORT` below.
 
    Escape is not handled, on purpose. This is a `region`, not a
    dialog — dismissing it with a keystroke would record silence as
@@ -180,24 +227,41 @@ export function ConsentBar() {
   const [entered, setEntered] = useState(false);
 
   useEffect(() => {
+    let detachGate: (() => void) | undefined;
+
+    const show = () => {
+      setEntered(false);
+      setAsking(true);
+    };
+
     /* Reading storage is the one thing that decides whether this component
        exists at all, and it can only happen in the browser. It also has to
        happen again whenever the privacy page clears the record, so the same
-       function is both the first read and the subscription. */
-    const decide = () => {
+       function is both the first read and the subscription — and a reset is
+       a request for the bar, so it skips the gate below. */
+    const decide = (event?: Event) => {
+      detachGate?.();
+      detachGate = undefined;
+
       const stored = readChoice();
       if (stored === 'granted') loadAnalytics();
-      if (stored === null) {
-        setEntered(false);
-        setAsking(true);
-      } else {
+      if (stored !== null) {
         setAsking(false);
+        return;
       }
+      if (event || !gated()) {
+        show();
+        return;
+      }
+      detachGate = waitForScroll(show);
     };
 
     decide();
     window.addEventListener(CONSENT.resetEvent, decide);
-    return () => window.removeEventListener(CONSENT.resetEvent, decide);
+    return () => {
+      detachGate?.();
+      window.removeEventListener(CONSENT.resetEvent, decide);
+    };
   }, []);
 
   /* A beat between mounting the panel and giving it its final position, so it

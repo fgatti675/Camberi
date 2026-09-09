@@ -62,7 +62,7 @@ export const en = {
         href: 'https://rebase.pro',
       },
       {
-        from: 'A Firebase or MongoDB collection',
+        from: 'A Firebase collection',
         to: 'An admin panel your non-technical team can actually use',
         product: 'FireCMS',
         href: 'https://firecms.co',
@@ -142,7 +142,7 @@ export const en = {
   },
 
   work: {
-    title: 'Products in production. Not case studies in a deck.',
+    title: 'Products in production. Not promises in a deck.',
     intro:
       'You can read about how we work, or you can go and use what we built. Everything below is live right now.',
     visit: (name: string) => `Visit ${name}`,
@@ -178,7 +178,7 @@ export const en = {
         { value: '9k', label: 'npm installs a month' },
         { value: '220+', label: 'forks' },
       ],
-      stack: ['TypeScript', 'React', 'Firebase', 'MongoDB'],
+      stack: ['TypeScript', 'React', 'Firebase'],
     },
     rebase: {
       kicker: 'Our product · Shipping now',
@@ -286,7 +286,7 @@ export const en = {
     repos: {
       firecms: {
         description:
-          'The headless CMS and admin panel for Firebase and MongoDB. Started in 2020, still merged into every week.',
+          'The headless CMS and admin panel for Firebase. Started in 2020, still merged into every week.',
         meta: '1.3k stars · 220 forks · TypeScript',
       },
       rebase: {

@@ -28,7 +28,7 @@ export const securityEs: SecurityCopy = {
       title: 'El código es vuestro y se queda donde está',
       body: [
         'El trabajo de cliente vive en los repositorios del cliente, sobre su infraestructura y con sus cuentas. Nosotros entramos como un miembro más, con los permisos que el trabajo requiere, y cuando el encargo termina las cuentas se quedan donde estaban: no hay que migrar nada de vuelta porque nada estuvo nunca en otro sitio.',
-        'Es lo mismo que dice el resto del sitio sobre cómo acaba un encargo: tu repositorio, tu infraestructura, tus cuentas, documentado. Aquí importa porque además responde a casi todo lo que pregunta una revisión de seguridad. No hay una copia de vuestro sistema alojada por Camberi que alguien pueda comprometer, no hay convivencia con los datos de otro cliente y no hay una cuenta de proveedor interpuesta entre vosotros y vuestro entorno de producción.',
+        'Es lo mismo que dice el resto del sitio sobre cómo acaba un encargo: vuestro repositorio, vuestra infraestructura, vuestras cuentas, documentado. Aquí importa porque además responde a casi todo lo que pregunta una revisión de seguridad. No hay una copia de vuestro sistema alojada por Camberi que alguien pueda comprometer, no hay convivencia con los datos de otro cliente y no hay una cuenta de proveedor interpuesta entre vosotros y vuestro entorno de producción.',
       ],
     },
     {

@@ -14,7 +14,7 @@ export const productEs: ServiceCopy = {
   lead: [
     'Este es el encargo en el que lo hacemos todo. No un diseño que después implementa otro, ni un backend enganchado a un frontend que escribió otra agencia: un equipo responsable de las pantallas, del modelo de datos, de la infraestructura y del despliegue, desde la primera sesión de trabajo hasta la primera versión en producción y más allá.',
     'Vale igual para la reescritura que para empezar de cero. El patrón es el mismo: acertar pronto con el modelo de datos, poner algo que se pueda clicar delante de usuarios reales en pocas semanas y subir a una URL de staging cada semana, para que en el cuarto mes nadie se lleve una sorpresa con el estado del trabajo.',
-    'Y vale para lo regulado. El producto que llevamos más tiempo construyendo lo recetan médicos y lo cubren [23 aseguradoras de salud alemanas y suizas o más](https://medicalmotion.com), así que las preguntas llegan tanto de aseguradoras y revisores como de usuarios, y una decisión de arquitectura equivocada no es un sprint que puedas repetir.',
+    'Y vale para lo regulado. El producto que llevamos más tiempo construyendo lo recetan médicos y lo cubren [más de 23 aseguradoras de salud alemanas y suizas](https://medicalmotion.com), así que las preguntas llegan tanto de aseguradoras y revisores como de usuarios, y una decisión de arquitectura equivocada no es un sprint que puedas repetir.',
   ],
 
   fit: {
@@ -27,7 +27,7 @@ export const productEs: ServiceCopy = {
       'Una v1 que hizo un freelance o una agencia y que ahora cuesta tres veces más cambiarla de lo que costó escribirla.',
       'Un producto regulado —salud, seguros, finanzas— donde el modelo de datos, los permisos y la traza de auditoría pesan tanto como la interfaz.',
       'Quieres un único equipo responsable de diseño, frontend, backend e infraestructura, en vez de tres proveedores señalándose entre ellos.',
-      'Alguien de vuestro lado puede decidir sobre producto en un día. Eso marca el ritmo más que cualquier decisión técnica.',
+      'Alguien de tu lado puede decidir sobre producto en un día. Eso marca el ritmo más que cualquier decisión técnica.',
     ],
     notTitle: 'No encaja',
     not: [
@@ -84,7 +84,7 @@ export const productEs: ServiceCopy = {
       },
       {
         title: 'Una URL de staging desde el primer día',
-        body: 'No una captura en una presentación. Cualquiera de vuestro lado puede abrir el estado actual del producto cuando quiera, sin pedírnoslo.',
+        body: 'No una captura en una presentación. Cualquiera de tu equipo puede abrir el estado actual del producto cuando quiera, sin pedírnoslo.',
       },
       {
         title: 'Una demo todos los viernes',

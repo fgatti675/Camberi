@@ -22,7 +22,7 @@ const decisions: CaseDecision[] = [
     title: 'El control de acceso es de Postgres, no de la aplicación.',
     body: [
       'El backend ejecuta cada petición como el usuario que la hace, y las políticas de row-level security son el modelo de seguridad. Viven en la configuración de colecciones que comparten el backend y el panel, así que no hay camino de código que pueda olvidarse de aplicarlas ni una segunda implementación que mantener a la par.',
-      'A partir de ahí, dos propiedades de RLS deciden el esquema más que el fichero de políticas. Es a nivel de fila, o sea que cualquier columna de una tabla con lectura pública es pública: la bolsa tiene que pintar nombres, logos y colores de marca para quien no ha entrado, así que todo lo comercial de una empresa vive en otra tabla distinta de la que lee el público. Y una petición sin autenticar llega como la cadena “anon”, no como null, que es de esos detalles que dejan una guarda bien escrita y mal cumplida: la comprobación de si hay un usuario de verdad es un único predicado compartido y no una comparación reescrita en cada política.',
+      'A partir de ahí, dos propiedades de RLS deciden el esquema más que el fichero de políticas. Es a nivel de fila, o sea que cualquier columna de una tabla con lectura pública es pública: la bolsa tiene que pintar nombres, logos y colores de marca para quien no ha entrado, así que todo lo comercial de una empresa vive en otra tabla distinta de la que lee el público. Y una petición sin autenticar llega como la cadena “anon”, no como null, que es de esos detalles que convierten una comprobación bien escrita en una que no se cumple: la comprobación de si hay un usuario de verdad es un único predicado compartido y no una comparación reescrita en cada política.',
     ],
   },
   {
@@ -82,7 +82,7 @@ export const sustentalentEs: SustentalentCopy = {
 
   shipped: {
     title: 'Qué salió',
-    body: ['Tres desplegables desde un solo repositorio y un CI que los typechequea todos.'],
+    body: ['Tres desplegables desde un solo repositorio y un CI que pasa el typecheck de los tres.'],
     items: [
       'La bolsa pública: Astro, con islas de React solo donde la página tiene que hacer algo. Se pinta entera para quien no ha entrado, que es un requisito y no una optimización.',
       'El backend y el panel: Rebase sobre Cloud Run, contra Cloud SQL Postgres, sirviendo a la vez el plano de datos y el panel donde vive el equipo.',

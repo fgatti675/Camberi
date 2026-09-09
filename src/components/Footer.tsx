@@ -66,9 +66,13 @@ export function Footer({ linkBase = '' }: { linkBase?: string }) {
           <div className="grid grid-cols-1 min-[520px]:grid-cols-2 min-[820px]:grid-cols-3 gap-8">
             {columns.map((col) => (
               <div key={col.title} className="flex flex-col">
-                <h4 className="font-mono text-[0.7rem] font-500 text-white/55 uppercase tracking-[0.14em] mb-4">
+                {/* h2, not h4: the footer is a sibling of `main`, so its level
+                    is fixed by the page's h1 alone. As an h4 it skipped a level
+                    on every page whose last heading is an h2. The utilities
+                    below already override everything the h2 base rule sets. */}
+                <h2 className="font-mono text-[0.7rem] font-500 leading-[1.2] text-white/55 uppercase tracking-[0.14em] mb-4">
                   {col.title}
-                </h4>
+                </h2>
                 <ul className="flex flex-col gap-2.5">
                   {col.links.map((l) => (
                     <li key={l.label}>

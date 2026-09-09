@@ -34,11 +34,12 @@ export function renderRoute(route: Route, assets: Assets): string {
   /* `ConsentBar` renders null here — it has no browser storage to read and
      nothing it could honestly say. It is in the tree all the same, so the
      server and the client agree on the shape of the root and hydration has
-     nothing to reconcile. */
+     nothing to reconcile. It sits before the page for the same reason it does
+     in `main.tsx`: the bar is fixed, so this is a tab-order decision only. */
   const app = renderToString(
     <StrictMode>
-      <Page />
       <ConsentBar />
+      <Page />
     </StrictMode>
   );
   const head = buildHead(route, locale);

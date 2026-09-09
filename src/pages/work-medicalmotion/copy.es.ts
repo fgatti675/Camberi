@@ -21,8 +21,8 @@ const decisions: CaseDecision[] = [
   {
     title: 'Lo que hace el paciente es el dato de la investigación.',
     body: [
-      'En 2024 medicalmotion abrió [Pain Lab](https://medicalmotion.com/en/about-us), un fondo de datos para el análisis del dolor y la investigación de servicios sanitarios. Lee lo que el producto ya recoge —el perfil de dolor, el plan que sale de ese perfil, las sesiones que se hacen de verdad— y no una segunda tubería montada al lado del producto para alimentar estudios.',
-      'Eso solo funciona si los datos de terapia se modelaron desde el principio como registro de lo que pasó y no como el estado actual de la app. Es una decisión que se toma una vez, pronto, y que rehacerla sale carísima: la versión en la que la app pisa el plan de la semana pasada se construye antes y ya nunca puede responder por qué mejoró un paciente.',
+      'En 2024 medicalmotion abrió [Pain Lab](https://medicalmotion.com/en/about-us), un fondo de datos para el análisis del dolor y la investigación de servicios sanitarios. Lee lo que el producto ya recoge —el perfil de dolor, el plan que sale de ese perfil, las sesiones que se hacen de verdad— y no un segundo pipeline montado al lado del producto para alimentar estudios.',
+      'Eso solo funciona si los datos de terapia se modelaron desde el principio como registro de lo que pasó y no como el estado actual de la app. Es una decisión que se toma una vez, pronto, y rehacerla sale carísimo: la versión en la que la app pisa el plan de la semana pasada se construye antes y ya nunca puede responder por qué mejoró un paciente.',
     ],
   },
   {
@@ -111,7 +111,7 @@ export const medicalmotionEs: MedicalmotionCopy = {
   outcome: {
     title: 'Dónde ha llegado',
     body: [
-      'Estos resultados son de medicalmotion, no nuestros. Lo que dicen de la tecnología es que lleva delante de aseguradoras, investigadores y pacientes el tiempo suficiente como para que cualquiera la compruebe.',
+      'Estos resultados son de medicalmotion, no nuestros. Lo que dicen de la tecnología es que lleva expuesta a aseguradoras, investigadores y pacientes el tiempo suficiente como para que cualquiera pueda comprobarlo.',
     ],
   },
   evidence,

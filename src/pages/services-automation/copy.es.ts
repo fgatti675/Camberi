@@ -12,7 +12,7 @@ export const automationEs: ServiceCopy = {
   meta: 'Normalmente 3–10 semanas · alcance cerrado y plan de hitos la primera semana',
 
   lead: [
-    'Casi todos los equipos arrastran un puñado de tareas que hace una persona porque nunca hubo tiempo de montarlas de otra forma. El Excel que se vuelve a rellenar el lunes por la mañana. El informe semanal que sale de juntar cuatro dashboards. La aprobación que vive en la bandeja de alguien y se para cuando esa persona se va de vacaciones. Ninguna es difícil. Todas son el martes de alguien.',
+    'Casi todos los equipos arrastran un puñado de tareas que hace una persona porque nunca hubo tiempo de montarlas de otra forma. El Excel que se vuelve a rellenar el lunes por la mañana. El informe semanal que sale de juntar cuatro dashboards. La aprobación que vive en la bandeja de alguien y se para cuando esa persona se va de vacaciones. Ninguna es difícil. Todas se comen la mañana de alguien.',
     'Buscamos cuáles compensa automatizar, las construimos y las dejamos funcionando sin que nadie tenga que estar encima. También funciones con LLM y agentes: un modelo en producción no se parece en nada a un modelo en una demo, así que sale con un set de evaluación, un coste por ejecución y un plan B definido para el día en que se equivoque con toda la seguridad del mundo.',
     'Si todavía no sabes qué procesos compensan, la [revisión de arquitectura](__REVIEW__) dura dos semanas y termina en un plan por escrito que puedes ejecutar sin nosotros.',
   ],
@@ -62,7 +62,7 @@ export const automationEs: ServiceCopy = {
       },
       {
         title: 'La integración que se rompió y nadie se enteró',
-        body: 'Un script que alguien escribió hace dos años, corriendo en un portátil o en un cron sin alertas. Lleva fallando en silencio desde abril. Una automatización cuya salud no ve nadie es un pasivo, no un activo.',
+        body: 'Un script que alguien escribió hace dos años y que se ejecuta en un portátil o en un cron sin alertas. Lleva fallando en silencio desde abril. Una automatización cuya salud no ve nadie es un pasivo, no un activo.',
       },
       {
         title: 'El picar datos que en realidad es un problema de modelo de datos',
@@ -145,7 +145,7 @@ export const automationEs: ServiceCopy = {
     evidence: [
       {
         value: 'A diario',
-        label: 'scrape de vacantes y enriquecimiento que alimentan la lista de prospectos de SustenTalent',
+        label: 'scraping de vacantes y enriquecimiento que alimentan la lista de prospectos de SustenTalent',
         source: 'sustentalent.com',
         href: 'https://sustentalent.com',
       },
@@ -163,7 +163,7 @@ export const automationEs: ServiceCopy = {
       },
     ],
     body: [
-      '[SustenTalent](__SUSTENTALENT__) es el ejemplo más claro del patrón. Es un portal de empleo, y la operación de captación que lo trabaja está metida dentro del mismo producto: un scrape entre semana lee vacantes reales por empresa en vez de por anuncio, un pipeline de enriquecimiento completa la empresa que hay detrás de cada oferta, el buzón compartido se sincroniza solo y el panel deduce el siguiente paso de cada prospecto en lugar de pedirle a nadie que mantenga una columna de estado. Nadie mantiene la lista de prospectos: sale de tener el portal funcionando.',
+      '[SustenTalent](__SUSTENTALENT__) es el ejemplo más claro del patrón. Es un portal de empleo, y la operación de captación que lo trabaja está metida dentro del mismo producto: un scraping entre semana lee vacantes reales por empresa en vez de por anuncio, un pipeline de enriquecimiento completa la empresa que hay detrás de cada oferta, el buzón compartido se sincroniza solo y el panel deduce el siguiente paso de cada prospecto en lugar de pedirle a nadie que mantenga una columna de estado. Nadie mantiene la lista de prospectos: sale de tener el portal funcionando.',
       '[Dataki](https://dataki.ai) es el ejemplo de modelo en producción: preguntas en lenguaje normal y te devuelve un dashboard junto con el SQL que ha escrito para llegar hasta ahí. Enseñar la consulta es la barrera de seguridad, porque es lo que te deja comprobar la respuesta en vez de fiarte de ella.',
       'Y la razón para encargarnos esto a nosotros en vez de construirlo una vez y olvidarlo: seguimos manteniendo todo lo que hemos hecho. [FireCMS](https://firecms.co) está en producción desde 2020 y no ha pasado una semana sin commits.',
     ],
