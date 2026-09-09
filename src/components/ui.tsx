@@ -36,7 +36,7 @@ export const CARD_DARK_HOVER =
    Rebase's mark changed: the origin was correct and browsers went on
    drawing the previous logo. Bump this whenever a file under /brand
    changes content without changing its name. */
-const BRAND_VERSION = 2;
+const BRAND_VERSION = 3;
 
 export const brand = (file: string) => `/brand/${file}?v=${BRAND_VERSION}`;
 
