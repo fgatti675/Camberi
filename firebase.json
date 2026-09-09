@@ -10,6 +10,42 @@
       ],
       "headers": [
         {
+          "source": "**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/es",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/es/",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
           "source": "**/*.@(js|css|woff2)",
           "headers": [
             {
@@ -24,24 +60,6 @@
             {
               "key": "Cache-Control",
               "value": "public, max-age=604800"
-            }
-          ]
-        },
-        {
-          "source": "/",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "public, max-age=0, must-revalidate"
-            }
-          ]
-        },
-        {
-          "source": "/es/",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "public, max-age=0, must-revalidate"
             }
           ]
         }
@@ -58,6 +76,42 @@
       ],
       "headers": [
         {
+          "source": "**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/es",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
+          "source": "/es/",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=0, must-revalidate"
+            }
+          ]
+        },
+        {
           "source": "**/*.@(js|css|woff2)",
           "headers": [
             {
@@ -72,24 +126,6 @@
             {
               "key": "Cache-Control",
               "value": "public, max-age=604800"
-            }
-          ]
-        },
-        {
-          "source": "/",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "public, max-age=0, must-revalidate"
-            }
-          ]
-        },
-        {
-          "source": "/es/",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "public, max-age=0, must-revalidate"
             }
           ]
         }

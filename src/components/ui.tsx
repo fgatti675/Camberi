@@ -78,6 +78,14 @@ interface SectionHeadProps {
   titleClass?: string;
   className?: string;
   children?: ReactNode;
+  /**
+   * A page has exactly one h1. On the home page that is the hero, so every
+   * section head here is an h2 — but an inner page's masthead *is* the h1,
+   * and it reuses this component rather than growing a second one that
+   * drifts. Pass `titleClass` to bring the size down with it: the base h1
+   * is cut for a hero.
+   */
+  as?: 'h1' | 'h2';
 }
 
 export function SectionHead({
@@ -87,14 +95,15 @@ export function SectionHead({
   titleClass = 'max-w-[19ch]',
   className = '',
   children,
+  as: Heading = 'h2',
 }: SectionHeadProps) {
   return (
     <div className={className}>
       <Rule dark={dark} />
       <div className="pt-10 md:pt-14 grid grid-cols-1 min-[900px]:grid-cols-[minmax(0,auto)_minmax(0,1fr)] gap-x-14 gap-y-5 items-baseline">
-        <h2 className={`${dark ? 'text-white' : 'text-text-main'} ${titleClass} reveal`}>
+        <Heading className={`${dark ? 'text-white' : 'text-text-main'} ${titleClass} reveal`}>
           {title}
-        </h2>
+        </Heading>
         {intro && (
           <p
             className={`text-[1.08rem] md:text-[1.15rem] leading-[1.6] max-w-[38ch] reveal d1 ${

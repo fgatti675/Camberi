@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import * as neatModule from "@firecms/neat";
 import type { NeatConfig } from "./neatConfigs";
 
@@ -120,23 +120,52 @@ function releaseCompileSlot() {
     }, 0);
 }
 
-/* Neat reads cameraX once, at construction, so the framing correction
+/* ── Environment the browser owns ─────────────────────────────
+   Orientation and device pixel ratio are external state, and both are
+   read through useSyncExternalStore rather than an effect that calls
+   setState. That is not a style preference: these pages are rendered
+   to HTML by node at build time, and the store's server snapshot is
+   what the markup is generated from. The browser's first render uses
+   the same snapshot, so hydration matches, and only then does React
+   re-read the real value. An effect setting state would have made the
+   server and the client disagree about the canvas box.
+
+   Neat reads cameraX once, at construction, so the framing correction
    can only follow a rotation by rebuilding the gradient. Orientation
    flips are rare enough that paying for a shader recompile is fine;
    plain resizes are left alone. */
+const PORTRAIT = "(orientation: portrait)";
+
+function subscribePortrait(onChange: () => void) {
+    const query = window.matchMedia?.(PORTRAIT);
+    if (!query) return () => {};
+    query.addEventListener("change", onChange);
+    return () => query.removeEventListener("change", onChange);
+}
+
 function useOrientation() {
-    const [portrait, setPortrait] = useState(false);
+    return useSyncExternalStore(
+        subscribePortrait,
+        () => window.matchMedia?.(PORTRAIT).matches ?? false,
+        () => false
+    );
+}
 
-    useEffect(() => {
-        const query = window.matchMedia?.("(orientation: portrait)");
-        if (!query) return;
-        setPortrait(query.matches);
-        const onChange = (event: MediaQueryListEvent) => setPortrait(event.matches);
-        query.addEventListener("change", onChange);
-        return () => query.removeEventListener("change", onChange);
-    }, []);
+/* devicePixelRatio changes when a window is dragged between displays,
+   and a resize is the event every browser fires when that happens. The
+   snapshot is a number, so a resize that does not change the ratio
+   costs nothing. */
+function subscribeDevicePixelRatio(onChange: () => void) {
+    window.addEventListener("resize", onChange);
+    return () => window.removeEventListener("resize", onChange);
+}
 
-    return portrait;
+function useSupersample() {
+    return useSyncExternalStore(
+        subscribeDevicePixelRatio,
+        () => Math.min(window.devicePixelRatio || 1, MAX_SUPERSAMPLE),
+        () => 1
+    );
 }
 
 interface NeatCanvasProps {
@@ -171,9 +200,7 @@ export function NeatCanvas({
                            }: NeatCanvasProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const portrait = useOrientation();
-    const [scale] = useState(() =>
-        typeof window === "undefined" ? 1 : Math.min(window.devicePixelRatio || 1, MAX_SUPERSAMPLE)
-    );
+    const scale = useSupersample();
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -313,7 +340,7 @@ export function NeatCanvas({
             stop();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [portrait]);
+    }, [portrait, scale]);
 
     return (
         <canvas

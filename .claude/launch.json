@@ -6,6 +6,12 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["dev", "--port", "5180", "--strictPort"],
       "port": 5180
+    },
+    {
+      "name": "camberi-preview",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["preview", "--port", "5181", "--strictPort"],
+      "port": 5181
     }
   ]
 }

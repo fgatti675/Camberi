@@ -1,119 +1,25 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <!-- ?v= busts the 7-day image cache so returning visitors pick up the
-         mark straight away instead of keeping the old icon for a week. -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=3" sizes="48x48" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3" />
-    <link rel="preload" as="font" type="font/woff2" crossorigin
-      href="/fonts/dm-serif-display-latin-400-normal.woff2" />
-    <link rel="preload" as="font" type="font/woff2" crossorigin
-      href="/fonts/instrument-sans-latin-wght-normal.woff2" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Camberi — the studio behind FireCMS, Rebase and medicalmotion</title>
-    <meta name="description" content="A product engineering studio in Madrid. We build and run our own software — FireCMS, Rebase and Neat — and the technology behind medicalmotion." />
-
-    <link rel="canonical" href="https://camberi.com/" />
-    <link rel="alternate" hreflang="en" href="https://camberi.com/" />
-    <link rel="alternate" hreflang="es" href="https://camberi.com/es/" />
-    <link rel="alternate" hreflang="x-default" href="https://camberi.com/" />
-
-    <meta property="og:title" content="Camberi — the studio behind FireCMS, Rebase and medicalmotion" />
-    <meta property="og:description" content="We don't hand it over and disappear. A product engineering studio that builds and runs its own software — and yours." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://camberi.com/" />
-    <meta property="og:locale" content="en_GB" />
-    <meta property="og:locale:alternate" content="es_ES" />
-    <meta property="og:image" content="https://camberi.com/og.png?v=2" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:site_name" content="Camberi" />
-    <meta property="og:image:alt" content="Camberi — product engineering studio" />
-    <meta name="twitter:site" content="@firecmsco" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Camberi — the studio behind FireCMS, Rebase and medicalmotion" />
-    <meta name="twitter:description" content="We don't hand it over and disappear. A product engineering studio that builds and runs its own software — and yours." />
-    <meta name="twitter:image" content="https://camberi.com/og.png?v=2" />
-
     <!--
-      Language routing. Each language is a real URL (`/` and `/es/`) so both
-      get indexed. This runs before anything paints, so a Spanish visitor
-      never sees an English flash.
+      Development shell only.
 
-      Only the English root redirects; `/es/` never does. That keeps the rule
-      loop-free and means a deliberate /es/ link always wins. A choice made
-      with the header switcher is stored and beats browser detection forever
-      after.
+      Every page's real <head> — title, description, canonical, hreflang,
+      og/twitter, favicons, font preloads, the language script and the JSON-LD
+      — is generated per route per language by `src/routes/head.ts` and written
+      to disk by `scripts/prerender.mjs`. That is the single source of truth.
+
+      Nothing added to this file reaches production. Vite needs an entry to
+      bundle and `pnpm dev` needs something to serve; that is all this is. Vite
+      also falls back to it for any unknown path, which is what makes
+      /legal/, /es/legal/ and everything else work in dev — the client picks
+      its page and its language from location.pathname.
+
+      To see a real page head, run `pnpm build && pnpm preview`.
     -->
-    <script>
-      (function () {
-        try {
-          var stored = null;
-          try { stored = localStorage.getItem('camberi-lang'); } catch (e) {}
-          if (stored === 'en') return;
-          var wantsEs = stored === 'es';
-          if (!stored) {
-            var langs = (navigator.languages && navigator.languages.length)
-              ? navigator.languages
-              : [navigator.language || ''];
-            wantsEs = /^es\b/i.test(langs[0] || '');
-          }
-          if (wantsEs) location.replace('/es/' + location.search + location.hash);
-        } catch (e) {}
-      })();
-    </script>
-
-    <!-- Google Analytics 4. Placed after the language redirect below, so a visitor sent
-         to /es/ is not counted once here and again there. -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z5J6BDF0QT"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', 'G-Z5J6BDF0QT');
-    </script>
-
-    <script type="application/ld+json">
-{
-      "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      "@id": "https://camberi.com/#organization",
-      "name": "Camberi",
-      "url": "https://camberi.com/",
-      "logo": "https://camberi.com/icon-512.png",
-      "image": "https://camberi.com/og.png?v=2",
-      "email": "hello@camberi.com",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Madrid",
-        "addressCountry": "ES"
-      },
-      "areaServed": {
-        "@type": "Place",
-        "name": "Europe"
-      },
-      "sameAs": [
-        "https://github.com/firecmsco",
-        "https://www.linkedin.com/company/camberi",
-        "https://x.com/firecmsco"
-      ],
-      "knowsAbout": [
-        "Product engineering",
-        "Workflow automation",
-        "PostgreSQL",
-        "React",
-        "TypeScript",
-        "AI integration",
-        "Health technology"
-      ],
-      "inLanguage": "en-GB",
-      "description": "A product engineering studio in Madrid. We build and run our own software — FireCMS, Rebase and Neat — and the technology behind medicalmotion."
-    }
-    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Camberi — dev</title>
   </head>
   <body>
     <div id="root"></div>

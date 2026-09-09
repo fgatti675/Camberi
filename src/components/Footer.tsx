@@ -1,45 +1,59 @@
-import { t } from '../i18n';
+import { t, locale } from '../i18n';
+import { localePath } from '../routes/paths';
 
-const columns = [
-  {
-    title: t.footer.studio,
-    links: [
-      { label: t.nav.work, href: '#work' },
-      { label: t.nav.services, href: '#services' },
-      { label: t.footer.howWeWork, href: '#process' },
-      { label: t.nav.team, href: '#team' },
-    ],
-  },
-  {
-    title: t.footer.built,
-    links: [
-      { label: 'FireCMS', href: 'https://firecms.co' },
-      { label: 'Rebase', href: 'https://rebase.pro' },
-      { label: 'Neat', href: 'https://neat.firecms.co' },
-      { label: 'Dadaki', href: 'https://dadaki.com' },
-      { label: 'Unbrand.my', href: 'https://unbrand.my' },
-      { label: 'medicalmotion', href: 'https://medicalmotion.com' },
-    ],
-  },
-  {
-    title: t.footer.connect,
-    links: [
-      { label: 'hello@camberi.com', href: 'mailto:hello@camberi.com' },
-      { label: 'GitHub', href: 'https://github.com/firecmsco' },
-      { label: 'LinkedIn', href: 'https://www.linkedin.com/company/camberi' },
-      { label: 'X / Twitter', href: 'https://x.com/firecmsco' },
-    ],
-  },
-];
+/* The studio column mixes two kinds of destination: anchors into the home
+   page, and pages of their own. The anchors need a base — on an inner page
+   `#work` would scroll nowhere — while the pages are already absolute and
+   carry the language prefix themselves. */
+function buildColumns(base: string) {
+  const page = (path: string) => localePath(locale, path);
 
-export function Footer() {
+  return [
+    {
+      title: t.footer.studio,
+      links: [
+        { label: t.nav.work, href: `${base}#work` },
+        { label: t.nav.services, href: page('/services/') },
+        { label: t.footer.howWeWork, href: `${base}#process` },
+        { label: t.nav.team, href: `${base}#team` },
+        { label: t.footer.security, href: page('/security/') },
+        { label: t.footer.legal, href: page('/legal/') },
+        { label: t.footer.privacy, href: page('/privacy/') },
+      ],
+    },
+    {
+      title: t.footer.built,
+      links: [
+        { label: 'FireCMS', href: 'https://firecms.co' },
+        { label: 'Rebase', href: 'https://rebase.pro' },
+        { label: 'Neat', href: 'https://neat.firecms.co' },
+        { label: 'Dadaki', href: 'https://dadaki.com' },
+        { label: 'Unbrand.my', href: 'https://unbrand.my' },
+        { label: 'medicalmotion', href: 'https://medicalmotion.com' },
+      ],
+    },
+    {
+      title: t.footer.connect,
+      links: [
+        { label: 'hello@camberi.com', href: 'mailto:hello@camberi.com' },
+        { label: 'GitHub', href: 'https://github.com/firecmsco' },
+        { label: 'LinkedIn', href: 'https://www.linkedin.com/company/camberi' },
+        { label: 'X / Twitter', href: 'https://x.com/firecmsco' },
+      ],
+    },
+  ];
+}
+
+export function Footer({ linkBase = '' }: { linkBase?: string }) {
+  const columns = buildColumns(linkBase);
+
   return (
     <footer className="bg-bg-dark text-white/60 pt-14 pb-10 border-t border-white/8">
       <div className="max-w-[72rem] mx-auto px-6 lg:px-8 w-full">
         <div className="grid grid-cols-1 min-[820px]:grid-cols-[1.3fr_2fr] gap-12 pb-14">
           <div className="flex flex-col">
             <a
-              href="#top"
+              href={`${linkBase}#top`}
               className="text-[1.3rem] font-600 tracking-[-0.03em] text-white hover:opacity-80 transition-opacity self-start">
               camberi
             </a>
