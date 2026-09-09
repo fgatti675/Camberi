@@ -106,7 +106,10 @@ export const SITE = {
     npm: 'https://www.npmjs.com/org/firecms',
   },
 
-  /** Left exactly as it was; the consent and analytics change is owned elsewhere. */
+  /**
+   * The GA4 measurement id. Nothing is loaded with it until a visitor has
+   * accepted — see `CONSENT` below and `src/components/ConsentBar.tsx`.
+   */
   ga4: 'G-Z5J6BDF0QT',
 
   /**
@@ -121,6 +124,31 @@ export const SITE = {
     url: 'https://firebase.google.com/terms',
   },
 };
+
+/* ──────────────────────────────────────────────────────────────
+   Consent.
+
+   Google Analytics is not exempt from consent. The AEPD's cookie
+   guide treats third-party audience measurement as outside the
+   narrow analytics exemption, and § 25 TDDDG requires consent for
+   any storage on a German visitor's device that the service they
+   asked for does not need. So the measurement id above is inert
+   until somebody says yes: `ConsentBar` holds it, and nothing is
+   requested from Google before then.
+
+   The record written under `storageKey` is
+   `{"choice":"granted"|"denied","at":<epoch ms>}`. It expires,
+   because consent given in 2026 is not consent in 2029 — twelve
+   months is the period the AEPD names.
+   ────────────────────────────────────────────────────────────── */
+export const CONSENT = {
+  /** localStorage key holding the visitor's choice and when they made it. */
+  storageKey: 'camberi-consent',
+  /** How long a choice stands before the bar asks again. */
+  maxAgeDays: 365,
+  /** Fired on `window` when the choice is cleared from the privacy page. */
+  resetEvent: 'camberi:consent-reset',
+} as const;
 
 /** `sameAs` for the organisation JSON-LD: every account that is really ours. */
 export const SAME_AS: string[] = [

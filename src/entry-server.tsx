@@ -5,6 +5,7 @@ import type { Route } from './routes/types';
 import { buildHead } from './routes/head';
 import { locale } from './i18n';
 import { SITE } from './site';
+import { ConsentBar } from './components/ConsentBar';
 
 /* ──────────────────────────────────────────────────────────────
    The server half of the build.
@@ -30,9 +31,14 @@ export interface Assets {
 
 export function renderRoute(route: Route, assets: Assets): string {
   const Page = route.component;
+  /* `ConsentBar` renders null here — it has no browser storage to read and
+     nothing it could honestly say. It is in the tree all the same, so the
+     server and the client agree on the shape of the root and hydration has
+     nothing to reconcile. */
   const app = renderToString(
     <StrictMode>
       <Page />
+      <ConsentBar />
     </StrictMode>
   );
   const head = buildHead(route, locale);

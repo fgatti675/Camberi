@@ -88,15 +88,24 @@ const LANGUAGE_SCRIPT = `<script>
       })();
     </script>`;
 
-/* Google Analytics 4, unchanged. Consent and analytics are being reworked
-   separately; this block is moved, not edited. */
-const ANALYTICS = `<script async src="https://www.googletagmanager.com/gtag/js?id=${SITE.ga4}"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', '${SITE.ga4}');
-    </script>`;
+/* ── Analytics ────────────────────────────────────────────────
+   There is deliberately no tag here.
+
+   Until now this file emitted gtag.js on every page of every
+   language, which meant Google was contacted and the `_ga` cookies
+   were written before the visitor had been asked anything. Google
+   Analytics is not covered by the narrow audience-measurement
+   exemption in the AEPD's cookie guide, and § 25 TDDDG requires
+   consent for any storage a German visitor's requested service does
+   not need — so that tag was the one non-compliant thing on the
+   site.
+
+   The measurement id now lives inert in `src/site.ts` and is picked
+   up by `src/components/ConsentBar.tsx`, which injects gtag.js from
+   the client only after somebody has accepted. Putting it in the
+   head at all would defeat the point: a script tag in prerendered
+   HTML fires before React has a chance to decide anything.
+   ────────────────────────────────────────────────────────────── */
 
 type Json = Record<string, unknown>;
 
@@ -250,7 +259,6 @@ export function buildHead(route: Route, locale: Locale): string {
   );
 
   if (isHome && locale === 'en') parts.push(LANGUAGE_SCRIPT, '');
-  parts.push(ANALYTICS, '');
   parts.push(jsonLdBlock(isHome ? organizationJsonLd(locale, m.description) : webPageJsonLd(route, locale)));
 
   return parts.join('\n    ');
