@@ -3,6 +3,7 @@ import { createRoot, hydrateRoot } from 'react-dom/client';
 import './index.css';
 import { findRoute } from './routes';
 import { locale } from './i18n';
+import { ConsentBar } from './components/ConsentBar';
 
 /* ──────────────────────────────────────────────────────────────
    The client half.
@@ -21,9 +22,14 @@ const route = container ? findRoute(window.location.pathname) : undefined;
 
 if (container && route) {
   const Page = route.component;
+  /* The consent bar is a sibling of the page rather than part of any layout:
+     it belongs to the document, not to a route, and it renders nothing at all
+     until an effect has read storage — which is what keeps it out of the
+     prerendered HTML and out of the way of hydration. */
   const tree = (
     <StrictMode>
       <Page />
+      <ConsentBar />
     </StrictMode>
   );
 
