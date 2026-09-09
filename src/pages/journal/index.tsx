@@ -2,7 +2,6 @@ import { PageLayout, PageHead } from '../../components/PageLayout';
 import { CONTAINER, ArrowRight } from '../../components/ui';
 import { locale } from '../../i18n';
 import { localePath } from '../../routes/paths';
-import type { Route } from '../../routes/types';
 import type { PostCopy, PostMeta } from './post';
 import { pick } from './locale';
 import { journalEn, type JournalCopy } from './copy.en';
@@ -49,7 +48,7 @@ function longDate(iso: string): string {
     .replace('__YEAR__', year);
 }
 
-export function Journal() {
+export default function Journal() {
   return (
     <PageLayout>
       <PageHead title={copy.title} intro={copy.intro} titleClass="max-w-[10ch]" />
@@ -85,22 +84,3 @@ export function Journal() {
     </PageLayout>
   );
 }
-
-export const route: Route = {
-  path: '/journal/',
-  draft: true,
-  priority: 0.5,
-  component: Journal,
-  locales: {
-    en: {
-      title: 'Journal — Camberi',
-      description:
-        'Notes on decisions in our own code: how FireCMS ships breaking changes across installations we cannot see, and why Rebase puts its access rules in Postgres.',
-    },
-    es: {
-      title: 'Cuaderno — Camberi',
-      description:
-        'Apuntes sobre decisiones de nuestro propio código: cómo publica FireCMS cambios que rompen en instalaciones que no vemos, y por qué Rebase pone sus reglas de acceso en Postgres.',
-    },
-  },
-};

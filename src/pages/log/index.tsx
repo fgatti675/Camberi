@@ -1,7 +1,6 @@
 import { PageLayout, PageHead } from '../../components/PageLayout';
 import { CONTAINER, Rule, ArrowUpRight } from '../../components/ui';
 import { locale } from '../../i18n';
-import type { Route } from '../../routes/types';
 import { entries, type LogEntry } from './entries';
 import { logEn, type LogCopy } from './copy.en';
 import { logEs } from './copy.es';
@@ -110,7 +109,7 @@ function Row({ entry }: { entry: LogEntry }) {
   );
 }
 
-export function Log() {
+export default function Log() {
   return (
     <PageLayout>
       <PageHead
@@ -139,21 +138,3 @@ export function Log() {
     </PageLayout>
   );
 }
-
-export const route: Route = {
-  path: '/log/',
-  priority: 0.5,
-  component: Log,
-  locales: {
-    en: {
-      title: 'Log — Camberi',
-      description:
-        'A dated record of what we shipped: FireCMS, Rebase and Neat releases, and changes to this site, each linking to the release, commit or page where you can check it.',
-    },
-    es: {
-      title: 'Registro — Camberi',
-      description:
-        'Un registro con fechas de lo que hemos publicado: releases de FireCMS, Rebase y Neat, y cambios en esta web, con un enlace a la release, el commit o la página donde comprobarlo.',
-    },
-  },
-};

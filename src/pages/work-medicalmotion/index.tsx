@@ -12,7 +12,6 @@ import {
 import { MedicalMotionCards } from '../../components/MedicalMotionCards';
 import { locale } from '../../i18n';
 import { localePath } from '../../routes/paths';
-import type { Route } from '../../routes/types';
 import { medicalmotionEn, type MedicalmotionCopy } from './copy.en';
 import { medicalmotionEs } from './copy.es';
 
@@ -35,7 +34,7 @@ import { medicalmotionEs } from './copy.es';
 const copy: MedicalmotionCopy = locale === 'es' ? medicalmotionEs : medicalmotionEn;
 const home = localePath(locale, '/');
 
-export function MedicalmotionCase() {
+export default function MedicalmotionCase() {
   return (
     <PageLayout>
       <PageHead title={copy.title} intro={copy.intro} meta={copy.meta} titleClass="max-w-[17ch]" />
@@ -92,23 +91,3 @@ export function MedicalmotionCase() {
     </PageLayout>
   );
 }
-
-export const route: Route = {
-  path: '/work/medicalmotion/',
-  priority: 0.8,
-  component: MedicalmotionCase,
-  locales: {
-    en: {
-      title: 'medicalmotion — a case study — Camberi',
-      description:
-        'How the technology behind medicalmotion was built: insurer coverage modelled as data, therapy records that Pain Lab can read, and one team on the app, the therapist tooling and the platform. Since 2019.',
-      ogTitle: 'medicalmotion: pain therapy more than 23 insurers pay for',
-    },
-    es: {
-      title: 'medicalmotion — el caso — Camberi',
-      description:
-        'Cómo se hizo la tecnología de medicalmotion: la cobertura de cada aseguradora como dato, datos de terapia que Pain Lab puede leer y un solo equipo para la app, las herramientas del fisio y la plataforma. Desde 2019.',
-      ogTitle: 'medicalmotion: terapia del dolor que pagan más de 23 aseguradoras',
-    },
-  },
-};

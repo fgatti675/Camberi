@@ -2,7 +2,6 @@ import { PageLayout, PageHead, Prose, inline } from '../../components/PageLayout
 import { CONTAINER, Rule } from '../../components/ui';
 import { SITE, known } from '../../site';
 import { locale } from '../../i18n';
-import type { Route } from '../../routes/types';
 import { legalEn, type LegalCopy } from './copy.en';
 import { legalEs } from './copy.es';
 
@@ -89,7 +88,7 @@ const rows: Row[] = [
   },
 ];
 
-export function Legal() {
+export default function Legal() {
   return (
     <PageLayout>
       <PageHead title={copy.title} intro={copy.intro} meta={copy.updated} titleClass="max-w-[13ch]" />
@@ -153,21 +152,3 @@ export function Legal() {
     </PageLayout>
   );
 }
-
-export const route: Route = {
-  path: '/legal/',
-  priority: 0.3,
-  component: Legal,
-  locales: {
-    en: {
-      title: 'Legal notice — Camberi',
-      description:
-        'FireCMS S.L., trading as Camberi: registered office, tax and commercial registry details, hosting provider, applicable law, and the German Impressum disclosures.',
-    },
-    es: {
-      title: 'Aviso legal — Camberi',
-      description:
-        'FireCMS S.L., que opera como Camberi: domicilio social, datos fiscales y registrales, proveedor de alojamiento, legislación aplicable y los datos del Impressum alemán.',
-    },
-  },
-};

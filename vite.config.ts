@@ -10,6 +10,16 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+  build: {
+    // `scripts/prerender.mjs` reads dist/.vite/manifest.json to find the chunk
+    // each page's `index.tsx` compiled to, and emits a <link rel="modulepreload">
+    // for it in that page's <head>. Without the manifest there is no way to know
+    // which of a dozen hashed chunks a given route needs, and the route chunk
+    // would only start downloading once the entry had run — a waterfall that
+    // costs more than the split saves. Firebase ignores `**/.*`, so the
+    // manifest is not deployed.
+    manifest: true,
+  },
   // One HTML entry, and it is only a shell. `pnpm build` runs three steps:
   // this client build, an SSR build of `src/entry-server.tsx`, and then
   // `scripts/prerender.mjs`, which writes a real HTML file per route per

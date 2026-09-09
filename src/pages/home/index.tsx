@@ -12,7 +12,6 @@ import { OpenSource } from '../../components/OpenSource';
 import { Team } from '../../components/Team';
 import { Contact } from '../../components/Contact';
 import { Footer } from '../../components/Footer';
-import type { Route } from '../../routes/types';
 
 /* The gradient lives inside the dark sections (Work, Process, Contact)
    rather than in bands between them, so the page reads as one flow with the
@@ -27,7 +26,7 @@ import type { Route } from '../../routes/types';
    This is the only page with a hero, so it is the only one whose header
    starts transparent and the only one that carries the scroll spine — a
    running head needs sections to run past. */
-export function Home() {
+export default function Home() {
   useScrollAnimation();
 
   return (
@@ -50,25 +49,3 @@ export function Home() {
     </>
   );
 }
-
-export const route: Route = {
-  path: '/',
-  priority: 1,
-  component: Home,
-  locales: {
-    en: {
-      title: 'Camberi — the studio behind FireCMS, Rebase and medicalmotion',
-      description:
-        'A product engineering studio in Madrid and Munich. We build and run our own software — FireCMS, Rebase and Neat — and the technology behind medicalmotion.',
-      ogDescription:
-        "We don't hand it over and disappear. A product engineering studio that builds and runs its own software — and yours.",
-    },
-    es: {
-      title: 'Camberi — el estudio detrás de FireCMS, Rebase y medicalmotion',
-      description:
-        'Estudio de ingeniería de producto entre Madrid y Múnich. Creamos y mantenemos nuestro propio software —FireCMS, Rebase, Neat— y la tecnología de medicalmotion.',
-      ogDescription:
-        'No lo entregamos y desaparecemos. Un estudio de ingeniería de producto que crea y mantiene su propio software, y el tuyo.',
-    },
-  },
-};

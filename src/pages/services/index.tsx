@@ -8,8 +8,7 @@ import {
   DarkGlow,
 } from '../../components/ui';
 import { t, locale } from '../../i18n';
-import type { Route } from '../../routes/types';
-import { SERVICE_PATHS, SERVICES_INDEX, contactHref, servicePath } from './service';
+import { SERVICE_PATHS, contactHref, servicePath } from './service';
 import { servicesEn, type ServicesCopy } from './copy.en';
 import { servicesEs } from './copy.es';
 
@@ -47,7 +46,7 @@ function geometry(weeks: number[]) {
 const GRID =
   'min-[860px]:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] min-[1100px]:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]';
 
-export function Services() {
+export default function Services() {
   return (
     <PageLayout>
       <PageHead
@@ -183,23 +182,3 @@ export function Services() {
     </PageLayout>
   );
 }
-
-export const route: Route = {
-  path: SERVICES_INDEX,
-  priority: 0.9,
-  component: Services,
-  locales: {
-    en: {
-      title: 'Services: automation, product, data platform, review — Camberi',
-      description:
-        'Four engagements, each with a fixed scope: automation and AI for operations, product engineering to production, a Postgres data platform, and a two-week architecture review.',
-      ogTitle: 'Four ways in, each with a fixed scope and an end date',
-    },
-    es: {
-      title: 'Servicios: automatización, producto, datos y arquitectura — Camberi',
-      description:
-        'Cuatro encargos con alcance cerrado: automatización e IA para operaciones, ingeniería de producto hasta producción, plataforma de datos en Postgres y revisión de arquitectura.',
-      ogTitle: 'Cuatro formas de empezar, todas con alcance cerrado y fecha de fin',
-    },
-  },
-};

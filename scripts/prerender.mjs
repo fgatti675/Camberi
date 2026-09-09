@@ -56,6 +56,54 @@ function readAssets() {
   return { head, body };
 }
 
+/* ── The route's own chunk ────────────────────────────────────
+   A page's component and words are a lazy import, so they are not
+   in the entry Vite lists above: the browser would only discover
+   them after running it, which is a second round trip on a page
+   whose HTML is already complete. The manifest says which hashed
+   chunk `src/pages/<dir>/index.tsx` became, and this preloads that
+   chunk and anything it imports that the entry does not already
+   pull in — so the page's JavaScript travels with the entry's.
+
+   `build.manifest` in `vite.config.ts` is what writes the file. */
+function readManifest() {
+  const file = join(DIST, '.vite', 'manifest.json');
+  if (!existsSync(file)) {
+    throw new Error(`${file} is missing — build.manifest must stay on in vite.config.ts.`);
+  }
+  return JSON.parse(readFileSync(file, 'utf8'));
+}
+
+/** The asset files the entry already fetches, so nothing is preloaded twice. */
+function alreadyLoaded(assets) {
+  const hrefs = [...assets.head.matchAll(/href="\/([^"]+)"/g)].map((m) => m[1]);
+  const srcs = [...assets.body.matchAll(/src="\/([^"]+)"/g)].map((m) => m[1]);
+  return new Set([...hrefs, ...srcs]);
+}
+
+function routePreloads(manifest, dir, already) {
+  const key = `src/pages/${dir}/index.tsx`;
+  if (!manifest[key]) {
+    throw new Error(`No client chunk for ${key} — is the page in the route glob?`);
+  }
+  const seen = new Set(already);
+  const tags = [];
+  const walk = (id) => {
+    const node = manifest[id];
+    if (!node || seen.has(node.file)) return;
+    seen.add(node.file);
+    tags.push(`<link rel="modulepreload" crossorigin href="/${node.file}" />`);
+    for (const css of node.css ?? []) {
+      if (seen.has(css)) continue;
+      seen.add(css);
+      tags.push(`<link rel="stylesheet" crossorigin href="/${css}" />`);
+    }
+    for (const imported of node.imports ?? []) walk(imported);
+  };
+  walk(key);
+  return tags;
+}
+
 function write(file, contents) {
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(file, contents);
@@ -137,6 +185,8 @@ async function renderLocale(locale) {
   globalThis.__CAMBERI_LOCALE__ = locale;
 
   const assets = JSON.parse(process.env.CAMBERI_ASSETS ?? '{}');
+  const manifest = readManifest();
+  const shared = alreadyLoaded(assets);
   const mod = await import(pathToFileURL(ssrEntry()).href);
 
   if (mod.activeLocale !== locale) {
@@ -146,7 +196,11 @@ async function renderLocale(locale) {
   }
 
   for (const route of mod.routes) {
-    const html = mod.renderRoute(route, assets);
+    const preloads = routePreloads(manifest, route.dir, shared);
+    const html = await mod.renderRoute(route, {
+      ...assets,
+      head: [assets.head, ...preloads].filter(Boolean).join('\n    '),
+    });
     write(outFile(locale, route.path, 'index.html'), html);
     write(outFile(locale, route.path, 'index.md'), markdownFor(route, locale, html, mod.origin));
     process.stdout.write(`  ${localePath(locale, route.path)}\n`);

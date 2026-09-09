@@ -2,7 +2,6 @@ import { PageLayout, PageHead, Prose, inline } from '../../components/PageLayout
 import { CONTAINER, Rule } from '../../components/ui';
 import { SITE } from '../../site';
 import { locale } from '../../i18n';
-import type { Route } from '../../routes/types';
 import { securityEn, type SecurityCopy } from './copy.en';
 import { securityEs } from './copy.es';
 
@@ -30,7 +29,7 @@ const VARS: Record<string, string> = {
   GITHUB: SITE.social.github,
 };
 
-export function Security() {
+export default function Security() {
   return (
     <PageLayout>
       <PageHead title={copy.title} intro={copy.intro} meta={copy.updated} titleClass="max-w-[17ch]" />
@@ -64,21 +63,3 @@ export function Security() {
     </PageLayout>
   );
 }
-
-export const route: Route = {
-  path: '/security/',
-  priority: 0.4,
-  component: Security,
-  locales: {
-    en: {
-      title: 'Security — Camberi',
-      description:
-        'No SOC 2, no ISO 27001, three engineers: client-owned repositories and accounts, access enforced by Postgres row-level security, health data under German regulation since 2019, and the NDA and DPA we will sign.',
-    },
-    es: {
-      title: 'Seguridad — Camberi',
-      description:
-        'Sin SOC 2 ni ISO 27001, tres ingenieros: repositorios y cuentas del cliente, control de acceso en Postgres con row-level security, datos de salud bajo normativa alemana desde 2019, y el NDA y el encargo de tratamiento que firmamos.',
-    },
-  },
-};

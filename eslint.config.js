@@ -20,17 +20,6 @@ export default defineConfig([
     },
   },
   {
-    /* Every page must export a `route` alongside its component — that export
-       is how the build discovers the page at all (see src/pages/README.md).
-       Fast Refresh gives up on a module that exports a non-component, which
-       for a page means a full reload on edit: an acceptable trade for a route
-       table nobody has to maintain by hand. */
-    files: ['src/pages/**/*.tsx'],
-    rules: {
-      'react-refresh/only-export-components': ['error', { allowExportNames: ['route'] }],
-    },
-  },
-  {
     /* These two are primitive libraries rather than screens: class-name
        constants, a brand-asset helper, an inline-markup renderer. They are
        imported by components and are not themselves refreshable. */

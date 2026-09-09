@@ -7,26 +7,63 @@ page, prerenders it in both languages, and adds it to the sitemap and
 
 ```
 src/pages/<name>/
-  index.tsx     the component and the `route` export
+  route.ts      the URL and the <head> copy — metadata only
+  index.tsx     the component, as the default export
   copy.en.ts    the page's English words
   copy.es.ts    the page's Spanish words, typed against copy.en.ts
 ```
 
 Read `src/pages/legal/` — it is the worked example for all of this.
 
-## 1. `index.tsx`
+**Why two files.** `route.ts` is imported eagerly, because the prerender, the
+sitemap and `llms.txt` need every page's path and head copy at once;
+`index.tsx` is imported lazily, so a visitor downloads one page's component
+and words rather than twelve. Bundling the site together cost every visitor
+about 200 KB of pages they were not reading. Keep `route.ts` metadata-only:
+whatever it imports is downloaded by everyone, on every page.
+
+## 1. `route.ts`
+
+```ts
+import type { Route } from '../../routes/types';
+
+export const route: Route = {
+  path: '/security/',
+  locales: {
+    en: { title: 'Security — Camberi', description: '…' },
+    es: { title: 'Seguridad — Camberi', description: '…' },
+  },
+};
+```
+
+That `route` export is half the contract. Its type is in
+`src/routes/types.ts`:
+
+| field       | required | notes |
+| ----------- | -------- | ----- |
+| `path`      | yes | The **English** URL. Leading *and* trailing slash. The Spanish URL is the same path under `/es/` — you never declare it, and that is what keeps hreflang correct for free. |
+| `locales`   | yes | `{ en, es }`, each `{ title, description, ogTitle?, ogDescription? }`. Both languages or the build fails. A `title` is at most 60 characters and a `description` at most 155, or Google writes its own. |
+| `priority`  | no  | Sitemap priority, 0–1. Home is 1, `/legal/` is 0.3. |
+| `draft`     | no  | `true` while you work: served by `pnpm dev`, never built, never listed. |
+| `noindex`   | no  | Built and reachable, but excluded from the index, the sitemap and `llms.txt`. |
+
+## 2. `index.tsx`
+
+The other half is the component, as the **default export**: the route table
+imports `index.tsx` and takes its `default`. A page with a `route.ts` and no
+`index.tsx`, or an `index.tsx` with no default export, fails loudly at
+startup rather than 404ing later.
 
 ```tsx
 import { PageLayout, PageHead, Prose } from '../../components/PageLayout';
 import { CONTAINER } from '../../components/ui';
 import { locale } from '../../i18n';
-import type { Route } from '../../routes/types';
 import { securityEn, type SecurityCopy } from './copy.en';
 import { securityEs } from './copy.es';
 
 const copy: SecurityCopy = locale === 'es' ? securityEs : securityEn;
 
-export function Security() {
+export default function Security() {
   return (
     <PageLayout>
       <PageHead title={copy.title} intro={copy.intro} />
@@ -36,30 +73,16 @@ export function Security() {
     </PageLayout>
   );
 }
-
-export const route: Route = {
-  path: '/security/',
-  component: Security,
-  locales: {
-    en: { title: 'Security — Camberi', description: '…' },
-    es: { title: 'Seguridad — Camberi', description: '…' },
-  },
-};
 ```
 
-That `route` export is the whole contract. Its type is in
-`src/routes/types.ts`:
+This file becomes the page's own chunk. The prerendered HTML carries a
+`<link rel="modulepreload">` for it, so it is fetched alongside the main
+bundle rather than after it and there is no flash while it arrives — the
+finished page is already on screen, and hydration waits for the chunk rather
+than rendering a placeholder over it. Nothing to configure: the preload is
+generated from Vite's manifest by `scripts/prerender.mjs`.
 
-| field       | required | notes |
-| ----------- | -------- | ----- |
-| `path`      | yes | The **English** URL. Leading *and* trailing slash. The Spanish URL is the same path under `/es/` — you never declare it, and that is what keeps hreflang correct for free. |
-| `locales`   | yes | `{ en, es }`, each `{ title, description, ogTitle?, ogDescription? }`. Both languages or the build fails. |
-| `component` | yes | Reads its locale from `import { t }` / `import { locale }` like everything else. |
-| `priority`  | no  | Sitemap priority, 0–1. Home is 1, `/legal/` is 0.3. |
-| `draft`     | no  | `true` while you work: served by `pnpm dev`, never built, never listed. |
-| `noindex`   | no  | Built and reachable, but excluded from the index, the sitemap and `llms.txt`. |
-
-## 2. Copy
+## 3. Copy
 
 Page copy lives with the page, **never** in `src/i18n/en.ts`. That file is only
 for chrome every page shares — nav labels, footer columns. Keeping page copy
@@ -92,7 +115,7 @@ depend on that), and write each sentence the way a Castilian speaker would.
 Register is tuteo for marketing pages; legal and policy pages are impersonal.
 Product and stack names stay in English.
 
-## 3. Prose, links and facts
+## 4. Prose, links and facts
 
 `Prose` (in `src/components/PageLayout.tsx`) renders an array of strings as
 paragraphs and understands two things inside them:
@@ -106,7 +129,7 @@ copy: it would then need correcting in two languages and every page that
 mentions it. An unverified fact is `TODO_FRANCESCO` in `site.ts`, which is
 `null`, and consumers must skip it rather than print a placeholder.
 
-## 4. Layout
+## 5. Layout
 
 - `PageLayout` gives you the header in its light state (there is no hero on an
   inner page), a `<main>`, and the footer. It also starts the entrance
@@ -120,7 +143,7 @@ mentions it. An unverified fact is `TODO_FRANCESCO` in `site.ts`, which is
 - **No eyebrow labels.** They were removed from the whole site on purpose.
 - Do not restyle the hero or the header.
 
-## 5. Server-side rendering
+## 6. Server-side rendering
 
 Every page is rendered to HTML by Node at build time and hydrated in the
 browser, so:
@@ -132,7 +155,7 @@ browser, so:
   browser-only value, start from a neutral default and set it in an effect.
 - Links between pages are ordinary `<a href>`. There is no router.
 
-## 6. Checking your work
+## 7. Checking your work
 
 ```
 pnpm dev                # any route, any language, hot reload
@@ -144,5 +167,6 @@ expected. To see the real `<title>`, canonical, hreflang and JSON-LD, build and
 preview, then look at `dist/<path>/index.html`.
 
 Before you finish: `pnpm build` and `pnpm lint` clean, the page present at both
-`dist/<path>/index.html` and `dist/es/<path>/index.html`, and no hydration
-errors in the browser console.
+`dist/<path>/index.html` and `dist/es/<path>/index.html`, no hydration errors
+in the browser console, and — in the network panel — the page loading its own
+chunk and the shared ones, and no other page's.

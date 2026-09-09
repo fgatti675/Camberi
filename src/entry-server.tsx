@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { routes } from './routes';
-import type { Route } from './routes/types';
+import type { PageRoute } from './routes/types';
 import { buildHead } from './routes/head';
 import { locale } from './i18n';
 import { SITE } from './site';
@@ -23,14 +23,22 @@ export const origin = SITE.origin;
 
 /** The tags Vite generated for the client bundle, lifted out of its own HTML. */
 export interface Assets {
-  /** Stylesheets and module preloads — go in `<head>`. */
+  /**
+   * Stylesheets and module preloads — go in `<head>`. The prerender adds the
+   * route's own chunk to this, so the page's JavaScript is fetched in
+   * parallel with the entry rather than after it.
+   */
   head: string;
   /** The module script — goes at the end of `<body>`. */
   body: string;
 }
 
-export function renderRoute(route: Route, assets: Assets): string {
-  const Page = route.component;
+/**
+ * One page as a complete HTML document. Async because a page's component is
+ * in its own chunk now; on the server that import is a file read.
+ */
+export async function renderRoute(route: PageRoute, assets: Assets): Promise<string> {
+  const Page = await route.load();
   /* `ConsentBar` renders null here — it has no browser storage to read and
      nothing it could honestly say. It is in the tree all the same, so the
      server and the client agree on the shape of the root and hydration has

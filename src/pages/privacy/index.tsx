@@ -3,7 +3,6 @@ import { CONTAINER, Rule } from '../../components/ui';
 import { CookieSettings } from '../../components/ConsentBar';
 import { SITE, CONSENT, known } from '../../site';
 import { locale, STORAGE_KEY } from '../../i18n';
-import type { Route } from '../../routes/types';
 import { privacyEn, type PrivacyCopy } from './copy.en';
 import { privacyEs } from './copy.es';
 
@@ -57,7 +56,7 @@ const VARS: Record<string, string> = {
   X: SITE.social.x,
 };
 
-export function Privacy() {
+export default function Privacy() {
   return (
     <PageLayout>
       <PageHead title={copy.title} intro={copy.intro} meta={copy.updated} titleClass="max-w-[12ch]" />
@@ -98,21 +97,3 @@ export function Privacy() {
     </PageLayout>
   );
 }
-
-export const route: Route = {
-  path: '/privacy/',
-  priority: 0.3,
-  component: Privacy,
-  locales: {
-    en: {
-      title: 'Privacy policy — Camberi',
-      description:
-        'What camberi.com does with personal data: Firebase Hosting request logs, Google Analytics only after you accept, email enquiries, your GDPR rights and how to exercise them.',
-    },
-    es: {
-      title: 'Política de privacidad — Camberi',
-      description:
-        'Qué hace camberi.com con los datos personales: registros de Firebase Hosting, Google Analytics solo tras aceptarlo, consultas por correo, y los derechos del RGPD y cómo ejercerlos.',
-    },
-  },
-};
