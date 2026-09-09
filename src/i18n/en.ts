@@ -218,6 +218,9 @@ export const en = {
     axisLabel: 'Weeks',
     unsure: 'Not sure which one you need? Neither are most people.',
     unsureCta: 'Tell us what’s stuck',
+    /* Each engagement is now a page of its own under /services/. This is the
+       link into it, from the home page list and from the services index. */
+    readMore: 'Read more',
     items: [
       {
         title: 'Automation and AI that survives production',

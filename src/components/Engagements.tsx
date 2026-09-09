@@ -1,5 +1,6 @@
-import { CONTAINER, SECTION_LG, SectionHead, Button, ArrowRight } from './ui';
+import { CONTAINER, SECTION_LG, SectionHead, Button, ArrowRight, ArrowUpRight } from './ui';
 import { t } from '../i18n';
+import { SERVICE_PATHS, servicePath } from '../pages/services/service';
 
 /* ──────────────────────────────────────────────────────────────
    A scale of engagements, not a list of them.
@@ -84,12 +85,18 @@ export function Engagements() {
 
         <div className="stagger">
           {t.engagements.items.map((e, i) => (
-            <article
+            /* Each row now leads somewhere: the engagement has a page of its
+               own under /services/, and this list is the way in from the home
+               page. The whole row is the target rather than a small link at
+               the end of the paragraph. */
+            <a
               key={e.title}
-              className={`grid grid-cols-1 ${GRID} gap-x-12 gap-y-4 items-start border-t border-hairline pt-6 pb-7`}>
+              href={servicePath(SERVICE_PATHS[i])}
+              aria-label={`${e.title} — ${t.engagements.readMore}`}
+              className={`group grid grid-cols-1 ${GRID} gap-x-12 gap-y-4 items-start border-t border-hairline pt-6 pb-7 transition-colors duration-300 hover:border-text-main`}>
               <div>
                 <h3
-                  className={`leading-[1.25] tracking-[-0.02em] text-text-main text-balance ${
+                  className={`leading-[1.25] tracking-[-0.02em] text-text-main text-balance transition-colors duration-300 group-hover:text-accent ${
                     i === 0 ? 'text-[1.3rem] font-600' : 'text-[1.08rem] font-600'
                   }`}>
                   {e.title}
@@ -97,6 +104,13 @@ export function Engagements() {
                 <p className="mt-2.5 text-[0.97rem] leading-[1.6] text-text-muted max-w-[44ch]">
                   {e.description}
                 </p>
+                <span className="mt-3.5 inline-flex items-center gap-1.5 font-mono text-[0.72rem] text-text-light transition-colors duration-300 group-hover:text-accent">
+                  {t.engagements.readMore}
+                  <ArrowUpRight
+                    size={11}
+                    className="shrink-0 transition-transform duration-300 ease-expo group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </span>
               </div>
 
               <div className="min-[820px]:pt-2">
@@ -109,7 +123,7 @@ export function Engagements() {
                   {e.scope}
                 </span>
               </div>
-            </article>
+            </a>
           ))}
           <div className="border-t border-hairline" />
         </div>
