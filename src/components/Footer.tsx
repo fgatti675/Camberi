@@ -16,6 +16,7 @@ function buildColumns(base: string) {
         { label: t.nav.services, href: page('/services/') },
         { label: t.footer.howWeWork, href: `${base}#process` },
         { label: t.nav.team, href: `${base}#team` },
+        { label: t.footer.log, href: page('/log/') },
         { label: t.footer.security, href: page('/security/') },
         { label: t.footer.legal, href: page('/legal/') },
         { label: t.footer.privacy, href: page('/privacy/') },

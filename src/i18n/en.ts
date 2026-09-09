@@ -338,6 +338,7 @@ export const en = {
     built: 'What we built',
     connect: 'Connect',
     howWeWork: 'How we work',
+    log: 'Log',
     legal: 'Legal notice',
     privacy: 'Privacy',
     security: 'Security',
