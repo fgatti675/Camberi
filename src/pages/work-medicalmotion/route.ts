@@ -10,13 +10,13 @@ export const route: Route = {
     en: {
       title: 'medicalmotion — a case study — Camberi',
       description:
-        'How the technology behind medicalmotion was built: insurer coverage modelled as data, therapy records that Pain Lab can read, and one team on the app, the therapist tooling and the platform. Since 2019.',
+        "How medicalmotion's technology was built: insurer coverage modelled as data, therapy records Pain Lab can read, and one team on app, tooling and platform.",
       ogTitle: 'medicalmotion: pain therapy more than 23 insurers pay for',
     },
     es: {
       title: 'medicalmotion — el caso — Camberi',
       description:
-        'Cómo se hizo la tecnología de medicalmotion: la cobertura de cada aseguradora como dato, datos de terapia que Pain Lab puede leer y un solo equipo para la app, las herramientas del fisio y la plataforma. Desde 2019.',
+        'Cómo se hizo la tecnología de medicalmotion: la cobertura de cada aseguradora como dato, datos de terapia que Pain Lab lee y un solo equipo desde 2019.',
       ogTitle: 'medicalmotion: terapia del dolor que pagan más de 23 aseguradoras',
     },
   },

@@ -10,12 +10,12 @@ export const route: Route = {
     en: {
       title: 'Legal notice — Camberi',
       description:
-        'FireCMS S.L., trading as Camberi: registered office, tax and commercial registry details, hosting provider, applicable law, and the German Impressum disclosures.',
+        'FireCMS S.L., trading as Camberi: registered office, tax and commercial registry details, hosting provider, applicable law and the German Impressum.',
     },
     es: {
       title: 'Aviso legal — Camberi',
       description:
-        'FireCMS S.L., que opera como Camberi: domicilio social, datos fiscales y registrales, proveedor de alojamiento, legislación aplicable y los datos del Impressum alemán.',
+        'FireCMS S.L., que opera como Camberi: domicilio social, datos fiscales y registrales, alojamiento, legislación aplicable y el Impressum alemán.',
     },
   },
 };

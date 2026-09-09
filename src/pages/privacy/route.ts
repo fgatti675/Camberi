@@ -10,12 +10,12 @@ export const route: Route = {
     en: {
       title: 'Privacy policy — Camberi',
       description:
-        'What camberi.com does with personal data: Firebase Hosting request logs, Google Analytics only after you accept, email enquiries, your GDPR rights and how to exercise them.',
+        'What camberi.com does with personal data: Firebase Hosting logs, Google Analytics only if you accept, email enquiries, and your rights under the GDPR.',
     },
     es: {
       title: 'Política de privacidad — Camberi',
       description:
-        'Qué hace camberi.com con los datos personales: registros de Firebase Hosting, Google Analytics solo tras aceptarlo, consultas por correo, y los derechos del RGPD y cómo ejercerlos.',
+        'Qué hace camberi.com con los datos personales: registros de Firebase Hosting, Google Analytics solo si lo aceptas, consultas por correo y derechos RGPD.',
     },
   },
 };

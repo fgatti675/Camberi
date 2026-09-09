@@ -11,13 +11,13 @@ export const route: Route = {
     en: {
       title: 'Postgres data platform and backend migrations — Camberi',
       description:
-        'Schema design, row-level security and migrations off Firebase, Supabase or another managed backend. FireCMS and Rebase implementation from the people who wrote them.',
+        'Schema design, row-level security and migrations off Firebase, Supabase or another managed backend, plus FireCMS and Rebase from the people who wrote them.',
       ogTitle: 'Postgres you own, and a clean way off the managed backend you have outgrown',
     },
     es: {
       title: 'Plataforma de datos en Postgres y migraciones — Camberi',
       description:
-        'Diseño de esquemas, row-level security y salida de Firebase, Supabase u otro backend gestionado. Implantación de FireCMS y Rebase por quienes escribieron los frameworks.',
+        'Diseño de esquemas, row-level security y salida de Firebase, Supabase u otro backend gestionado, más FireCMS y Rebase por quienes los escribieron.',
       ogTitle: 'Un Postgres que es tuyo, y una salida limpia del backend que se te ha quedado pequeño',
     },
   },

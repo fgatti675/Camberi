@@ -11,13 +11,13 @@ export const route: Route = {
     en: {
       title: 'Software architecture review in two weeks — Camberi',
       description:
-        'A fixed-scope software architecture review: two weeks reading your stack, then a written plan that ranks findings by cost and that your own team can act on without us.',
+        'A fixed-scope software architecture review: two weeks reading your stack, then a written plan that ranks findings by cost and your team can act on alone.',
       ogTitle: 'Two weeks, and a written plan your own team can act on',
     },
     es: {
-      title: 'Revisión de arquitectura de software en dos semanas — Camberi',
+      title: 'Revisión de arquitectura de software, dos semanas — Camberi',
       description:
-        'Revisión de arquitectura con alcance cerrado: dos semanas leyendo tu stack y un plan por escrito, ordenado por coste, que tu equipo puede ejecutar sin nosotros.',
+        'Revisión de arquitectura con alcance cerrado: dos semanas leyendo tu stack y un plan escrito, ordenado por coste, que tu equipo ejecuta sin nosotros.',
       ogTitle: 'Dos semanas y un plan por escrito que tu equipo puede ejecutar solo',
     },
   },

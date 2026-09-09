@@ -10,12 +10,12 @@ export const route: Route = {
     en: {
       title: 'Security — Camberi',
       description:
-        'No SOC 2, no ISO 27001, three engineers: client-owned repositories and accounts, access enforced by Postgres row-level security, health data under German regulation since 2019, and the NDA and DPA we will sign.',
+        'No SOC 2, no ISO 27001, three engineers: repositories and accounts you own, access enforced in Postgres, health data under German rules since 2019.',
     },
     es: {
       title: 'Seguridad — Camberi',
       description:
-        'Sin SOC 2 ni ISO 27001, tres ingenieros: repositorios y cuentas del cliente, control de acceso en Postgres con row-level security, datos de salud bajo normativa alemana desde 2019, y el NDA y el encargo de tratamiento que firmamos.',
+        'Sin SOC 2 ni ISO 27001, tres ingenieros: repositorios y cuentas tuyos, permisos en Postgres y datos de salud bajo normativa alemana desde 2019.',
     },
   },
 };
