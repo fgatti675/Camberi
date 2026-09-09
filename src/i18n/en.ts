@@ -146,6 +146,8 @@ export const en = {
     intro:
       'You can read about how we work, or you can go and use what we built. Everything below is live right now.',
     visit: (name: string) => `Visit ${name}`,
+    /* Shown only on the two projects that have a page of their own. */
+    caseStudy: 'Read the case study',
     alsoTitle: 'Also built and running',
     alsoNote:
       'Plus a decade of consulting for product teams across Europe — from the first architecture call to the rescue mission six months after launch.',

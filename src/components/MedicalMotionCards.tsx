@@ -37,11 +37,58 @@ const CARDS: Card[] = [
   { bg: '#ceb9fa', fg: '#000038', image: '/work/mm/feat-04.webp' },
 ];
 
-export function MedicalMotionCards() {
+/**
+ * `row` is the work section: a strip that bleeds off the page and scrolls on a
+ * phone. `grid` is the case study at /work/medicalmotion/, where the same four
+ * cards are the page's only illustration and sit inside the measure — no
+ * bleed, so no left-edge fade, and no hover lift, because nothing there is a
+ * link. One component either way: the cards are markup, and a second copy of
+ * that markup would go stale the first time the product changed.
+ */
+export function MedicalMotionCards({ variant = 'row' }: { variant?: 'row' | 'grid' }) {
+  const grid = variant === 'grid';
+
   const ordered = CARDS.map((card, i) => ({
     ...card,
     label: t.work.medicalmotion.cards[i],
   }));
+
+  if (grid) {
+    return (
+      <div
+        className="grid grid-cols-2 min-[760px]:grid-cols-4 gap-3"
+        role="img"
+        aria-label={`medicalmotion: ${t.work.medicalmotion.cards.join(', ')}`}>
+        {ordered.map((c) => (
+          <div
+            key={c.image}
+            style={{ backgroundColor: c.bg }}
+            className="rounded-[1.15rem] overflow-hidden aspect-[1/1.55] flex flex-col">
+            {/* A paragraph, not a heading: on the case study these four are
+                captions inside a figure, and four h3s would land in the
+                middle of the page's outline — and in the plain-text twin the
+                prerender emits — as if they were sections. */}
+            <div className="flex items-center justify-center px-4 pt-6 pb-2">
+              <p
+                style={{ color: c.fg }}
+                className="flex min-h-[2.5em] items-center justify-center max-w-[17ch] text-center text-[0.92rem] min-[1100px]:text-[1rem] font-600 leading-[1.25] tracking-[-0.015em] text-balance">
+                {c.label}
+              </p>
+            </div>
+            <img
+              src={c.image}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              width={520}
+              height={573}
+              className="mt-auto block w-full flex-1 min-h-0 h-full object-cover object-top"
+            />
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     /* Above 900px the row runs in reverse, which puts the first feature
