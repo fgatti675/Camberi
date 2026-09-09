@@ -144,6 +144,8 @@ export const es: Dict = {
     intro:
       'Puedes leer cómo trabajamos o puedes ir a usar lo que hemos hecho. Todo lo de aquí abajo está funcionando ahora mismo.',
     visit: (name: string) => `Visitar ${name}`,
+    /* Solo en los dos proyectos que tienen página propia. */
+    caseStudy: 'Leer el caso',
     alsoTitle: 'También nuestro, también en marcha',
     alsoNote:
       'Y más de una década de consultoría para equipos de producto por toda Europa: desde la primera llamada de arquitectura hasta el rescate a los seis meses del lanzamiento.',

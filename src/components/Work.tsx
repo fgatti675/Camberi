@@ -2,6 +2,7 @@ import {
   brand,
   CONTAINER_WIDE,
   SectionHead,
+  ArrowRight,
   ArrowUpRight,
   Tag,
   CARD_DARK,
@@ -10,7 +11,8 @@ import {
 import { AmbientGradient } from './AmbientGradient';
 import { MedicalMotionCards } from './MedicalMotionCards';
 import { AMBIENT_WORK } from './neatConfigs';
-import { t } from '../i18n';
+import { t, locale } from '../i18n';
+import { localePath } from '../routes/paths';
 
 interface Project {
   id: string;
@@ -26,6 +28,17 @@ interface Project {
   domain: string;
   /** Absent for medicalmotion, which renders its feature cards as markup. */
   image?: string;
+  /**
+   * The screenshot's natural size. Written out because a browser given no
+   * dimensions reserves no space, and the whole section reflows around each
+   * shot as it arrives — which is what a Lighthouse audit flagged.
+   */
+  imageSize?: { w: number; h: number };
+  /**
+   * The two projects that have a page of their own. English path only: the
+   * Spanish one is the same path under `/es/`, which `localePath` adds.
+   */
+  caseStudy?: string;
   /** Bloom colour behind the screenshot — taken from the product's own brand. */
   glow: string;
 }
@@ -38,6 +51,7 @@ const projects: Project[] = [
     logo: brand('medicalmotion-icon.png'),
     href: 'https://medicalmotion.com',
     domain: 'medicalmotion.com',
+    caseStudy: '/work/medicalmotion/',
     glow: 'rgba(16,185,129,0.30)',
   },
   {
@@ -48,6 +62,7 @@ const projects: Project[] = [
     href: 'https://firecms.co',
     domain: 'firecms.co',
     image: '/work/firecms.webp',
+    imageSize: { w: 1600, h: 983 },
     glow: 'rgba(255,122,0,0.26)',
   },
   {
@@ -58,6 +73,7 @@ const projects: Project[] = [
     href: 'https://rebase.pro',
     domain: 'rebase.pro',
     image: '/work/rebase.webp',
+    imageSize: { w: 1450, h: 946 },
     glow: 'rgba(0,90,255,0.34)',
   },
   {
@@ -70,10 +86,14 @@ const projects: Project[] = [
     href: 'https://sustentalent.com',
     domain: 'sustentalent.com',
     image: '/work/sustentalent.webp',
+    imageSize: { w: 1600, h: 1000 },
+    caseStudy: '/work/sustentalent/',
     glow: 'rgba(21,209,127,0.28)',
   },
 ];
 
+/* `size` is each screenshot's natural size, so the card reserves its space
+   before the image arrives instead of growing under the cursor. */
 const alsoBuilt = [
   {
     title: 'Dataki',
@@ -81,6 +101,7 @@ const alsoBuilt = [
     href: 'https://dataki.ai',
     logo: brand('dataki.svg'),
     image: '/work/dataki.webp',
+    size: { w: 1800, h: 854 },
     description: t.work.dataki,
   },
   {
@@ -89,6 +110,7 @@ const alsoBuilt = [
     href: 'https://unbrand.my',
     logo: brand('unbrand.svg'),
     image: '/work/unbrand.webp',
+    size: { w: 1600, h: 1385 },
     description: t.work.unbrand,
   },
   {
@@ -97,6 +119,7 @@ const alsoBuilt = [
     href: 'https://neat.firecms.co',
     logo: brand('neat.svg'),
     image: '/work/neat.webp',
+    size: { w: 1800, h: 871 },
     description: t.work.neat,
   },
   {
@@ -105,6 +128,7 @@ const alsoBuilt = [
     href: 'https://dadaki.com',
     logo: brand('dadaki.svg'),
     image: '/work/dadaki.webp',
+    size: { w: 1600, h: 840 },
     description: t.work.dadaki,
   },
 ];
@@ -122,11 +146,15 @@ function Frame({
   alt,
   href,
   bleed,
+  width,
+  height,
 }: {
   image: string;
   alt: string;
   href: string;
   bleed: 'left' | 'right';
+  width: number;
+  height: number;
 }) {
   /* Written out literally — Tailwind scans for whole class names. The side
      that runs off the page loses its corner and its border, so the shot reads
@@ -144,7 +172,14 @@ function Frame({
       tabIndex={-1}
       aria-hidden="true"
       className={`block rounded-[1.15rem] ${edge} overflow-hidden border border-white/12 shadow-[0_40px_90px_-40px_rgba(0,0,0,0.9)] transition-all duration-700 ease-expo group-hover/row:-translate-y-2 group-hover/row:border-white/25 group-hover/row:shadow-[0_60px_120px_-50px_rgba(0,0,0,1)]`}>
-      <img src={image} alt={alt} loading="lazy" className="block w-full h-auto" />
+      <img
+        src={image}
+        alt={alt}
+        loading="lazy"
+        width={width}
+        height={height}
+        className="block w-full h-auto"
+      />
     </a>
   );
 }
@@ -211,6 +246,8 @@ export function Work() {
                     alt={`${p.title} interface`}
                     href={p.href}
                     bleed={i % 2 ? 'right' : 'left'}
+                    width={p.imageSize?.w ?? 1600}
+                    height={p.imageSize?.h ?? 1000}
                   />
                 ) : (
                   <MedicalMotionCards />
@@ -225,6 +262,8 @@ export function Work() {
                     src={p.logo}
                     alt=""
                     aria-hidden="true"
+                    width={44}
+                    height={44}
                     className="h-11 w-11 object-contain shrink-0"
                   />
                   <h3 className="text-white text-[2.1rem] md:text-[2.5rem] font-600 tracking-[-0.035em] leading-[1.05]">
@@ -264,14 +303,31 @@ export function Work() {
                   ))}
                 </div>
 
-                <a
-                  href={p.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-8 inline-flex items-center gap-1.5 self-start text-accent-light font-500 text-[1.0625rem] group/link hover:text-white transition-colors duration-300">
-                  {t.work.visit(p.title)}
-                  <ArrowUpRight className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-300 ease-expo" />
-                </a>
+                {/* Two exits, and they are different promises: the live
+                    product, and the page that says how it was built. The case
+                    study leads, because a reader still deciding whether we can
+                    do their kind of work needs the reasoning more than the
+                    demo — and only two of these four have one. */}
+                <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3">
+                  {p.caseStudy && (
+                    <a
+                      href={localePath(locale, p.caseStudy)}
+                      className="inline-flex items-center gap-1.5 text-accent-light font-500 text-[1.0625rem] group/case hover:text-white transition-colors duration-300">
+                      {t.work.caseStudy}
+                      <ArrowRight className="group-hover/case:translate-x-0.5 transition-transform duration-300 ease-expo" />
+                    </a>
+                  )}
+                  <a
+                    href={p.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`inline-flex items-center gap-1.5 font-500 text-[1.0625rem] group/link transition-colors duration-300 ${
+                      p.caseStudy ? 'text-white/60 hover:text-white' : 'text-accent-light hover:text-white'
+                    }`}>
+                    {t.work.visit(p.title)}
+                    <ArrowUpRight className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-300 ease-expo" />
+                  </a>
+                </div>
               </div>
             </article>
           ))}
@@ -296,12 +352,21 @@ export function Work() {
                     src={a.image}
                     alt={`${a.title} interface`}
                     loading="lazy"
+                    width={a.size.w}
+                    height={a.size.h}
                     className="block w-full h-full object-cover object-top transition-transform duration-700 ease-expo group-hover:scale-[1.03]"
                   />
                 </div>
                 <div className="p-7">
                   <div className="flex items-center gap-2.5">
-                    <img src={a.logo} alt="" aria-hidden="true" className="w-6 h-6 rounded-[0.35rem] object-contain shrink-0" />
+                    <img
+                      src={a.logo}
+                      alt=""
+                      aria-hidden="true"
+                      width={24}
+                      height={24}
+                      className="w-6 h-6 rounded-[0.35rem] object-contain shrink-0"
+                    />
                     <h4 className="text-white font-600 text-[1.15rem]">{a.title}</h4>
                     <span className="font-mono text-[0.75rem] text-white/55 truncate">{a.domain}</span>
                     <ArrowUpRight className="ml-auto shrink-0 text-white/55 transition-transform duration-300 ease-expo group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
