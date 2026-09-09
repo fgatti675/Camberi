@@ -218,6 +218,7 @@ export const es: Dict = {
     axisLabel: 'Semanas',
     unsure: '¿No sabes cuál necesitas? Casi nadie lo sabe.',
     unsureCta: 'Cuéntanos qué te falla',
+    readMore: 'Ver en detalle',
     items: [
       {
         title: 'Automatización e IA que aguanta en producción',
