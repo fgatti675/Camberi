@@ -329,6 +329,18 @@ export const en = {
     bookBody: 'Hi — I’d like to book a call. Here’s what we’re building and where we’re stuck:\n\n',
     /* Sits under the two buttons as a plain, checkable promise. */
     reply: 'We read everything and reply within one business day.',
+    /* The four steps between the email and a signed scope. Written so a
+       reader can tell whether they want the next one before taking this
+       one — including the step where the answer is no. */
+    next: {
+      title: 'What happens next',
+      steps: [
+        'You write two paragraphs: what you are building, and where it is stuck.',
+        'We come back with our first questions — or with a straight no, if this is not work for us.',
+        'A 30-minute call about the product, the constraints and the deadline.',
+        'A written scope: the milestones, and a price that does not move.',
+      ],
+    },
   },
 
   footer: {

@@ -75,6 +75,28 @@ export function Contact() {
           </p>
         </div>
 
+        {/* The route from that email to a signed scope, in four steps.
+            The mask above dissolves the canvas to nothing by 22rem (14rem
+            on mobile) and this block starts about 55rem into the section,
+            so these lines sit on flat `bg-bg-dark` at every scroll offset
+            rather than on whatever facet the ribbon has drifted to.
+            Verified at −350 / 0 / +350 on desktop and at 390px. */}
+        <div className="mt-16 md:mt-20 reveal">
+          <h3 className="text-[1.05rem] font-600 text-white">{t.contact.next.title}</h3>
+          <ol className="mt-7 grid grid-cols-1 min-[640px]:grid-cols-2 min-[980px]:grid-cols-4 gap-x-10 gap-y-8 stagger">
+            {t.contact.next.steps.map((step, i) => (
+              <li key={step} className="border-t border-white/15 pt-5">
+                <span className="block font-mono text-[0.72rem] tracking-[0.06em] text-white/50">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className="mt-3 block text-[0.95rem] leading-[1.6] text-white/75 max-w-[30ch]">
+                  {step}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
         <div className="mt-16 md:mt-20 pt-7 border-t border-white/10 flex flex-wrap items-center justify-between gap-x-8 gap-y-5">
           <p className="font-mono text-[0.74rem] tracking-[0.02em] text-white/55">
             {t.contact.location}

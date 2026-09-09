@@ -326,6 +326,15 @@ export const es: Dict = {
     bookSubject: 'Llamada de 30 minutos',
     bookBody: 'Hola: me gustaría reservar una llamada. Esto es lo que estamos haciendo y dónde estamos atascados:\n\n',
     reply: 'Lo leemos todo y contestamos en un día laborable.',
+    next: {
+      title: 'Cómo seguimos',
+      steps: [
+        'Nos escribes dos párrafos: qué estás montando y por dónde se ha atascado.',
+        'Te volvemos con las primeras preguntas, o con un no claro si no es trabajo para nosotros.',
+        'Una llamada de 30 minutos sobre el producto, sus límites y los plazos.',
+        'El alcance por escrito: los hitos, y un precio que no se mueve.',
+      ],
+    },
   },
 
   footer: {

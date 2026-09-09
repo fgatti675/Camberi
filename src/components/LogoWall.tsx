@@ -12,30 +12,40 @@ import { t } from '../i18n';
    `h-*` class below is enough.
 
    The two rows carry different logos on purpose — the same list scrolling
-   past twice in opposite directions reads as a rendering bug. */
-type Logo = { src: string; alt: string };
+   past twice in opposite directions reads as a rendering bug.
+
+   `width` is the file's real pixel width and `height` is the shared canvas
+   height every export uses. The browser needs both to reserve the right box
+   before the bytes arrive: without them these seventeen images are laid out
+   twice, and Lighthouse counts every one of them as an unsized image. The
+   `h-8 md:h-9 w-auto` classes still decide the drawn size — the attributes
+   only supply the ratio. */
+type Logo = { src: string; alt: string; width: number };
+
+/** Every mark is exported onto the same canvas height, so only width varies. */
+const LOGO_HEIGHT = 140;
 
 const rowOne: Logo[] = [
-  { src: '/logos/medicalmotion.png', alt: 'medicalmotion' },
-  { src: '/logos/clario.png', alt: 'Clario' },
-  { src: '/logos/somnio.png', alt: 'Somnio Software' },
-  { src: '/logos/withu.png', alt: 'WithU' },
-  { src: '/logos/gearfocus.png', alt: 'GearFocus' },
-  { src: '/logos/nfq.png', alt: 'NFQ' },
-  { src: '/logos/riverstone.png', alt: 'Riverstone' },
-  { src: '/logos/kodecreators.png', alt: 'Kode Creators' },
-  { src: '/logos/viscap.png', alt: 'VisCap.ai' },
+  { src: '/logos/medicalmotion.png', alt: 'medicalmotion', width: 396 },
+  { src: '/logos/clario.png', alt: 'Clario', width: 369 },
+  { src: '/logos/somnio.png', alt: 'Somnio Software', width: 349 },
+  { src: '/logos/withu.png', alt: 'WithU', width: 362 },
+  { src: '/logos/gearfocus.png', alt: 'GearFocus', width: 460 },
+  { src: '/logos/nfq.png', alt: 'NFQ', width: 281 },
+  { src: '/logos/riverstone.png', alt: 'Riverstone', width: 373 },
+  { src: '/logos/kodecreators.png', alt: 'Kode Creators', width: 331 },
+  { src: '/logos/viscap.png', alt: 'VisCap.ai', width: 460 },
 ];
 
 const rowTwo: Logo[] = [
-  { src: '/logos/deardoc.png', alt: 'DearDoc' },
-  { src: '/logos/codelabs.png', alt: 'Code Labs' },
-  { src: '/logos/bitforge.png', alt: 'Bitforge' },
-  { src: '/logos/socialincome.png', alt: 'Social Income' },
-  { src: '/logos/sustentalent.png', alt: 'SustenTalent' },
-  { src: '/logos/mindswitch.png', alt: 'Mindswitch' },
-  { src: '/logos/abacus.png', alt: 'Abacus Plus' },
-  { src: '/logos/fyclabs.png', alt: 'FYC Labs' },
+  { src: '/logos/deardoc.png', alt: 'DearDoc', width: 357 },
+  { src: '/logos/codelabs.png', alt: 'Code Labs', width: 460 },
+  { src: '/logos/bitforge.png', alt: 'Bitforge', width: 410 },
+  { src: '/logos/socialincome.png', alt: 'Social Income', width: 460 },
+  { src: '/logos/sustentalent.png', alt: 'SustenTalent', width: 422 },
+  { src: '/logos/mindswitch.png', alt: 'Mindswitch', width: 460 },
+  { src: '/logos/abacus.png', alt: 'Abacus Plus', width: 325 },
+  { src: '/logos/fyclabs.png', alt: 'FYC Labs', width: 460 },
 ];
 
 function Row({ logos, reverse = false }: { logos: Logo[]; reverse?: boolean }) {
@@ -51,7 +61,10 @@ function Row({ logos, reverse = false }: { logos: Logo[]; reverse?: boolean }) {
           key={`${l.alt}-${i}`}
           src={l.src}
           alt={l.alt}
+          width={l.width}
+          height={LOGO_HEIGHT}
           loading="lazy"
+          decoding="async"
           className="h-8 md:h-9 w-auto shrink-0 opacity-30 hover:opacity-70 transition-opacity duration-300"
         />
       ))}

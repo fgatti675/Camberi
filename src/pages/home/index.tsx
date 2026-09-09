@@ -59,14 +59,14 @@ export const route: Route = {
     en: {
       title: 'Camberi — the studio behind FireCMS, Rebase and medicalmotion',
       description:
-        'A product engineering studio in Madrid. We build and run our own software — FireCMS, Rebase and Neat — and the technology behind medicalmotion.',
+        'A product engineering studio in Madrid and Munich. We build and run our own software — FireCMS, Rebase and Neat — and the technology behind medicalmotion.',
       ogDescription:
         "We don't hand it over and disappear. A product engineering studio that builds and runs its own software — and yours.",
     },
     es: {
       title: 'Camberi — el estudio detrás de FireCMS, Rebase y medicalmotion',
       description:
-        'Estudio de ingeniería de producto en Madrid. Creamos y mantenemos nuestro propio software —FireCMS, Rebase, Neat— y la tecnología de medicalmotion.',
+        'Estudio de ingeniería de producto entre Madrid y Múnich. Creamos y mantenemos nuestro propio software —FireCMS, Rebase, Neat— y la tecnología de medicalmotion.',
       ogDescription:
         'No lo entregamos y desaparecemos. Un estudio de ingeniería de producto que crea y mantiene su propio software, y el tuyo.',
     },
