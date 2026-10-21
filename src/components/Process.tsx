@@ -15,8 +15,16 @@ export function Process() {
   return (
     <section
       id="process"
+      data-tone="dark"
       className={`relative ${SECTION} text-white bg-bg-dark isolate overflow-hidden`}>
-      <AmbientGradient config={AMBIENT_PROCESS} className="h-[34rem]" strength={0.22} />
+      {/* Faded in from the top edge, like the work band, so the canvas never
+          shows a cut line while the page colour is blending into the band. */}
+      <AmbientGradient
+        config={AMBIENT_PROCESS}
+        className="h-[34rem]"
+        strength={0.22}
+        mask="[mask-image:linear-gradient(to_bottom,transparent,#000_8rem)]"
+      />
       <div className={`relative z-10 ${CONTAINER}`}>
         <SectionHead
           dark

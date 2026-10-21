@@ -17,7 +17,7 @@ import { t } from '../i18n';
    ────────────────────────────────────────────────────────────── */
 export function Thesis() {
   return (
-    <section id="about" className={`${SECTION_LG} bg-bg-alt`}>
+    <section id="about" data-tone="alt" className={`${SECTION_LG} bg-bg-alt`}>
       <div className={CONTAINER}>
         <SectionHead
           title={t.thesis.title}

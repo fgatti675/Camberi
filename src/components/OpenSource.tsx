@@ -41,7 +41,7 @@ const repos: Repo[] = [
    more rounded panels. The page already has enough panels. */
 export function OpenSource() {
   return (
-    <section id="open-source" className={`${SECTION_LG} bg-bg-alt`}>
+    <section id="open-source" data-tone="alt" className={`${SECTION_LG} bg-bg-alt`}>
       <div className={CONTAINER}>
         <SectionHead
           title={t.openSource.title}

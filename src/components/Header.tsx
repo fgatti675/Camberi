@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { t, locale, localeHome, otherLocale, switchLocale } from '../i18n';
 
 const navLinks = [
+  { label: t.nav.agents, href: '#agents' },
   { label: t.nav.work, href: '#work' },
   { label: t.nav.services, href: '#services' },
-  { label: t.nav.openSource, href: '#open-source' },
   { label: t.nav.team, href: '#team' },
 ];
 

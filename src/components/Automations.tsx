@@ -13,7 +13,7 @@ import { t } from '../i18n';
    mono voice, small and grey, because it is raw material: a
    schema, a URL, a question. The output is set in the display
    serif, large and black, because it is the finished thing. The
-   reader watches material become work product six times without
+   reader watches material become work product four times without
    anyone having to say so.
 
    Three columns, like a specification sheet: which product, what
@@ -89,7 +89,7 @@ function Row({
 
 export function Automations() {
   return (
-    <section id="automations" className={`${SECTION_LG} bg-bg-main`}>
+    <section id="automations" data-tone="main" className={`${SECTION_LG} bg-bg-main`}>
       <div className={CONTAINER}>
         <SectionHead
           title={t.automations.title}

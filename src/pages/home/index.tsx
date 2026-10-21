@@ -1,9 +1,12 @@
+import { useRef } from 'react';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
+import { useToneFlow } from '../../hooks/useToneFlow';
 import { Header } from '../../components/Header';
 import { ScrollSpine } from '../../components/ScrollSpine';
 import { Hero } from '../../components/Hero';
 import { LogoWall } from '../../components/LogoWall';
 import { Automations } from '../../components/Automations';
+import { Agents } from '../../components/Agents';
 import { Thesis } from '../../components/Thesis';
 import { Work } from '../../components/Work';
 import { Engagements } from '../../components/Engagements';
@@ -15,34 +18,47 @@ import { Footer } from '../../components/Footer';
 
 /* The gradient lives inside the dark sections (Work, Process, Contact)
    rather than in bands between them, so the page reads as one flow with the
-   hero as its single saturated moment.
+   hero as its single saturated moment. The colour of the page itself follows
+   the story: `useToneFlow` blends from each section's tone to the next as the
+   reader scrolls, instead of cutting from white to black at every band.
 
-   Section order is an argument, in this order: here is what we build (and
-   every one of them does somebody's work for them), here is why that makes
-   us different, here is the proof you can go and click, here is how to buy
-   it, here is how it runs, here is the code, here are the people, here is
-   the address.
+   Section order is the story, told once and in order:
+
+   1. The promise — software that does the work for you (Hero), and the
+      teams already running on what we wrote (LogoWall).
+   2. What we build — products that take a job off somebody's desk.
+   3. Why it holds up — the hard part of an agent is everything around the
+      model, which is what we have been building for a decade.
+   4. Why us — we stay, and with AI that matters more; the numbers.
+   5. The proof — products you can open (Work), then the code you can read
+      (OpenSource), back to back so the evidence is never interrupted.
+   6. The people you would be working with.
+   7. How to start (Engagements), how it runs week to week (Process), and
+      the address (Contact), which closes on the question the hero opened.
 
    This is the only page with a hero, so it is the only one whose header
    starts transparent and the only one that carries the scroll spine — a
    running head needs sections to run past. */
 export default function Home() {
   useScrollAnimation();
+  const mainRef = useRef<HTMLElement>(null);
+  useToneFlow(mainRef);
 
   return (
     <>
       <Header />
       <ScrollSpine />
-      <main className="bg-bg-main">
+      <main ref={mainRef} className="bg-bg-main">
         <Hero />
         <LogoWall />
         <Automations />
+        <Agents />
         <Thesis />
         <Work />
-        <Engagements />
-        <Process />
         <OpenSource />
         <Team />
+        <Engagements />
+        <Process />
         <Contact />
       </main>
       <Footer />

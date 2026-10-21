@@ -7,6 +7,7 @@ export const en = {
   otherLocaleName: 'Español',
 
   nav: {
+    agents: 'AI agents',
     work: 'Work',
     services: 'Services',
     openSource: 'Open source',
@@ -20,6 +21,7 @@ export const en = {
      narrow rail without wrapping. */
   spine: {
     automations: 'What we build',
+    agents: 'AI agents',
     about: 'Why us',
     work: 'Work',
     services: 'Services',
@@ -30,10 +32,10 @@ export const en = {
   },
 
   hero: {
-    titleTop: 'We build software',
-    titleBottom: 'that earns its keep.',
+    titleTop: 'Software that does',
+    titleBottom: 'the work for you.',
     intro:
-      'A product engineering studio. For over a decade we’ve built and shipped our own products — like FireCMS and Rebase — and we bring that same depth to yours.',
+      'AI agents and automation, built to keep running in production. For over a decade we’ve shipped and maintained our own products — like FireCMS and Rebase — and we bring that same depth to yours.',
     primary: 'Start a project',
     secondary: 'See our work',
     scrollCue: 'Scroll',
@@ -47,31 +49,29 @@ export const en = {
      Every product Camberi has ever shipped takes a job someone was
      doing by hand and hands it to the machine. Nothing here is a
      claim about the future — each row describes what the product
-     does today, on a site you can go and open. */
+     does today, on a site you can go and open.
+
+     The rows are the products where a model or a pipeline does the
+     work. FireCMS and Rebase are told in full further down, in the
+     work and open-source sections, so they are not repeated here. */
   automations: {
-    title: 'Everything we build does the work for you.',
+    title: 'Every product we ship takes a job off somebody’s desk.',
     intro:
-      'One habit, in our own products and in client work alike: take the job somebody is doing by hand and make the software do it instead — properly, in production, for years.',
+      'One habit, in our own products and in client work alike: find the work somebody is doing by hand and give it to software instead. More and more often that software is an agent — it reads, decides and acts, with a person there for the calls that matter.',
     fromLabel: 'You give it',
     toLabel: 'You get',
     rows: [
-      {
-        from: 'A Postgres database you already own',
-        to: 'A complete backend, with the access rules enforced by Postgres itself',
-        product: 'Rebase',
-        href: 'https://rebase.pro',
-      },
-      {
-        from: 'A Firebase collection',
-        to: 'An admin panel your non-technical team can actually use',
-        product: 'FireCMS',
-        href: 'https://firecms.co',
-      },
       {
         from: 'A question typed in plain English',
         to: 'A real dashboard, with the SQL it wrote to get there',
         product: 'Dataki',
         href: 'https://dataki.ai',
+      },
+      {
+        from: 'A patient’s pain profile',
+        to: 'A personalised, AI-supported therapy plan that doctors prescribe and insurers reimburse',
+        product: 'medicalmotion',
+        href: 'https://medicalmotion.com',
       },
       {
         from: 'Any website address',
@@ -91,11 +91,41 @@ export const en = {
     cta: 'Automate something of yours',
   },
 
+  /* ── Agents ────────────────────────────────────────────────────
+     Why a studio known for admin panels and Postgres is the right one
+     to build agents: everything that makes an agent safe to run is
+     the part we have been building for years. Every claim below is
+     one the automation service page already makes in detail. */
+  agents: {
+    title: 'The hard part of an agent isn’t the model.',
+    intro:
+      'It’s everything around it: what it can read, what it’s allowed to change, who checks its work and what happens when it’s wrong. That part is what we’ve spent a decade building.',
+    items: [
+      {
+        title: 'Access enforced below the prompt',
+        body: 'An agent gets exactly the data and the actions its job needs, enforced by the database with row-level security rather than by a line in a system prompt asking it nicely. It’s the model Rebase is built on.',
+      },
+      {
+        title: 'A person where it matters',
+        body: 'Approvals, review queues and an audit trail of everything it did, in a back office your team can actually use. Admin panels are home ground: we wrote FireCMS.',
+      },
+      {
+        title: 'Measured, not hoped for',
+        body: 'An evaluation set built from your own cases, a pass rate you can watch and a cost per run, so “the AI is quite good” turns into a number.',
+      },
+      {
+        title: 'A plan for the day it’s wrong',
+        body: 'A fallback decided before it goes live — a human queue, a deterministic path or a refusal — and monitoring that tells somebody the moment it stops.',
+      },
+    ],
+    cta: 'How we build agents',
+  },
+
   thesis: {
     title: 'We don’t hand it over and disappear.',
     p1: 'Most agencies ship a v1 and move on. We have never had that luxury — we build our own products too, and we are still running them.',
     p2: 'FireCMS has been in production since 2020. Every schema we got wrong, every migration we had to ship without breaking thousands of live installs, every issue answered in public at midnight: we paid for those lessons on our own time.',
-    p3: 'It changes the questions you ask. Not “can we build this?” — almost anyone can build it — but “who is going to be maintaining this in four years, and will they curse us?”',
+    p3: 'With AI that matters more, not less. An agent that works in a demo is an afternoon’s work now. The real question isn’t “can we build this?” but “will it still be right in four years — after the model changes and the edge cases arrive — and who will be maintaining it?”',
     p4: 'That is what you are actually hiring. Not capacity. Judgement about the decisions that get expensive later.',
     /* The ledger. The entire positioning of this site is that the
        claims are checkable, so the source is part of the number
@@ -225,7 +255,7 @@ export const en = {
     readMore: 'Read more',
     items: [
       {
-        title: 'Automation and AI that survives production',
+        title: 'AI agents and automation that survive production',
         weeks: [3, 10],
         description:
           'The spreadsheet that gets re-keyed every Monday, the report somebody assembles from four dashboards, the approval that lives in an inbox. We find the ones worth automating and build them so they keep running without a babysitter — LLM features and agents included, with evaluation, cost control and a defined fallback for the day the model is confidently wrong.',
@@ -325,8 +355,8 @@ export const en = {
   },
 
   contact: {
-    title: 'Tell us what’s stuck.',
-    body: 'Most of our work comes from people who already use something we made. The rest starts with an email — two paragraphs about your product and where it is blocked is plenty.',
+    title: 'What would you hand to an agent?',
+    body: 'Most of our work comes from people who already use something we made. The rest starts with an email — two paragraphs about the work your team does by hand, or the product that’s stuck, is plenty.',
     book: 'Book a 30-minute call',
     location: 'Working across European time zones',
     emailSubject: 'New project enquiry',
@@ -350,7 +380,7 @@ export const en = {
 
   footer: {
     tagline:
-      'A product engineering studio. We build software we would still be willing to maintain in six years — because we usually are.',
+      'A product engineering studio for AI agents and automation. We build software we would still be willing to maintain in six years — because we usually are.',
     studio: 'Studio',
     built: 'What we built',
     connect: 'Connect',

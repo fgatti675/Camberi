@@ -58,7 +58,7 @@ function Bar({ weeks, lead }: { weeks: number[]; lead: boolean }) {
 
 export function Engagements() {
   return (
-    <section id="services" className={`${SECTION_LG} bg-bg-main`}>
+    <section id="services" data-tone="main" className={`${SECTION_LG} bg-bg-main`}>
       <div className={CONTAINER}>
         <SectionHead
           title={t.engagements.title}

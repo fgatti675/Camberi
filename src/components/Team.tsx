@@ -104,7 +104,7 @@ function Portrait({ member }: { member: Member }) {
    the bio underneath. It reads as a list of authors, which is what it is. */
 export function Team() {
   return (
-    <section id="team" className={`${SECTION} bg-bg-main`}>
+    <section id="team" data-tone="main" className={`${SECTION} bg-bg-main`}>
       <div className={CONTAINER}>
         <SectionHead
           title={t.team.title}

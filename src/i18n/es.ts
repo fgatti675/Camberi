@@ -15,6 +15,7 @@ export const es: Dict = {
   otherLocaleName: 'English',
 
   nav: {
+    agents: 'Agentes de IA',
     work: 'Proyectos',
     services: 'Servicios',
     openSource: 'Código abierto',
@@ -26,6 +27,7 @@ export const es: Dict = {
 
   spine: {
     automations: 'Qué hacemos',
+    agents: 'Agentes de IA',
     about: 'Por qué nosotros',
     work: 'Proyectos',
     services: 'Servicios',
@@ -36,10 +38,10 @@ export const es: Dict = {
   },
 
   hero: {
-    titleTop: 'Hacemos software',
-    titleBottom: 'que se paga solo.',
+    titleTop: 'Software que hace',
+    titleBottom: 'el trabajo por ti.',
     intro:
-      'Un estudio de ingeniería de producto en Madrid. Llevamos más de diez años haciendo y manteniendo productos propios —FireCMS, Rebase— y el tuyo lo trabajamos igual.',
+      'Agentes de IA y automatización hechos para seguir funcionando en producción. Llevamos más de diez años haciendo y manteniendo productos propios —FireCMS, Rebase— y el tuyo lo trabajamos igual.',
     primary: 'Empezar un proyecto',
     secondary: 'Ver lo que hemos hecho',
     scrollCue: 'Baja',
@@ -50,29 +52,23 @@ export const es: Dict = {
   },
 
   automations: {
-    title: 'Todo lo que hacemos trabaja por ti.',
+    title: 'Cada producto que sacamos le quita un trabajo de encima a alguien.',
     intro:
-      'Una misma manía, en nuestros productos y en los proyectos de cliente: coger el trabajo que alguien está haciendo a mano y dejar que lo haga el software. Bien hecho, en producción y durante años.',
+      'Una misma manía, en nuestros productos y en los proyectos de cliente: buscar el trabajo que alguien está haciendo a mano y dárselo al software. Cada vez más, ese software es un agente: lee, decide y actúa, con una persona ahí para las decisiones que importan.',
     fromLabel: 'Le das',
     toLabel: 'Te devuelve',
     rows: [
-      {
-        from: 'Una base de datos Postgres que ya es tuya',
-        to: 'Un backend completo, con los permisos aplicados por el propio Postgres',
-        product: 'Rebase',
-        href: 'https://rebase.pro',
-      },
-      {
-        from: 'Una colección de Firebase',
-        to: 'Un panel de administración que tu equipo no técnico sabe usar',
-        product: 'FireCMS',
-        href: 'https://firecms.co',
-      },
       {
         from: 'Una pregunta escrita en lenguaje normal',
         to: 'Un dashboard de verdad, con el SQL que ha escrito para montarlo',
         product: 'Dataki',
         href: 'https://dataki.ai',
+      },
+      {
+        from: 'El perfil de dolor de un paciente',
+        to: 'Un plan de terapia personalizado y asistido por IA, que los médicos recetan y las aseguradoras cubren',
+        product: 'medicalmotion',
+        href: 'https://medicalmotion.com',
       },
       {
         from: 'La dirección de una web cualquiera',
@@ -92,11 +88,36 @@ export const es: Dict = {
     cta: 'Automatiza algo tuyo',
   },
 
+  agents: {
+    title: 'Lo difícil de un agente no es el modelo.',
+    intro:
+      'Es todo lo que lo rodea: qué puede leer, qué puede tocar, quién revisa lo que hace y qué pasa cuando se equivoca. Esa parte es justo la que llevamos diez años construyendo.',
+    items: [
+      {
+        title: 'Permisos por debajo del prompt',
+        body: 'Un agente accede solo a los datos y las acciones que su trabajo necesita, y eso lo aplica la base de datos con row-level security, no una frase en el system prompt pidiéndoselo por favor. Es el mismo modelo sobre el que está hecho Rebase.',
+      },
+      {
+        title: 'Una persona donde hace falta',
+        body: 'Aprobaciones, colas de revisión y un registro de todo lo que ha hecho, en un back office que tu equipo sabe usar. Los paneles de administración son terreno conocido: FireCMS es nuestro.',
+      },
+      {
+        title: 'Medido, no a ojo',
+        body: 'Un conjunto de evaluación hecho con tus propios casos, una tasa de acierto que puedes seguir y un coste por ejecución. Así «la IA va bastante bien» pasa a ser un número.',
+      },
+      {
+        title: 'Un plan B para cuando se equivoque',
+        body: 'Una alternativa decidida antes de salir a producción —una cola para una persona, un camino determinista o una negativa— y una monitorización que avisa en cuanto deja de funcionar.',
+      },
+    ],
+    cta: 'Cómo hacemos agentes',
+  },
+
   thesis: {
     title: 'No somos de entregar y desaparecer.',
     p1: 'La mayoría de las agencias entrega una v1 y pasa página. Nosotros nunca hemos podido permitírnoslo: también hacemos productos propios, y los seguimos manteniendo.',
     p2: 'FireCMS lleva en producción desde 2020. Cada esquema que planteamos mal, cada migración que hubo que sacar sin romper miles de instalaciones en marcha, cada issue contestado en público a medianoche: esas lecciones las hemos pagado de nuestro bolsillo.',
-    p3: 'Eso cambia las preguntas. Ya no es «¿sabemos hacer esto?» —eso lo hace casi cualquiera—, sino «¿quién va a mantenerlo dentro de cuatro años, y cuánto nos va a odiar?».',
+    p3: 'Con la IA eso importa más, no menos. Hoy un agente que funciona en una demo es cosa de una tarde. La pregunta de verdad ya no es «¿sabemos hacer esto?», sino «¿seguirá acertando dentro de cuatro años, cuando cambie el modelo y lleguen los casos raros, y quién lo va a mantener?».',
     p4: 'Eso es lo que contratas de verdad. No horas de desarrollo, sino criterio sobre las decisiones que salen caras más adelante.',
     ledgerTitle: 'Cada número de esta página enlaza al sitio donde puedes comprobarlo.',
     ledger: [
@@ -221,7 +242,7 @@ export const es: Dict = {
     readMore: 'Ver en detalle',
     items: [
       {
-        title: 'Automatización e IA que aguanta en producción',
+        title: 'Agentes de IA y automatización que aguantan en producción',
         weeks: [3, 10],
         description:
           'El Excel que alguien vuelve a rellenar cada lunes, el informe que sale de juntar cuatro dashboards, la aprobación que vive en una bandeja de entrada. Buscamos cuáles compensa automatizar y las dejamos funcionando sin que nadie tenga que estar encima. También funciones con LLM y agentes, con evaluación, control de coste y un plan B para el día en que el modelo se equivoque con toda la seguridad del mundo.',
@@ -321,8 +342,8 @@ export const es: Dict = {
   },
 
   contact: {
-    title: 'Cuéntanos qué te tiene atascado.',
-    body: 'La mayoría de nuestro trabajo llega de gente que ya usa algo que hicimos. El resto empieza por un correo: con dos párrafos sobre tu producto y dónde está atascado nos sobra.',
+    title: '¿Qué trabajo le pasarías a un agente?',
+    body: 'La mayoría de nuestro trabajo llega de gente que ya usa algo que hicimos. El resto empieza por un correo: con dos párrafos sobre el trabajo que tu equipo hace a mano, o sobre el producto que se ha atascado, nos sobra.',
     book: 'Reservar una llamada de 30 min',
     location: 'Madrid — trabajamos en horario europeo',
     emailSubject: 'Nuevo proyecto',
@@ -342,7 +363,7 @@ export const es: Dict = {
 
   footer: {
     tagline:
-      'Un estudio de ingeniería de producto. Hacemos software que no nos importaría seguir manteniendo dentro de seis años, y normalmente acabamos manteniéndolo.',
+      'Un estudio de ingeniería de producto especializado en agentes de IA y automatización. Hacemos software que no nos importaría seguir manteniendo dentro de seis años, y normalmente acabamos manteniéndolo.',
     studio: 'Estudio',
     built: 'Lo que hemos hecho',
     connect: 'Contacto',

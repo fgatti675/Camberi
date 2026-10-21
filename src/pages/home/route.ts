@@ -8,18 +8,18 @@ export const route: Route = {
   priority: 1,
   locales: {
     en: {
-      title: 'Camberi — the studio behind FireCMS, Rebase, medicalmotion',
+      title: 'Camberi — AI agents and automation that survive production',
       description:
-        'A product engineering studio in Madrid and Munich. We build and run our own software — FireCMS, Rebase and Neat — and the technology behind medicalmotion.',
+        'A product engineering studio in Madrid and Munich. We build AI agents and automation that keep running — by the team behind FireCMS and Rebase.',
       ogDescription:
-        "We don't hand it over and disappear. A product engineering studio that builds and runs its own software — and yours.",
+        'Software that does the work for you. AI agents and automation from a studio that builds, runs and maintains its own software — and yours.',
     },
     es: {
-      title: 'Camberi — el estudio tras FireCMS, Rebase y medicalmotion',
+      title: 'Camberi — agentes de IA y automatización en producción',
       description:
-        'Estudio de ingeniería de producto entre Madrid y Múnich. Creamos y mantenemos nuestro software —FireCMS, Rebase, Neat— y la tecnología de medicalmotion.',
+        'Estudio de ingeniería de producto entre Madrid y Múnich. Hacemos agentes de IA y automatización que siguen funcionando, del equipo de FireCMS y Rebase.',
       ogDescription:
-        'No lo entregamos y desaparecemos. Un estudio de ingeniería de producto que crea y mantiene su propio software, y el tuyo.',
+        'Software que hace el trabajo por ti. Agentes de IA y automatización de un estudio que crea y mantiene su propio software, y el tuyo.',
     },
   },
 };
