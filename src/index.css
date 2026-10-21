@@ -107,9 +107,6 @@
   --color-bg-main: #ffffff;
   --color-bg-alt: #f4f4f2;
   --color-bg-dark: #0c0c14;
-  /* The agents band: blue-black, far enough from bg-dark that the page
-     visibly changes colour on the way into it. */
-  --color-bg-night: #0a1238;
 
   --color-hairline: rgba(0, 0, 0, 0.12);
   --color-hairline-soft: rgba(0, 0, 0, 0.07);
@@ -450,14 +447,4 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hero-cue { animation: none; opacity: 0.6; }
-}
-
-/* ── Tone flow ────────────────────────────────────────────────
-   On the home page the colour belongs to the page, not to each
-   section: `useToneFlow` paints the container as the boundaries
-   pass, and the sections stand aside. Unlayered on purpose, so it
-   outranks the `bg-*` utility each section still carries for the
-   prerendered page and every page without the flow. */
-.tone-flow-on > section[data-tone] {
-  background-color: transparent;
 }

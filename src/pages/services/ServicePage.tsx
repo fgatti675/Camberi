@@ -47,7 +47,7 @@ function Bullet({ children }: { children: ReactNode }) {
 
 export function ServicePage({ copy, path }: { copy: ServiceCopy; path: string }) {
   const vars = serviceVars();
-  /* The other three engagements, named exactly as the home page names
+  /* The other two engagements, named exactly as the home page names
      them so the reader recognises where they have landed. */
   const others = t.engagements.items
     .map((item, i) => ({ item, href: SERVICE_PATHS[i] }))
@@ -222,7 +222,7 @@ export function ServicePage({ copy, path }: { copy: ServiceCopy; path: string })
         </div>
       </section>
 
-      {/* ── The other three ─────────────────────────────────────── */}
+      {/* ── The other two ───────────────────────────────────────── */}
       <section className={`${CONTAINER} mt-20 md:mt-28`}>
         <SectionHead
           title={copy.related.title}
@@ -230,7 +230,7 @@ export function ServicePage({ copy, path }: { copy: ServiceCopy; path: string })
           titleClass="max-w-[15ch]"
           className="mb-8 md:mb-10"
         />
-        <div className="grid grid-cols-1 min-[760px]:grid-cols-3 gap-x-10 gap-y-1 stagger">
+        <div className="grid grid-cols-1 min-[760px]:grid-cols-2 gap-x-10 gap-y-1 stagger">
           {others.map(({ item, href }) => (
             <a
               key={href}
@@ -239,9 +239,9 @@ export function ServicePage({ copy, path }: { copy: ServiceCopy; path: string })
               <h3 className="text-[1.02rem] font-600 text-text-main max-w-[26ch] transition-colors duration-300 group-hover:text-accent">
                 {item.title}
               </h3>
-              {/* Pushed to the bottom of the row so three cards with
-                  one-, two- and three-line titles still line their
-                  metadata up with each other. */}
+              {/* Pushed to the bottom of the row so cards with titles
+                  of different lengths still line their metadata up
+                  with each other. */}
               <div className="mt-auto pt-3">
                 <p className="text-[0.94rem] leading-[1.6] text-text-muted">{item.scope}</p>
                 <span className="mt-2.5 inline-flex items-center gap-1.5 font-mono text-[0.72rem] text-text-light transition-colors duration-300 group-hover:text-accent">

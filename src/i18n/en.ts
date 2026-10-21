@@ -10,7 +10,6 @@ export const en = {
     agents: 'AI agents',
     work: 'Work',
     services: 'Services',
-    openSource: 'Open source',
     team: 'Team',
     cta: 'Start a project',
     toggleMenu: 'Toggle menu',
@@ -20,13 +19,10 @@ export const en = {
   /* The scroll spine in the left margin. Short enough to sit in a
      narrow rail without wrapping. */
   spine: {
-    automations: 'What we build',
     agents: 'AI agents',
-    about: 'Why us',
     work: 'Work',
     services: 'Services',
     process: 'How we work',
-    openSource: 'Open source',
     team: 'Team',
     contact: 'Contact',
   },
@@ -43,52 +39,6 @@ export const en = {
 
   logoWall: {
     caption: 'Teams shipping products on software we wrote',
-  },
-
-  /* ── The automations thesis ───────────────────────────────────
-     Every product Camberi has ever shipped takes a job someone was
-     doing by hand and hands it to the machine. Nothing here is a
-     claim about the future — each row describes what the product
-     does today, on a site you can go and open.
-
-     The rows are the products where a model or a pipeline does the
-     work. FireCMS and Rebase are told in full further down, in the
-     work and open-source sections, so they are not repeated here. */
-  automations: {
-    title: 'Every product we ship takes a job off somebody’s desk.',
-    intro:
-      'One habit, in our own products and in client work alike: find the work somebody is doing by hand and give it to software instead. More and more often that software is an agent — it reads, decides and acts, with a person there for the calls that matter.',
-    fromLabel: 'You give it',
-    toLabel: 'You get',
-    rows: [
-      {
-        from: 'A question typed in plain English',
-        to: 'A real dashboard, with the SQL it wrote to get there',
-        product: 'Dataki',
-        href: 'https://dataki.ai',
-      },
-      {
-        from: 'A patient’s pain profile',
-        to: 'A personalised, AI-supported therapy plan that doctors prescribe and insurers reimburse',
-        product: 'medicalmotion',
-        href: 'https://medicalmotion.com',
-      },
-      {
-        from: 'Any website address',
-        to: 'A full brand book — colour ramps, contrast-checked pairings, type and spacing tokens',
-        product: 'Unbrand.my',
-        href: 'https://unbrand.my',
-      },
-      {
-        from: 'A weekday scrape of public job postings',
-        to: 'A live list of the employers hiring right now, enriched and queued, with the next step already worked out',
-        product: 'SustenTalent',
-        href: 'https://sustentalent.com',
-      },
-    ],
-    closing:
-      'None of that is a demo. Every row above is a product running in production right now, and the link takes you straight to it.',
-    cta: 'Automate something of yours',
   },
 
   /* ── Agents ────────────────────────────────────────────────────
@@ -118,54 +68,6 @@ export const en = {
       },
     ],
     cta: 'How we build agents',
-  },
-
-  thesis: {
-    title: 'We don’t hand it over and disappear.',
-    p1: 'Most agencies ship a v1 and move on. We have never had that luxury — we build our own products too, and we are still running them.',
-    p4: 'That is what you are actually hiring. Not capacity. Judgement about the decisions that get expensive later.',
-    /* The ledger. The entire positioning of this site is that the
-       claims are checkable, so the source is part of the number
-       rather than a footnote nobody reads. */
-    ledgerTitle: 'Every number on this page links to where you can check it.',
-    ledger: [
-      {
-        value: '6 yrs',
-        label: 'FireCMS in production, merged into every week since 2020',
-        source: 'github.com/firecmsco/firecms',
-        href: 'https://github.com/firecmsco/firecms',
-      },
-      {
-        value: '22k',
-        label: 'installs a month across our published npm packages',
-        source: 'npmjs.com/org/firecms',
-        href: 'https://www.npmjs.com/package/@firecms/core',
-      },
-      {
-        value: '23+',
-        label: 'German and Swiss health insurers reimburse a product we built',
-        source: 'medicalmotion.com',
-        href: 'https://medicalmotion.com',
-      },
-      {
-        value: '12k',
-        label: 'installs a month of Neat, the gradient engine behind this page',
-        source: 'npmjs.com/package/@firecms/neat',
-        href: 'https://www.npmjs.com/package/@firecms/neat',
-      },
-      {
-        value: '3.7k',
-        label: 'commits in public from one of us, on FireCMS alone',
-        source: 'github.com/fgatti675',
-        href: 'https://github.com/fgatti675',
-      },
-      {
-        value: '6',
-        label: 'products of our own, all of them still running',
-        source: 'see the work below',
-        href: '#work',
-      },
-    ],
   },
 
   work: {
@@ -241,7 +143,7 @@ export const en = {
   },
 
   engagements: {
-    title: 'Four ways in. All of them scoped.',
+    title: 'Three ways in. All of them scoped.',
     intro:
       'Every engagement starts with a fixed scope, a milestone plan and a price — not a discovery phase that bills for three months.',
     axisLabel: 'Weeks',
@@ -253,31 +155,24 @@ export const en = {
     items: [
       {
         title: 'AI agents and automation that survive production',
-        weeks: [3, 10],
+        weeks: [2, 6],
         description:
-          'The spreadsheet that gets re-keyed every Monday, the report somebody assembles from four dashboards, the approval that lives in an inbox. We find the ones worth automating and build them so they keep running without a babysitter — LLM features and agents included, with evaluation, cost control and a defined fallback for the day the model is confidently wrong.',
-        scope: 'Typically 3–10 weeks',
+          'The spreadsheet re-keyed every Monday, the report assembled from four dashboards, the approval that lives in an inbox. We hand them to agents that keep running without a babysitter — with evaluation, cost control and a fallback for the day the model is confidently wrong.',
+        scope: 'Typically 2–6 weeks',
       },
       {
         title: 'Build the product',
-        weeks: [13, 26],
+        weeks: [6, 12],
         description:
-          'Zero to production, or the rewrite that finally scales. Design, frontend, backend and infrastructure owned by one team, so nothing falls between vendors — including the regulated kind, where the data is medical and the architecture has to survive scrutiny. We have been doing exactly that in German healthcare since 2019.',
-        scope: 'Typically 3–6 months',
+          'Zero to production in weeks, not quarters. Design, frontend, backend and infrastructure owned by one team — including the regulated kind, where the data is medical. We have been doing that in German healthcare since 2019.',
+        scope: 'Typically 6–12 weeks',
       },
       {
         title: 'Data platform, Postgres and admin tooling',
-        weeks: [1, 8],
+        weeks: [1, 4],
         description:
-          'Schema design, painful migrations, row-level security, and getting off a managed backend you have outgrown without a weekend of downtime. Plus FireCMS and Rebase implementation from the people who wrote the frameworks.',
-        scope: 'Typically 1–8 weeks',
-      },
-      {
-        title: 'Architecture review',
-        weeks: [2, 2],
-        description:
-          'Two weeks, a senior read on your stack, and a written plan your own team can act on. The cheapest way to find out whether you need us at all.',
-        scope: 'Fixed price, 2 weeks',
+          'Schema design, painful migrations, row-level security, and getting off a managed backend you have outgrown. Plus FireCMS and Rebase implementation from the people who wrote them.',
+        scope: 'Typically 1–4 weeks',
       },
     ],
   },
@@ -303,30 +198,6 @@ export const en = {
         desc: 'Your repo, your infrastructure, your accounts, documented. We leave cleanly — or stay on as the team that keeps it alive.',
       },
     ],
-  },
-
-  openSource: {
-    title: 'Everything we know, in public.',
-    p1: 'Thousands of developers install our tools every month, and every decision we have made is sitting in a public commit history — along with the ones we had to walk back.',
-    p2: 'Six years of answering issues in the open is six years of mistakes we will not repeat inside your codebase.',
-    cta: 'Explore our GitHub',
-    repos: {
-      firecms: {
-        description:
-          'The headless CMS and admin panel for Firebase. Started in 2020, still merged into every week.',
-        meta: '1.3k stars · 220 forks · TypeScript',
-      },
-      rebase: {
-        description:
-          'REST, auth, storage, realtime and an admin panel generated from a Postgres schema you already own.',
-        meta: 'Open source · Self-hosted · Postgres',
-      },
-      neat: {
-        description:
-          'The WebGL gradient engine rendering the background of this page. Three.js under the hood, one npm install on top.',
-        meta: '12k installs a month · Three.js',
-      },
-    },
   },
 
   team: {

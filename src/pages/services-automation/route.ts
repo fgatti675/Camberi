@@ -9,15 +9,15 @@ export const route: Route = {
   priority: 0.8,
   locales: {
     en: {
-      title: 'Automation and AI for operations teams — Camberi',
+      title: 'AI agents and automation for operations teams — Camberi',
       description:
-        'We automate the spreadsheets, reports and approvals your team redoes by hand — LLM features included, with evaluation, cost control and a defined fallback.',
+        'We automate the spreadsheets, reports and approvals your team redoes by hand — AI agents included, with evaluation, cost control and a defined fallback.',
       ogTitle: 'The work your team redoes every week, done by software instead',
     },
     es: {
-      title: 'Automatización e IA para equipos de operaciones — Camberi',
+      title: 'Agentes de IA y automatización para operaciones — Camberi',
       description:
-        'Automatizamos el Excel, el informe y la aprobación que tu equipo repite a mano. También funciones con LLM, con evaluación, control de coste y plan B.',
+        'Automatizamos el Excel, el informe y la aprobación que tu equipo repite a mano. También agentes de IA, con evaluación, control de coste y plan B.',
       ogTitle: 'Que el software haga el trabajo que tu equipo repite cada semana',
     },
   },

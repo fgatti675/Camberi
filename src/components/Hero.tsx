@@ -16,7 +16,6 @@ import { t } from '../i18n';
 export function Hero() {
   return (
     <section
-      data-tone="main"
       className="relative isolate min-h-[92vh] flex items-end pt-44 md:pt-72 lg:pt-80 pb-[16vh] md:pb-[20vh] overflow-hidden"
       id="top">
       <div className="absolute inset-0 -z-20">

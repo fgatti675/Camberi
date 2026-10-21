@@ -4,8 +4,8 @@ import { localePath } from '../../routes/paths';
 /* ──────────────────────────────────────────────────────────────
    The parts every service page shares.
 
-   The four engagements used to be four anchors on the home page,
-   which meant one URL had to rank for four different things and
+   The engagements used to be anchors on the home page, which
+   meant one URL had to rank for several different things and
    ranked for none of them. Each is now a page, and each page has
    to earn its own place: the same skeleton, entirely different
    words. A page that answered the same question as its neighbours
@@ -18,7 +18,7 @@ import { localePath } from '../../routes/paths';
    ────────────────────────────────────────────────────────────── */
 
 /**
- * The four engagement pages, **in the order of `t.engagements.items`**.
+ * The three engagement pages, **in the order of `t.engagements.items`**.
  *
  * That order is the coupling: the home page's engagement list, the
  * `/services/` index and the "other engagements" block at the foot of each
@@ -29,7 +29,6 @@ export const SERVICE_PATHS = [
   '/services/automation/',
   '/services/product/',
   '/services/data-platform/',
-  '/services/architecture-review/',
 ] as const;
 
 export const SERVICES_INDEX = '/services/';
@@ -51,7 +50,6 @@ export function serviceVars(): Record<string, string> {
     AUTOMATION: servicePath(SERVICE_PATHS[0]),
     PRODUCT: servicePath(SERVICE_PATHS[1]),
     DATA_PLATFORM: servicePath(SERVICE_PATHS[2]),
-    REVIEW: servicePath(SERVICE_PATHS[3]),
     MEDICALMOTION: servicePath('/work/medicalmotion/'),
     SUSTENTALENT: servicePath('/work/sustentalent/'),
     CONTACT: contactHref,
@@ -116,6 +114,6 @@ export interface ServiceCopy {
   /** The one paragraph that leads into the shared contact promise. */
   cta: { body: string };
 
-  /** Heading for the block linking the other three engagements. */
+  /** Heading for the block linking the other two engagements. */
   related: { title: string; intro: string };
 }

@@ -8,10 +8,9 @@ import { SERVICE_PATHS, servicePath } from '../pages/services/service';
    This section already carried the one number a buyer actually
    wants — how long each engagement runs — and was spending it on a
    grey line of small print under each item. Drawn to a shared axis
-   instead, the same seven items answer "how much am I committing
-   to?" at a glance: the architecture review is a tick, building a
-   product runs off to six months, and the distance between them is
-   the argument the heading is making.
+   instead, the same three items answer "how much am I committing
+   to?" at a glance: data work is a few weeks, building a product runs
+   to a quarter at most, and none of them is a six-month retainer.
 
    It also gives the section something to look at. Every other
    section has an image, a figure or a gradient; this one had
@@ -21,7 +20,9 @@ import { SERVICE_PATHS, servicePath } from '../pages/services/service';
 /* The longest engagement sets the scale, so the axis never has dead
    space at the end and never clips a bar. */
 const SCALE_WEEKS = Math.max(...t.engagements.items.map((e) => e.weeks[1]));
-const TICKS = [4, 8, 12, 16, 20, 24].filter((w) => w < SCALE_WEEKS);
+/* Every two weeks: the longest engagement is a quarter, so four-week
+   ticks would leave the axis with two labels on it. */
+const TICKS = Array.from({ length: Math.ceil(SCALE_WEEKS / 2) - 1 }, (_, i) => (i + 1) * 2);
 
 const pct = (weeks: number) => (weeks / SCALE_WEEKS) * 100;
 
@@ -58,7 +59,7 @@ function Bar({ weeks, lead }: { weeks: number[]; lead: boolean }) {
 
 export function Engagements() {
   return (
-    <section id="services" data-tone="main" className={`${SECTION_LG} bg-bg-main`}>
+    <section id="services" className={`${SECTION_LG} bg-bg-main`}>
       <div className={CONTAINER}>
         <SectionHead
           title={t.engagements.title}

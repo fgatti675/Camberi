@@ -8,13 +8,13 @@ import type { ServiceCopy } from '../services/service';
 export const automationEs: ServiceCopy = {
   title: 'Que el software haga el trabajo que tu equipo repite cada semana.',
   intro:
-    'Automatización e IA para equipos de operaciones: cogemos los procesos que se hacen a mano y los dejamos funcionando solos, también los que llevan un modelo de lenguaje dentro.',
-  meta: 'Normalmente 3–10 semanas · alcance cerrado y plan de hitos la primera semana',
+    'Agentes de IA y automatización para equipos de operaciones: cogemos los procesos que se hacen a mano y los dejamos funcionando solos, también los que llevan un modelo de lenguaje dentro.',
+  meta: 'Normalmente 2–6 semanas · alcance cerrado y plan de hitos la primera semana',
 
   lead: [
     'Casi todos los equipos arrastran un puñado de tareas que hace una persona porque nunca hubo tiempo de montarlas de otra forma. El Excel que se vuelve a rellenar el lunes por la mañana. El informe semanal que sale de juntar cuatro dashboards. La aprobación que vive en la bandeja de alguien y se para cuando esa persona se va de vacaciones. Ninguna es difícil. Todas se comen la mañana de alguien.',
     'Buscamos cuáles compensa automatizar, las construimos y las dejamos funcionando sin que nadie tenga que estar encima. También funciones con LLM y agentes: un modelo en producción no se parece en nada a un modelo en una demo, así que sale con un set de evaluación, un coste por ejecución y un plan B definido para el día en que se equivoque con toda la seguridad del mundo.',
-    'Si todavía no sabes qué procesos compensan, la [revisión de arquitectura](__REVIEW__) dura dos semanas y termina en un plan por escrito que puedes ejecutar sin nosotros.',
+    'Si todavía no sabes qué procesos compensan, [cuéntanos qué te falla](__CONTACT__) y en la primera llamada te diremos cuáles se pagan solos y cuáles no.',
   ],
 
   fit: {
@@ -195,7 +195,7 @@ export const automationEs: ServiceCopy = {
       },
       {
         q: 'No sabemos qué procesos compensa automatizar.',
-        a: 'Entonces empieza por la [revisión de arquitectura](__REVIEW__): dos semanas, un plan por escrito y cada punto ordenado por lo que te cuesta hoy. Buena parte suele poder hacerla tu propio equipo, y eso también es un buen resultado.',
+        a: 'Para eso está la primera semana. Miramos cómo se trabaja, ordenamos cada candidato por las horas que devuelve frente a lo que cuesta construirlo, y eliges tú. A veces la respuesta es que un proceso no necesita software, y eso también es un buen resultado.',
       },
     ],
   },
@@ -205,7 +205,7 @@ export const automationEs: ServiceCopy = {
   },
 
   related: {
-    title: 'Las otras tres formas de empezar.',
+    title: 'Las otras dos formas de empezar.',
     intro: 'Todos los encargos arrancan con un alcance cerrado y un plan de hitos.',
   },
 };

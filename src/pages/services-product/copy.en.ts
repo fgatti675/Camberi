@@ -7,24 +7,24 @@ import type { ServiceCopy } from '../services/service';
    team, and companies whose data is regulated, where "it works" is only
    half the requirement. The medicalmotion work is the strongest thing on
    this site and it belongs here rather than being spread thinly across
-   four pages. */
+   three pages. */
 
 export const productEn: ServiceCopy = {
   title: 'From zero to a product in production — including the regulated kind.',
   intro:
     'Design, frontend, backend and infrastructure owned by one team, so nothing falls between vendors. Health data included: we have been building in German healthcare since 2019.',
-  meta: 'Typically 3–6 months · fixed scope and milestone plan agreed in week one',
+  meta: 'Typically 6–12 weeks · fixed scope and milestone plan agreed in week one',
 
   lead: [
     'This is the engagement where we build the whole thing. Not a design handed to somebody else to implement, not a backend bolted onto a frontend a different agency wrote — one team accountable for the screens, the data model, the infrastructure and the deploy, from the first working session to the first production release and past it.',
-    'It covers the rewrite as well as the greenfield build. The pattern is the same either way: get the data model right early, put something clickable in front of real users within weeks, and ship to a staging URL every week so nothing about the state of the work is a surprise in month four.',
+    'It covers the rewrite as well as the greenfield build. The pattern is the same either way: get the data model right early, put something clickable in front of real users within weeks, and ship to a staging URL every week so nothing about the state of the work is a surprise at the end.',
     'And it covers the regulated kind. The product we have built longest is prescribed by doctors and reimbursed by [23 or more German and Swiss health insurers](https://medicalmotion.com) — which means the questions about it come from insurers and reviewers as often as from users, and a wrong architectural call is not a sprint you can redo.',
   ],
 
   fit: {
     title: 'Who this is for.',
     intro:
-      'A long engagement is the wrong shape for a lot of good projects. These are the ones it is the right shape for.',
+      'Our longest engagement is the wrong shape for a lot of good projects. These are the ones it is the right shape for.',
     forTitle: 'A good fit',
     for: [
       'A founder or a product team with something validated and no engineering team to build it properly.',
@@ -84,7 +84,7 @@ export const productEn: ServiceCopy = {
       },
       {
         title: 'Something clickable, early',
-        body: 'In your browser within weeks. We would much rather find out an idea is wrong in week two than in month four, and so would you.',
+        body: 'In your browser within the first two weeks. We would much rather find out an idea is wrong in week two than in week ten, and so would you.',
       },
       {
         title: 'A staging URL from day one',
@@ -116,7 +116,7 @@ export const productEn: ServiceCopy = {
   running: {
     title: 'How it runs.',
     intro:
-      'Shape, not a Gantt chart. A three-month build and a six-month build have the same four movements; only the middle one gets longer.',
+      'Shape, not a Gantt chart. A six-week build and a twelve-week build have the same four movements; only the middle one gets longer.',
     steps: [
       {
         label: 'Week one',
@@ -124,12 +124,12 @@ export const productEn: ServiceCopy = {
         body: 'A working session with the people who know the product and the people who will use it. You leave with a written scope, a milestone plan and a price that does not move.',
       },
       {
-        label: 'Weeks two to four',
+        label: 'Weeks two to three',
         title: 'Data model and prototype',
         body: 'The schema first, because it is the decision everything else inherits — then something clickable on top of it, in your browser, on the staging URL.',
       },
       {
-        label: 'The long middle',
+        label: 'The middle weeks',
         title: 'Ship every week',
         body: 'Milestone by milestone, demoed every Friday. On a regulated product the access rules and the audit trail are built here, not added at the end.',
       },
@@ -178,7 +178,7 @@ export const productEn: ServiceCopy = {
     items: [
       {
         q: 'Can you take over a codebase somebody else wrote?',
-        a: 'Yes, and it is common. We start with the [architecture review](__REVIEW__) rather than an estimate: two weeks of reading it properly, then a written plan. Quoting a takeover before reading the code produces a number that is wrong in one direction or the other.',
+        a: 'Yes, and it is common. We read the code before we quote: a few days going through it properly, then a written scope and plan. Quoting a takeover before reading the code produces a number that is wrong in one direction or the other.',
       },
       {
         q: 'Do you do the design as well?',
@@ -208,7 +208,7 @@ export const productEn: ServiceCopy = {
   },
 
   related: {
-    title: 'The other three ways in.',
+    title: 'The other two ways in.',
     intro: 'Every engagement here starts with a fixed scope and a milestone plan.',
   },
 };

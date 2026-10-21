@@ -74,7 +74,7 @@ function Row({ logos, reverse = false }: { logos: Logo[]; reverse?: boolean }) {
 
 export function LogoWall() {
   return (
-    <section data-tone="main" className="pt-20 pb-16 md:pt-24 md:pb-20 bg-bg-main">
+    <section className="pt-20 pb-16 md:pt-24 md:pb-20 bg-bg-main">
       <div className={CONTAINER}>
         <p className="text-center font-mono text-[0.72rem] tracking-[0.1em] uppercase text-text-light reveal">
           {t.logoWall.caption}

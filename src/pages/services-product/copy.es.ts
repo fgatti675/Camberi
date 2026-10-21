@@ -9,18 +9,18 @@ export const productEs: ServiceCopy = {
   title: 'De cero a un producto en producción, también del tipo regulado.',
   intro:
     'Diseño, frontend, backend e infraestructura en un solo equipo, para que nada se caiga entre proveedores. Datos médicos incluidos: llevamos en la sanidad alemana desde 2019.',
-  meta: 'Normalmente 3–6 meses · alcance cerrado y plan de hitos la primera semana',
+  meta: 'Normalmente 6–12 semanas · alcance cerrado y plan de hitos la primera semana',
 
   lead: [
     'Este es el encargo en el que lo hacemos todo. No un diseño que después implementa otro, ni un backend enganchado a un frontend que escribió otra agencia: un equipo responsable de las pantallas, del modelo de datos, de la infraestructura y del despliegue, desde la primera sesión de trabajo hasta la primera versión en producción y más allá.',
-    'Vale igual para la reescritura que para empezar de cero. El patrón es el mismo: acertar pronto con el modelo de datos, poner algo que se pueda clicar delante de usuarios reales en pocas semanas y subir a una URL de staging cada semana, para que en el cuarto mes nadie se lleve una sorpresa con el estado del trabajo.',
+    'Vale igual para la reescritura que para empezar de cero. El patrón es el mismo: acertar pronto con el modelo de datos, poner algo que se pueda clicar delante de usuarios reales en pocas semanas y subir a una URL de staging cada semana, para que al final nadie se lleve una sorpresa con el estado del trabajo.',
     'Y vale para lo regulado. El producto que llevamos más tiempo construyendo lo recetan médicos y lo cubren [más de 23 aseguradoras de salud alemanas y suizas](https://medicalmotion.com), así que las preguntas llegan tanto de aseguradoras y revisores como de usuarios, y una decisión de arquitectura equivocada no es un sprint que puedas repetir.',
   ],
 
   fit: {
     title: 'Para quién es esto.',
     intro:
-      'Un encargo largo es la forma equivocada para muchos proyectos buenos. Estos son aquellos en los que sí encaja.',
+      'Nuestro encargo más largo es la forma equivocada para muchos proyectos buenos. Estos son aquellos en los que sí encaja.',
     forTitle: 'Encaja bien',
     for: [
       'Fundadores o un equipo de producto con algo ya validado y sin equipo técnico para construirlo en condiciones.',
@@ -80,7 +80,7 @@ export const productEs: ServiceCopy = {
       },
       {
         title: 'Algo que se pueda clicar, pronto',
-        body: 'En tu navegador en pocas semanas. Preferimos descubrir que una idea no funciona en la semana dos y no en el cuarto mes. Tú también.',
+        body: 'En tu navegador en las dos primeras semanas. Preferimos descubrir que una idea no funciona en la semana dos y no en la diez. Tú también.',
       },
       {
         title: 'Una URL de staging desde el primer día',
@@ -112,7 +112,7 @@ export const productEs: ServiceCopy = {
   running: {
     title: 'Cómo se trabaja.',
     intro:
-      'La forma, no un diagrama de Gantt. Un proyecto de tres meses y uno de seis tienen los mismos cuatro movimientos; solo se alarga el del medio.',
+      'La forma, no un diagrama de Gantt. Un proyecto de seis semanas y uno de doce tienen los mismos cuatro movimientos; solo se alarga el del medio.',
     steps: [
       {
         label: 'Semana uno',
@@ -120,12 +120,12 @@ export const productEs: ServiceCopy = {
         body: 'Una sesión de trabajo con quien conoce el producto y con quien lo va a usar. Sales con un alcance por escrito, un plan de hitos y un precio que no se mueve.',
       },
       {
-        label: 'Semanas dos a cuatro',
+        label: 'Semanas dos y tres',
         title: 'Modelo de datos y prototipo',
         body: 'Primero el esquema, porque es la decisión que hereda todo lo demás. Después, algo que se pueda clicar encima, en tu navegador, en la URL de staging.',
       },
       {
-        label: 'El tramo largo',
+        label: 'Las semanas centrales',
         title: 'Entregar cada semana',
         body: 'Hito a hito, con demo cada viernes. En un producto regulado, los permisos y la traza de auditoría se construyen aquí, no se añaden al final.',
       },
@@ -174,7 +174,7 @@ export const productEs: ServiceCopy = {
     items: [
       {
         q: '¿Podéis coger un código que ha escrito otro?',
-        a: 'Sí, y pasa a menudo. Empezamos por la [revisión de arquitectura](__REVIEW__) en vez de por un presupuesto: dos semanas leyéndolo en serio y después un plan por escrito. Presupuestar un relevo sin haber leído el código da un número equivocado en un sentido o en el otro.',
+        a: 'Sí, y pasa a menudo. Leemos el código antes de dar un precio: unos días revisándolo en serio y después un alcance y un plan por escrito. Presupuestar un relevo sin haber leído el código da un número equivocado en un sentido o en el otro.',
       },
       {
         q: '¿Hacéis también el diseño?',
@@ -204,7 +204,7 @@ export const productEs: ServiceCopy = {
   },
 
   related: {
-    title: 'Las otras tres formas de empezar.',
+    title: 'Las otras dos formas de empezar.',
     intro: 'Todos los encargos arrancan con un alcance cerrado y un plan de hitos.',
   },
 };

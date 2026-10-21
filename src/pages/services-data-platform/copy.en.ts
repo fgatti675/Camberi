@@ -12,7 +12,7 @@ export const dataPlatformEn: ServiceCopy = {
   title: 'Postgres you own, and a clean way off the managed backend you have outgrown.',
   intro:
     'Schema design, painful migrations, row-level security and the admin tooling your team actually uses — plus FireCMS and Rebase implementation from the people who wrote the frameworks.',
-  meta: 'Typically 1–8 weeks · fixed scope and milestone plan agreed in week one',
+  meta: 'Typically 1–4 weeks · fixed scope and milestone plan agreed in week one',
 
   lead: [
     'A managed backend is the right decision at the start and a constraint later. The read bill grows with traffic rather than with value, the query you now need cannot be expressed, and the access rules have become a file that one person understands and nobody wants to touch. None of that is a reason to panic, and all of it is a reason to plan the move rather than discover it during an incident.',
@@ -115,7 +115,7 @@ export const dataPlatformEn: ServiceCopy = {
   running: {
     title: 'How it runs.',
     intro:
-      'A one-week schema review and an eight-week migration are the same four movements at different lengths.',
+      'A one-week schema review and a four-week migration are the same four movements at different lengths.',
     steps: [
       {
         label: 'Week one',
@@ -167,7 +167,7 @@ export const dataPlatformEn: ServiceCopy = {
     body: [
       '[Rebase](https://rebase.pro) is our Postgres backend: point it at a database you already own and you get REST, auth, storage, realtime and a generated admin panel, with every access rule enforced by row-level security rather than by middleware. Open source, self-hosted, and built for teams who would rather not hand production data to somebody else’s managed instance.',
       '[SustenTalent](__SUSTENTALENT__) is that stack in production — an Astro site with React islands, a Rebase backend on Cloud Run, Cloud SQL Postgres underneath, and access control enforced by the database rather than by application code. Public site, backend and admin panel out of one repository.',
-      'If what you are describing is really a whole product rather than its data layer, the [product engagement](__PRODUCT__) is the right shape. If you are not yet sure the move is worth making, the [architecture review](__REVIEW__) answers that in two weeks and in writing.',
+      'If what you are describing is really a whole product rather than its data layer, the [product engagement](__PRODUCT__) is the right shape. If you are not yet sure the move is worth making, [tell us what is stuck](__CONTACT__): it is usually clear on the first call, and sometimes the answer is no.',
     ],
   },
 
@@ -197,17 +197,17 @@ export const dataPlatformEn: ServiceCopy = {
       },
       {
         q: 'Can you just review the schema and leave us to it?',
-        a: 'Yes, and for a lot of teams that is the right purchase: the [architecture review](__REVIEW__) is two weeks and ends in a written plan your own engineers can execute without us.',
+        a: 'Yes, and for a lot of teams that is the right purchase: a schema review is the one-week version of this engagement, and it ends in a written plan your own engineers can execute without us.',
       },
     ],
   },
 
   cta: {
-    body: 'Tell us what the database is, what it is doing that it should not, and what you are afraid will break. Two paragraphs is enough to say whether this is two weeks or two months.',
+    body: 'Tell us what the database is, what it is doing that it should not, and what you are afraid will break. Two paragraphs is enough to say whether this is one week or four.',
   },
 
   related: {
-    title: 'The other three ways in.',
+    title: 'The other two ways in.',
     intro: 'Every engagement here starts with a fixed scope and a milestone plan.',
   },
 };

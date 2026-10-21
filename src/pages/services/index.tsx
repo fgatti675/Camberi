@@ -15,18 +15,18 @@ import { servicesEs } from './copy.es';
 /* ──────────────────────────────────────────────────────────────
    The services hub.
 
-   Four engagements used to be four anchors on one page, which meant
-   the home page had to rank for automation, product engineering,
-   Postgres and architecture review at the same time. Each is now a
-   page; this one is how you choose between them.
+   The engagements used to be anchors on one page, which meant the
+   home page had to rank for AI agents, product engineering and
+   Postgres at the same time. Each is now a page; this one is how
+   you choose between them.
 
-   It reads the four titles, week ranges and scope lines straight
+   It reads the titles, week ranges and scope lines straight
    from `t.engagements`, so the home page's list and this page can
    never drift apart. Only the choosing paragraph is written here.
 
    The bar chart is the same device the home page uses, and for the
    same reason: length is the one number a buyer wants before
-   anything else, and drawn against a shared axis the four items
+   anything else, and drawn against a shared axis the items
    answer "how much am I committing to?" at a glance.
    ────────────────────────────────────────────────────────────── */
 
@@ -130,7 +130,7 @@ export default function Services() {
       </section>
 
       {/* ── The constant ────────────────────────────────────────
-          The four differ in length and in subject; the way the work
+          The three differ in length and in subject; the way the work
           runs is identical, and it is the half of the decision a
           list of capabilities never answers. Same four steps as the
           home page, because they really are the same four steps. */}

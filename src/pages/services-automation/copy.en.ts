@@ -15,13 +15,13 @@ import type { ServiceCopy } from '../services/service';
 export const automationEn: ServiceCopy = {
   title: 'The work your team redoes every week, done by software instead.',
   intro:
-    'Automation and AI for operations teams: we take the processes people run by hand and build them so they keep running — including the ones with a language model in them.',
-  meta: 'Typically 3–10 weeks · fixed scope and milestone plan agreed in week one',
+    'AI agents and automation for operations teams: we take the processes people run by hand and build them so they keep running — including the ones with a language model in them.',
+  meta: 'Typically 2–6 weeks · fixed scope and milestone plan agreed in week one',
 
   lead: [
     'Almost every team has a handful of jobs that are done by a person because nobody ever got round to doing them any other way. A spreadsheet re-keyed on Monday morning. A weekly report assembled from four dashboards. An approval that lives in somebody’s inbox and stops when they take a holiday. None of them are hard. All of them are somebody’s Tuesday.',
     'We find the ones worth automating, build them, and leave them running without a babysitter. That includes LLM features and agents — but a model in production is a different object from a model in a demo, so it ships with an evaluation set, a cost per run and a defined fallback for the day it is confidently wrong.',
-    'If you are not sure yet which of your processes are worth it, the [architecture review](__REVIEW__) is two weeks and ends in a written plan you can act on without us.',
+    'If you are not sure yet which of your processes are worth it, [tell us what is stuck](__CONTACT__) and we will say on the first call which ones would pay for themselves and which would not.',
   ],
 
   fit: {
@@ -201,7 +201,7 @@ export const automationEn: ServiceCopy = {
       },
       {
         q: 'We do not know which processes are worth automating.',
-        a: 'Then start with the [architecture review](__REVIEW__): two weeks, a written plan, ranked by what each item costs you today. Most of it is work your own team can do, and that is a fine outcome.',
+        a: 'That is what week one is for. We watch the work, rank every candidate by the hours it gives back against the effort to build it, and you pick. Sometimes the answer is that a process does not need software at all, and that is a fine outcome.',
       },
     ],
   },
@@ -211,7 +211,7 @@ export const automationEn: ServiceCopy = {
   },
 
   related: {
-    title: 'The other three ways in.',
+    title: 'The other two ways in.',
     intro: 'Every engagement here starts with a fixed scope and a milestone plan.',
   },
 };

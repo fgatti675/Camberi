@@ -29,19 +29,16 @@ import { t } from '../i18n';
    ────────────────────────────────────────────────────────────── */
 
 const sections = [
-  { id: 'automations', label: t.spine.automations },
   { id: 'agents', label: t.spine.agents },
-  { id: 'about', label: t.spine.about },
   { id: 'work', label: t.spine.work },
-  { id: 'open-source', label: t.spine.openSource },
-  { id: 'team', label: t.spine.team },
   { id: 'services', label: t.spine.services },
   { id: 'process', label: t.spine.process },
+  { id: 'team', label: t.spine.team },
   { id: 'contact', label: t.spine.contact },
 ];
 
 /* The dark bands need light ticks and the light ones need dark. */
-const DARK_SECTIONS = new Set(['agents', 'work', 'process', 'contact']);
+const DARK_SECTIONS = new Set(['work', 'process', 'contact']);
 
 /* 78rem is CONTAINER_WIDE; 3.5rem is the distance from that container's
    outer edge back to the rail. Clamped so the rail never leaves the

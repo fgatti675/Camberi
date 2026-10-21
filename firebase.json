@@ -64,7 +64,19 @@
           ]
         }
       ],
-      "cleanUrls": true
+      "cleanUrls": true,
+      "redirects": [
+        {
+          "source": "/services/architecture-review{,/}",
+          "destination": "/services/",
+          "type": 301
+        },
+        {
+          "source": "/es/services/architecture-review{,/}",
+          "destination": "/es/services/",
+          "type": 301
+        }
+      ]
     },
     {
       "target": "canary",
@@ -130,7 +142,19 @@
           ]
         }
       ],
-      "cleanUrls": true
+      "cleanUrls": true,
+      "redirects": [
+        {
+          "source": "/services/architecture-review{,/}",
+          "destination": "/services/",
+          "type": 301
+        },
+        {
+          "source": "/es/services/architecture-review{,/}",
+          "destination": "/es/services/",
+          "type": 301
+        }
+      ]
     }
   ]
 }

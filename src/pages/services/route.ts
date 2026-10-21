@@ -9,16 +9,16 @@ export const route: Route = {
   priority: 0.9,
   locales: {
     en: {
-      title: 'Services: automation, product, data, architecture — Camberi',
+      title: 'Services: AI agents, product engineering, data — Camberi',
       description:
-        'Four engagements with a fixed scope: automation and AI for operations, product engineering to production, a Postgres data platform, an architecture review.',
-      ogTitle: 'Four ways in, each with a fixed scope and an end date',
+        'Three engagements with a fixed scope: AI agents and automation for operations, product engineering to production, and a Postgres data platform.',
+      ogTitle: 'Three ways in, each with a fixed scope and an end date',
     },
     es: {
-      title: 'Automatización, producto, datos y arquitectura — Camberi',
+      title: 'Agentes de IA, producto y datos en Postgres — Camberi',
       description:
-        'Cuatro encargos con alcance cerrado: automatización e IA, ingeniería de producto hasta producción, datos en Postgres y revisión de arquitectura.',
-      ogTitle: 'Cuatro formas de empezar, todas con alcance cerrado y fecha de fin',
+        'Tres encargos con alcance cerrado: agentes de IA y automatización, ingeniería de producto hasta producción y una plataforma de datos en Postgres.',
+      ogTitle: 'Tres formas de empezar, todas con alcance cerrado y fecha de fin',
     },
   },
 };

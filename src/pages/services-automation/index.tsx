@@ -6,8 +6,7 @@ import { automationEs } from './copy.es';
 
 /* The engagement's own page. It used to be the first anchor in the
    home page's engagement list, which meant one URL had to rank for
-   automation, product engineering, Postgres and architecture review
-   at once.
+   AI agents, product engineering and Postgres at once.
 
    The directory is flat — `services-automation`, not
    `services/automation` — because the page glob in

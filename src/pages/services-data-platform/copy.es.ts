@@ -8,7 +8,7 @@ export const dataPlatformEs: ServiceCopy = {
   title: 'Un Postgres que es tuyo, y una salida limpia del backend que se te ha quedado pequeño.',
   intro:
     'Diseño de esquemas, migraciones dolorosas, row-level security y el panel de administración que tu equipo sí usa. Y la implantación de FireCMS y Rebase, hecha por quienes escribieron los frameworks.',
-  meta: 'Normalmente 1–8 semanas · alcance cerrado y plan de hitos la primera semana',
+  meta: 'Normalmente 1–4 semanas · alcance cerrado y plan de hitos la primera semana',
 
   lead: [
     'Un backend gestionado es la decisión correcta al principio y una limitación más tarde. La factura crece con las lecturas y no con el valor, la consulta que ahora necesitas no se puede expresar y las reglas de acceso se han convertido en un fichero que entiende una persona y que nadie quiere tocar. Nada de eso es para alarmarse, y todo eso es motivo para planificar la salida en vez de descubrirla en mitad de una incidencia.',
@@ -111,7 +111,7 @@ export const dataPlatformEs: ServiceCopy = {
   running: {
     title: 'Cómo se trabaja.',
     intro:
-      'Una revisión de esquema de una semana y una migración de ocho son los mismos cuatro movimientos a distinta longitud.',
+      'Una revisión de esquema de una semana y una migración de cuatro son los mismos cuatro movimientos a distinta longitud.',
     steps: [
       {
         label: 'Semana uno',
@@ -163,7 +163,7 @@ export const dataPlatformEs: ServiceCopy = {
     body: [
       '[Rebase](https://rebase.pro) es nuestro backend sobre Postgres: lo apuntas a una base de datos que ya es tuya y te da REST, autenticación, almacenamiento, tiempo real y un panel generado, con cada regla de acceso aplicada por row-level security en lugar de por middleware. Open source, self-hosted y pensado para equipos que prefieren no dejar los datos de producción en la instancia gestionada de otro.',
       '[SustenTalent](__SUSTENTALENT__) es ese stack en producción: un sitio en Astro con islas de React, un backend Rebase en Cloud Run, Cloud SQL Postgres debajo y control de acceso aplicado por la base de datos y no por el código. Web pública, backend y panel salen de un único repositorio.',
-      'Si lo que describes es en realidad un producto entero y no su capa de datos, la forma correcta es el [encargo de producto](__PRODUCT__). Y si todavía no tienes claro que el cambio compense, la [revisión de arquitectura](__REVIEW__) lo responde en dos semanas y por escrito.',
+      'Si lo que describes es en realidad un producto entero y no su capa de datos, la forma correcta es el [encargo de producto](__PRODUCT__). Y si todavía no tienes claro que el cambio compense, [cuéntanos qué te falla](__CONTACT__): suele quedar claro en la primera llamada, y a veces la respuesta es que no.',
     ],
   },
 
@@ -193,17 +193,17 @@ export const dataPlatformEs: ServiceCopy = {
       },
       {
         q: '¿Podéis revisar el esquema y ya está?',
-        a: 'Sí, y para muchos equipos es la compra correcta: la [revisión de arquitectura](__REVIEW__) dura dos semanas y termina en un plan por escrito que tus propios ingenieros pueden ejecutar sin nosotros.',
+        a: 'Sí, y para muchos equipos es la compra correcta: una revisión de esquema es la versión de una semana de este encargo, y termina en un plan por escrito que tus propios ingenieros pueden ejecutar sin nosotros.',
       },
     ],
   },
 
   cta: {
-    body: 'Cuéntanos qué base de datos es, qué está haciendo que no debería y qué te da miedo que se rompa. Con dos párrafos basta para decirte si esto son dos semanas o dos meses.',
+    body: 'Cuéntanos qué base de datos es, qué está haciendo que no debería y qué te da miedo que se rompa. Con dos párrafos basta para decirte si esto es cosa de una semana o de cuatro.',
   },
 
   related: {
-    title: 'Las otras tres formas de empezar.',
+    title: 'Las otras dos formas de empezar.',
     intro: 'Todos los encargos arrancan con un alcance cerrado y un plan de hitos.',
   },
 };

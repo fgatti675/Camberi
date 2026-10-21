@@ -18,7 +18,6 @@ export const es: Dict = {
     agents: 'Agentes de IA',
     work: 'Proyectos',
     services: 'Servicios',
-    openSource: 'Código abierto',
     team: 'Equipo',
     cta: 'Empezar un proyecto',
     toggleMenu: 'Abrir menú',
@@ -26,13 +25,10 @@ export const es: Dict = {
   },
 
   spine: {
-    automations: 'Qué hacemos',
     agents: 'Agentes de IA',
-    about: 'Por qué nosotros',
     work: 'Proyectos',
     services: 'Servicios',
     process: 'Cómo trabajamos',
-    openSource: 'Código abierto',
     team: 'Equipo',
     contact: 'Contacto',
   },
@@ -49,43 +45,6 @@ export const es: Dict = {
 
   logoWall: {
     caption: 'Equipos con productos en producción sobre código nuestro',
-  },
-
-  automations: {
-    title: 'Cada producto que sacamos le quita un trabajo de encima a alguien.',
-    intro:
-      'Una misma manía, en nuestros productos y en los proyectos de cliente: buscar el trabajo que alguien está haciendo a mano y dárselo al software. Cada vez más, ese software es un agente: lee, decide y actúa, con una persona ahí para las decisiones que importan.',
-    fromLabel: 'Le das',
-    toLabel: 'Te devuelve',
-    rows: [
-      {
-        from: 'Una pregunta escrita en lenguaje normal',
-        to: 'Un dashboard de verdad, con el SQL que ha escrito para montarlo',
-        product: 'Dataki',
-        href: 'https://dataki.ai',
-      },
-      {
-        from: 'El perfil de dolor de un paciente',
-        to: 'Un plan de terapia personalizado y asistido por IA, que los médicos recetan y las aseguradoras cubren',
-        product: 'medicalmotion',
-        href: 'https://medicalmotion.com',
-      },
-      {
-        from: 'La dirección de una web cualquiera',
-        to: 'Un manual de marca entero: escalas de color, combinaciones con el contraste comprobado, tipografía y espaciado',
-        product: 'Unbrand.my',
-        href: 'https://unbrand.my',
-      },
-      {
-        from: 'Un scraping entre semana de ofertas públicas',
-        to: 'Una lista viva de las empresas que están contratando ahora mismo, enriquecida y en cola, con el siguiente paso ya decidido',
-        product: 'SustenTalent',
-        href: 'https://sustentalent.com',
-      },
-    ],
-    closing:
-      'Nada de esto es una demo. Cada línea de arriba es un producto funcionando ahora mismo, y el enlace te lleva directo.',
-    cta: 'Automatiza algo tuyo',
   },
 
   agents: {
@@ -110,51 +69,6 @@ export const es: Dict = {
       },
     ],
     cta: 'Cómo hacemos agentes',
-  },
-
-  thesis: {
-    title: 'No somos de entregar y desaparecer.',
-    p1: 'La mayoría de las agencias entrega una v1 y pasa página. Nosotros nunca hemos podido permitírnoslo: también hacemos productos propios, y los seguimos manteniendo.',
-    p4: 'Eso es lo que contratas de verdad. No horas de desarrollo, sino criterio sobre las decisiones que salen caras más adelante.',
-    ledgerTitle: 'Cada número de esta página enlaza al sitio donde puedes comprobarlo.',
-    ledger: [
-      {
-        value: '6 años',
-        label: 'FireCMS en producción, con cambios cada semana desde 2020',
-        source: 'github.com/firecmsco/firecms',
-        href: 'https://github.com/firecmsco/firecms',
-      },
-      {
-        value: '22k',
-        label: 'instalaciones al mes de nuestros paquetes publicados en npm',
-        source: 'npmjs.com/org/firecms',
-        href: 'https://www.npmjs.com/package/@firecms/core',
-      },
-      {
-        value: '23+',
-        label: 'aseguradoras de salud alemanas y suizas cubren un producto nuestro',
-        source: 'medicalmotion.com',
-        href: 'https://medicalmotion.com',
-      },
-      {
-        value: '12k',
-        label: 'instalaciones al mes de Neat, el motor del degradado de esta página',
-        source: 'npmjs.com/package/@firecms/neat',
-        href: 'https://www.npmjs.com/package/@firecms/neat',
-      },
-      {
-        value: '3,7k',
-        label: 'commits en público de uno de nosotros, solo en FireCMS',
-        source: 'github.com/fgatti675',
-        href: 'https://github.com/fgatti675',
-      },
-      {
-        value: '6',
-        label: 'productos propios, todos siguen en marcha',
-        source: 'mira los proyectos',
-        href: '#work',
-      },
-    ],
   },
 
   work: {
@@ -230,7 +144,7 @@ export const es: Dict = {
   },
 
   engagements: {
-    title: 'Cuatro formas de empezar. Todas con alcance cerrado.',
+    title: 'Tres formas de empezar. Todas con alcance cerrado.',
     intro:
       'Cada proyecto arranca con un alcance cerrado, un plan de hitos y un precio. No con una fase de descubrimiento que factura tres meses.',
     axisLabel: 'Semanas',
@@ -240,31 +154,24 @@ export const es: Dict = {
     items: [
       {
         title: 'Agentes de IA y automatización que aguantan en producción',
-        weeks: [3, 10],
+        weeks: [2, 6],
         description:
-          'El Excel que alguien vuelve a rellenar cada lunes, el informe que sale de juntar cuatro dashboards, la aprobación que vive en una bandeja de entrada. Buscamos cuáles compensa automatizar y las dejamos funcionando sin que nadie tenga que estar encima. También funciones con LLM y agentes, con evaluación, control de coste y un plan B para el día en que el modelo se equivoque con toda la seguridad del mundo.',
-        scope: 'Normalmente 3–10 semanas',
+          'El Excel que alguien rellena cada lunes, el informe que sale de juntar cuatro dashboards, la aprobación que vive en una bandeja de entrada. Se lo pasamos a agentes que funcionan sin que nadie esté encima, con evaluación, control de coste y un plan B para el día en que el modelo se equivoque con toda la seguridad del mundo.',
+        scope: 'Normalmente 2–6 semanas',
       },
       {
         title: 'Hacer el producto',
-        weeks: [13, 26],
+        weeks: [6, 12],
         description:
-          'De cero a producción, o la reescritura que por fin escala. Diseño, frontend, backend e infraestructura en un solo equipo, para que nada se caiga entre proveedores. También del tipo regulado, con datos médicos y una arquitectura que tiene que aguantar una auditoría: llevamos haciéndolo en la sanidad alemana desde 2019.',
-        scope: 'Normalmente 3–6 meses',
+          'De cero a producción en semanas, no en trimestres. Diseño, frontend, backend e infraestructura en un solo equipo, también del tipo regulado, con datos médicos: llevamos haciéndolo en la sanidad alemana desde 2019.',
+        scope: 'Normalmente 6–12 semanas',
       },
       {
         title: 'Plataforma de datos, Postgres y herramientas internas',
-        weeks: [1, 8],
+        weeks: [1, 4],
         description:
-          'Diseño de esquemas, migraciones dolorosas, row-level security y salir de un backend gestionado que se te ha quedado pequeño sin pasar un fin de semana caído. Y la implantación de FireCMS y Rebase, hecha por quienes escribieron los frameworks.',
-        scope: 'Normalmente 1–8 semanas',
-      },
-      {
-        title: 'Revisión de arquitectura',
-        weeks: [2, 2],
-        description:
-          'Dos semanas, una revisión a fondo de tu stack por gente sénior y un plan por escrito que tu equipo pueda ejecutar solo. La forma más barata de saber si nos necesitas siquiera.',
-        scope: 'Precio cerrado, 2 semanas',
+          'Diseño de esquemas, migraciones dolorosas, row-level security y salir de un backend gestionado que se te ha quedado pequeño. Y la implantación de FireCMS y Rebase, hecha por quienes los escribieron.',
+        scope: 'Normalmente 1–4 semanas',
       },
     ],
   },
@@ -290,30 +197,6 @@ export const es: Dict = {
         desc: 'Tu repositorio, tu infraestructura, tus cuentas, documentado. Nos vamos sin dejar cabos sueltos, o nos quedamos como el equipo que lo mantiene vivo.',
       },
     ],
-  },
-
-  openSource: {
-    title: 'Todo lo que sabemos, en público.',
-    p1: 'Miles de desarrolladores instalan nuestras herramientas cada mes, y cada decisión que hemos tomado está en un historial de commits público. También las que tuvimos que deshacer.',
-    p2: 'Seis años respondiendo issues en abierto son seis años de errores que no vamos a repetir dentro de tu código.',
-    cta: 'Ver nuestro GitHub',
-    repos: {
-      firecms: {
-        description:
-          'El CMS headless y panel de administración para Firebase. Arrancó en 2020 y le seguimos metiendo cambios cada semana.',
-        meta: '1,3k estrellas · 220 forks · TypeScript',
-      },
-      rebase: {
-        description:
-          'REST, autenticación, almacenamiento, tiempo real y un panel de administración, generados a partir de un esquema de Postgres que ya es tuyo.',
-        meta: 'Código abierto · Autoalojado · Postgres',
-      },
-      neat: {
-        description:
-          'El motor de degradados en WebGL que dibuja el fondo de esta página. Three.js por debajo y un npm install por encima.',
-        meta: '12k instalaciones al mes · Three.js',
-      },
-    },
   },
 
   team: {
