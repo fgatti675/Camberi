@@ -13,18 +13,24 @@ import { SERVICE_PATHS, servicePath } from '../pages/services/service';
    been building for a decade: row-level security in Rebase, back
    offices in FireCMS, products kept alive for years.
 
-   It sits on the night tone, a blue-black of its own, so the page
-   changes colour as the story turns from "what we build" to "why it
-   holds up". No ribbon here: the shift in the background is the
-   event, and the copy sits on flat colour at every scroll offset.
+   It sits on the night tone, a blue-black of its own, and it is the
+   one place the page colour blends rather than cuts: the story turns
+   from "what we build" to "why it holds up". No ribbon here — the
+   shift in the background is the event.
 
-   Four properties, not four steps, so no numbers — each hangs off its
-   own rule and the rules draw in one after the other, the same device
-   the process section uses for its timeline.
+   Kept deliberately short: a statement, one line under it, and four
+   properties of one line each. Not steps, so no numbers — each hangs
+   off its own rule and the rules draw in one after the other, the same
+   device the process section uses for its timeline.
    ────────────────────────────────────────────────────────────── */
 export function Agents() {
   return (
-    <section id="agents" data-tone="night" className={`relative ${SECTION_LG} text-white bg-bg-night`}>
+    /* At least a screen tall, so the page colour can finish blending into
+       the night tone before the next section starts blending out of it. */
+    <section
+      id="agents"
+      data-tone="night"
+      className={`relative ${SECTION_LG} min-h-[100svh] flex flex-col justify-center text-white bg-bg-night`}>
       <div className={CONTAINER}>
         <SectionHead
           dark
@@ -34,7 +40,7 @@ export function Agents() {
           className="mb-16 md:mb-20"
         />
 
-        <div className="grid grid-cols-1 min-[720px]:grid-cols-2 gap-x-14 gap-y-12 stagger">
+        <div className="grid grid-cols-1 min-[560px]:grid-cols-2 min-[960px]:grid-cols-4 gap-x-10 gap-y-12 stagger">
           {t.agents.items.map((item, i) => (
             <div key={item.title} className="relative pt-7">
               <span
@@ -42,8 +48,8 @@ export function Agents() {
                 className="rule absolute inset-x-0 top-0 h-px bg-white/25"
                 style={{ transitionDelay: `${i * 0.12}s` }}
               />
-              <h3 className="text-white text-[1.3rem] font-600">{item.title}</h3>
-              <p className="mt-3 text-white/60 text-[1rem] leading-[1.65] max-w-[44ch]">{item.body}</p>
+              <h3 className="text-white font-600">{item.title}</h3>
+              <p className="mt-2.5 text-white/55 text-[0.97rem] leading-[1.62]">{item.body}</p>
             </div>
           ))}
         </div>

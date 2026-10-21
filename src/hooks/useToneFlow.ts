@@ -3,19 +3,25 @@ import { useEffect, type RefObject } from 'react';
 /* ──────────────────────────────────────────────────────────────
    The page changes colour as the story moves.
 
-   Every section of the home page declares a tone (`data-tone="main"`,
-   `"alt"`, `"night"`, `"dark"`), and instead of each one painting its own
-   rectangle the page itself carries the colour, blending from one tone to
-   the next as each boundary crosses the screen. The hard cut between the
-   light and the dark bands becomes a change of mood.
+   Sections opt in with a tone (`data-tone="main"`, `"alt"`, `"night"`),
+   and instead of each one painting its own rectangle the page itself
+   carries the colour, blending from one tone to the next as each boundary
+   crosses the screen.
 
-   The blend runs while the boundary travels from 80% of the viewport
-   height to 20%. Sections open and close on several rems of padding, so
-   by the time the colour is halfway across, the copy of the outgoing
-   section has scrolled under the header and the incoming copy has not
-   arrived yet — text never sits on a colour it was not set for for more
-   than a moment. Smoothstep keeps each tone at full strength for longer
-   at both ends of the window.
+   The dark bands with a NEAT ribbon (work, process, contact) do not opt
+   in. Their ribbons are composed on solid black, and a ribbon over a
+   half-blended grey looks like a mistake, so those bands keep their own
+   background and their hard edges. In practice the blend happens around
+   the agents section, which has no ribbon to protect.
+
+   The blend runs while the boundary travels from 75% of the viewport
+   height to 25%. Sections open and close on several rems of padding, so
+   while the colour is moving, the copy on either side is mostly out of
+   frame — text never sits on a colour it was not set for for more than a
+   moment. A section that blends on both sides must be at least a screen
+   tall (the agents section is), or it never reaches its full tone.
+   Smoothstep keeps each tone at full strength for longer at both ends of
+   the window.
 
    Progressive enhancement: the sections keep their own backgrounds in the
    prerendered HTML and only turn transparent once `tone-flow-on` is on
@@ -23,8 +29,8 @@ import { useEffect, type RefObject } from 'react';
    looks exactly as it did.
    ────────────────────────────────────────────────────────────── */
 
-const BLEND_START = 0.8;
-const BLEND_END = 0.2;
+const BLEND_START = 0.75;
+const BLEND_END = 0.25;
 
 type RGB = [number, number, number];
 

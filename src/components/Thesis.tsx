@@ -12,8 +12,10 @@ import { t } from '../i18n';
    so the eye read the punchline before the joke.
 
    It now runs straight down the page in the order the argument is
-   actually made — claim, three paragraphs of why, the conclusion at
-   statement size, then six numbers you can go and check.
+   actually made — claim, one sentence of why, the conclusion at
+   statement size, then six numbers you can go and check. The section
+   right before it makes the agents argument at length, so this one
+   stays short and lets the ledger do the talking.
    ────────────────────────────────────────────────────────────── */
 export function Thesis() {
   return (
@@ -26,16 +28,9 @@ export function Thesis() {
           className="mb-14 md:mb-18"
         />
 
-        {/* The argument. Two columns, read left to right, both at a
-            proper measure rather than one wide column of nothing. */}
-        <div className="grid grid-cols-1 min-[820px]:grid-cols-2 gap-x-14 gap-y-6 text-[1.06rem] md:text-[1.12rem] leading-[1.65] text-text-muted">
-          <p className="reveal max-w-[46ch]">{t.thesis.p2}</p>
-          <p className="reveal d1 max-w-[46ch]">{t.thesis.p3}</p>
-        </div>
-
-        {/* The conclusion, at statement size, underneath the argument
+        {/* The conclusion, at statement size, underneath the claim
             that earns it. */}
-        <p className="mt-16 md:mt-24 display text-[2rem] md:text-[2.7rem] leading-[1.08] text-text-main text-balance max-w-[24ch] wipe">
+        <p className="mt-4 md:mt-8 display text-[2rem] md:text-[2.7rem] leading-[1.08] text-text-main text-balance max-w-[24ch] wipe">
           {t.thesis.p4}
         </p>
 

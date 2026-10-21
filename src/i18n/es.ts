@@ -90,24 +90,23 @@ export const es: Dict = {
 
   agents: {
     title: 'Lo difícil de un agente no es el modelo.',
-    intro:
-      'Es todo lo que lo rodea: qué puede leer, qué puede tocar, quién revisa lo que hace y qué pasa cuando se equivoca. Esa parte es justo la que llevamos diez años construyendo.',
+    intro: 'Es qué puede tocar, quién lo revisa y qué pasa cuando se equivoca.',
     items: [
       {
         title: 'Permisos por debajo del prompt',
-        body: 'Un agente accede solo a los datos y las acciones que su trabajo necesita, y eso lo aplica la base de datos con row-level security, no una frase en el system prompt pidiéndoselo por favor. Es el mismo modelo sobre el que está hecho Rebase.',
+        body: 'Los aplica la base de datos, no una petición amable.',
       },
       {
         title: 'Una persona donde hace falta',
-        body: 'Aprobaciones, colas de revisión y un registro de todo lo que ha hecho, en un back office que tu equipo sabe usar. Los paneles de administración son terreno conocido: FireCMS es nuestro.',
+        body: 'Colas de revisión y un registro que tu equipo sabe usar.',
       },
       {
-        title: 'Medido, no a ojo',
-        body: 'Un conjunto de evaluación hecho con tus propios casos, una tasa de acierto que puedes seguir y un coste por ejecución. Así «la IA va bastante bien» pasa a ser un número.',
+        title: 'Medido',
+        body: 'Una evaluación con tus propios casos y un coste por ejecución.',
       },
       {
-        title: 'Un plan B para cuando se equivoque',
-        body: 'Una alternativa decidida antes de salir a producción —una cola para una persona, un camino determinista o una negativa— y una monitorización que avisa en cuanto deja de funcionar.',
+        title: 'Un plan B',
+        body: 'Una alternativa segura, decidida antes de salir a producción.',
       },
     ],
     cta: 'Cómo hacemos agentes',
@@ -116,8 +115,6 @@ export const es: Dict = {
   thesis: {
     title: 'No somos de entregar y desaparecer.',
     p1: 'La mayoría de las agencias entrega una v1 y pasa página. Nosotros nunca hemos podido permitírnoslo: también hacemos productos propios, y los seguimos manteniendo.',
-    p2: 'FireCMS lleva en producción desde 2020. Cada esquema que planteamos mal, cada migración que hubo que sacar sin romper miles de instalaciones en marcha, cada issue contestado en público a medianoche: esas lecciones las hemos pagado de nuestro bolsillo.',
-    p3: 'Con la IA eso importa más, no menos. Hoy un agente que funciona en una demo es cosa de una tarde. La pregunta de verdad ya no es «¿sabemos hacer esto?», sino «¿seguirá acertando dentro de cuatro años, cuando cambie el modelo y lleguen los casos raros, y quién lo va a mantener?».',
     p4: 'Eso es lo que contratas de verdad. No horas de desarrollo, sino criterio sobre las decisiones que salen caras más adelante.',
     ledgerTitle: 'Cada número de esta página enlaza al sitio donde puedes comprobarlo.',
     ledger: [

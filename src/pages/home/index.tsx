@@ -18,9 +18,9 @@ import { Footer } from '../../components/Footer';
 
 /* The gradient lives inside the dark sections (Work, Process, Contact)
    rather than in bands between them, so the page reads as one flow with the
-   hero as its single saturated moment. The colour of the page itself follows
-   the story: `useToneFlow` blends from each section's tone to the next as the
-   reader scrolls, instead of cutting from white to black at every band.
+   hero as its single saturated moment. Around the agents section the page
+   colour blends instead of cutting (`useToneFlow`); the ribbon bands keep
+   their solid black and their hard edges.
 
    Section order is the story, told once and in order:
 

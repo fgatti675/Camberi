@@ -188,18 +188,14 @@ export function Work() {
   return (
     <section
       id="work"
-      data-tone="dark"
       className="relative pt-[15rem] pb-28 md:pt-[25rem] md:pb-40 text-white bg-bg-dark isolate overflow-hidden">
       {/* The ribbon is a banner across the top; the mask has it fully gone a
-          rem above the rule, so nothing in the section head ever sits on it.
-          It also fades in from the top edge: on the home page the background
-          is still blending from the light section above when the canvas
-          arrives, and an unmasked canvas shows its top as a hard line. */}
+          rem above the rule, so nothing in the section head ever sits on it. */}
       <AmbientGradient
         config={AMBIENT_WORK}
         className="h-[52rem]"
         strength={0.3}
-        mask="[mask-image:linear-gradient(to_bottom,transparent,#000_5rem,#000_8rem,transparent_14rem)] md:[mask-image:linear-gradient(to_bottom,transparent,#000_8rem,#000_16rem,transparent_24rem)]"
+        mask="[mask-image:linear-gradient(to_bottom,#000_8rem,transparent_14rem)] md:[mask-image:linear-gradient(to_bottom,#000_16rem,transparent_24rem)]"
       />
 
       <div className={`relative z-10 ${CONTAINER_WIDE}`}>

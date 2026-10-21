@@ -30,7 +30,6 @@ export function Contact() {
   return (
     <section
       id="contact"
-      data-tone="dark"
       className="relative pt-[15rem] md:pt-[23rem] pb-20 md:pb-24 text-white bg-bg-dark isolate overflow-hidden">
       {/* Same banner treatment as the work section: the shape hangs above the
           heading and dissolves before the rule, so the address and the copy sit

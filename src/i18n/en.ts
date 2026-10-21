@@ -98,24 +98,23 @@ export const en = {
      one the automation service page already makes in detail. */
   agents: {
     title: 'The hard part of an agent isn’t the model.',
-    intro:
-      'It’s everything around it: what it can read, what it’s allowed to change, who checks its work and what happens when it’s wrong. That part is what we’ve spent a decade building.',
+    intro: 'It’s what it can touch, who checks it, and what happens when it’s wrong.',
     items: [
       {
-        title: 'Access enforced below the prompt',
-        body: 'An agent gets exactly the data and the actions its job needs, enforced by the database with row-level security rather than by a line in a system prompt asking it nicely. It’s the model Rebase is built on.',
+        title: 'Access below the prompt',
+        body: 'Permissions enforced by the database, not by asking nicely.',
       },
       {
         title: 'A person where it matters',
-        body: 'Approvals, review queues and an audit trail of everything it did, in a back office your team can actually use. Admin panels are home ground: we wrote FireCMS.',
+        body: 'Review queues and an audit trail your team can actually use.',
       },
       {
-        title: 'Measured, not hoped for',
-        body: 'An evaluation set built from your own cases, a pass rate you can watch and a cost per run, so “the AI is quite good” turns into a number.',
+        title: 'Measured',
+        body: 'An evaluation set from your own cases, and a cost per run.',
       },
       {
-        title: 'A plan for the day it’s wrong',
-        body: 'A fallback decided before it goes live — a human queue, a deterministic path or a refusal — and monitoring that tells somebody the moment it stops.',
+        title: 'A plan for when it’s wrong',
+        body: 'A safe fallback, decided before it goes live.',
       },
     ],
     cta: 'How we build agents',
@@ -124,8 +123,6 @@ export const en = {
   thesis: {
     title: 'We don’t hand it over and disappear.',
     p1: 'Most agencies ship a v1 and move on. We have never had that luxury — we build our own products too, and we are still running them.',
-    p2: 'FireCMS has been in production since 2020. Every schema we got wrong, every migration we had to ship without breaking thousands of live installs, every issue answered in public at midnight: we paid for those lessons on our own time.',
-    p3: 'With AI that matters more, not less. An agent that works in a demo is an afternoon’s work now. The real question isn’t “can we build this?” but “will it still be right in four years — after the model changes and the edge cases arrive — and who will be maintaining it?”',
     p4: 'That is what you are actually hiring. Not capacity. Judgement about the decisions that get expensive later.',
     /* The ledger. The entire positioning of this site is that the
        claims are checkable, so the source is part of the number
